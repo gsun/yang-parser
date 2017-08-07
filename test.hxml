@@ -3,6 +3,4 @@
 -main Test 
 -js bin\Test.js
 -lib hxnodejs
--resource openconfig-ospfv2.yang@yang
 -cmd copy src\parser.js bin\parser.js
--cmd copy test\openconfig-ospfv2.yang bin\openconfig-ospfv2.yang
