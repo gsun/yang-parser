@@ -11,6 +11,7 @@ class Test {
 			resource = ereg.replace(resource, "");
 			
 		    var result = Parser.parse(resource);
+			//var outfile = infile + ".json";
 		    //File.saveContent(outfile,  haxe.Json.stringify(result));
 			//trace(infile + " parsed success");
 		} catch (e:Dynamic) {

@@ -9433,7 +9433,7 @@ module.exports = /*
         if (s1 !== peg$FAILED) {
           s2 = peg$parsestmtsep_no_stmt_();
           if (s2 !== peg$FAILED) {
-            s3 = peg$parsenotification_stmt_subs();
+            s3 = peg$parsenotification_stmt_subs_();
             if (s3 !== peg$FAILED) {
               if (input.charCodeAt(peg$currPos) === 125) {
                 s4 = peg$c2;
@@ -10569,10 +10569,7 @@ module.exports = /*
       if (s0 === peg$FAILED) {
         s0 = peg$parsemax_keyword();
         if (s0 === peg$FAILED) {
-          s0 = peg$parseinteger_value();
-          if (s0 === peg$FAILED) {
-            s0 = peg$parsedecimal_value();
-          }
+          s0 = peg$parsedecimal_value();
         }
       }
 
@@ -13603,6 +13600,9 @@ module.exports = /*
         } else {
           peg$currPos = s2;
           s2 = peg$FAILED;
+        }
+        if (s2 === peg$FAILED) {
+          s2 = null;
         }
         if (s2 !== peg$FAILED) {
           s1 = [s1, s2];
