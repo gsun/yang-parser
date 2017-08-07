@@ -1,5 +1,6 @@
 import Parser;
 import sys.io.File;
+import haxe.io.Path;
 
 class Test {
 	static function parseFile(infile:String) {
@@ -11,8 +12,8 @@ class Test {
 			resource = ereg.replace(resource, "");
 			
 		    var result = Parser.parse(resource);
-			//var outfile = infile + ".json";
-		    //File.saveContent(outfile,  haxe.Json.stringify(result));
+			var outfile = infile + ".json";
+		    File.saveContent(outfile,  haxe.Json.stringify(result));
 			//trace(infile + " parsed success");
 		} catch (e:Dynamic) {
 			trace(infile + " parsed fail");
@@ -30,7 +31,7 @@ class Test {
 			  parsePath(path + '/' + entry);
 			}
 		} else {
-			parseFile(path);
+			if (Path.extension(path) == "yang") parseFile(path);
 		}
 		
 	}

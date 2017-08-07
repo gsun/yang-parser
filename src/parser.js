@@ -10563,13 +10563,19 @@ module.exports = /*
     }
 
     function peg$parserange_boundary() {
-      var s0;
+      var s0, s1;
 
       s0 = peg$parsemin_keyword();
       if (s0 === peg$FAILED) {
         s0 = peg$parsemax_keyword();
         if (s0 === peg$FAILED) {
-          s0 = peg$parsedecimal_value();
+          s0 = peg$currPos;
+          s1 = peg$parsedecimal_value();
+          if (s1 !== peg$FAILED) {
+            s0 = input.substring(s0, peg$currPos);
+          } else {
+            s0 = s1;
+          }
         }
       }
 
