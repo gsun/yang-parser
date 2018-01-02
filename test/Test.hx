@@ -13,7 +13,7 @@ class Test {
             
             var result = Parser.parse(resource);
             var outfile = infile + ".json";
-            File.saveContent(outfile,  haxe.Json.stringify(result));
+            File.saveContent(outfile,  haxe.Json.stringify(result, null, " "));
             //trace(infile + " parsed success");
         } catch (e:Dynamic) {
             trace(infile + " parsed fail");
