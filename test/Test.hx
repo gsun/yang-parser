@@ -1,4 +1,4 @@
-import Parser;
+import Parser.YangParser;
 import sys.io.File;
 import haxe.io.Path;
 
@@ -11,7 +11,7 @@ class Test {
             var ereg:EReg = ~/["'][\s\r\n]*\+[\s\r\n]*["']/g;
             resource = ereg.replace(resource, "");
             
-            var result = Parser.parse(resource);
+            var result = YangParser.parse(resource);
             var outfile = infile + ".json";
             File.saveContent(outfile,  haxe.Json.stringify(result, null, " "));
             //trace(infile + " parsed success");

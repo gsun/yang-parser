@@ -3,4 +3,15 @@
 -main Test 
 -js bin\Test.js
 -lib hxnodejs
--cmd copy src\parser.js bin\parser.js
+
+
+--next
+-cp src
+-cp test
+-main TestParser 
+-js bin\TestParser.js
+-lib hxnodejs
+
+
+--next
+-cmd copy src\yang.js bin\yang.js
