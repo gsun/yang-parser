@@ -1,11 +1,9 @@
 import Parser;
+import Context;
 
 class TestParser {
     static function main(){
-        var p = new Parser();
-        p.parsePath("./models");	
-        for (st in p.stmt.keys()) {
-			trace(st);
-		}		
+        var p = new Parser(c);
+        p.parse("./models");    
     }
 }

@@ -150,7 +150,8 @@ function peg$parse(input, options) {
       	  type:"module_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:h.concat(l,m,r,b)
+      	  subs:h.concat(l,m,r,b),
+      	  location: location()
       	};
         },
       peg$c5 = function(k, a, h, l, m, r, b) {
@@ -158,7 +159,8 @@ function peg$parse(input, options) {
       	  type:"submodule_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:h.concat(l,m,r,b)
+      	  subs:h.concat(l,m,r,b),
+      	  location: location()
       	};
         },
       peg$c6 = function(l) {
@@ -169,7 +171,8 @@ function peg$parse(input, options) {
       	  type:"yang_version_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c8 = function(v) { return v; },
@@ -180,7 +183,8 @@ function peg$parse(input, options) {
           type:"import_stmt",
       	keyword:k,
       	arg:a,
-      	subs: extractOptional(d, 0) ? [p, extractOptional(d, 0)]:[p]
+      	subs: extractOptional(d, 0) ? [p, extractOptional(d, 0)]:[p],
+      	location: location()
         };
       },
       peg$c12 = function(k, a, s) { 
@@ -188,7 +192,8 @@ function peg$parse(input, options) {
       	  type:"include_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c13 = ";",
@@ -202,7 +207,8 @@ function peg$parse(input, options) {
       	  type:"namespace_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c18 = function(u) { return u; },
@@ -211,7 +217,8 @@ function peg$parse(input, options) {
       	  type:"prefix_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c20 = function(k, a, p) {
@@ -219,7 +226,8 @@ function peg$parse(input, options) {
       	  type:"belongs_to_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[p]
+      	  subs:[p],
+      	  location: location()
       	};
         },
       peg$c21 = function(k, a) {
@@ -227,7 +235,8 @@ function peg$parse(input, options) {
       	  type:"organization_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c22 = function(k, a) {
@@ -235,7 +244,8 @@ function peg$parse(input, options) {
       	  type:"contact_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c23 = function(k, a) {
@@ -243,7 +253,8 @@ function peg$parse(input, options) {
       	  type:"description_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c24 = function(k, a) {
@@ -251,7 +262,8 @@ function peg$parse(input, options) {
       	  type:"reference_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c25 = function(k, a) {
@@ -259,7 +271,8 @@ function peg$parse(input, options) {
       	  type:"units_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c26 = function(k, a, s) {
@@ -267,7 +280,8 @@ function peg$parse(input, options) {
       	  type:"revision_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c27 = function(s) { return s; },
@@ -276,7 +290,8 @@ function peg$parse(input, options) {
       	  type:"revision_date_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c29 = function(k, a, s) {
@@ -284,7 +299,8 @@ function peg$parse(input, options) {
       	  type:"extension_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c30 = function(k, a, s) {
@@ -292,7 +308,8 @@ function peg$parse(input, options) {
       	  type:"argument_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c31 = function() { return [];},
@@ -304,7 +321,8 @@ function peg$parse(input, options) {
       	  type:"yin_element_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c34 = function(y) { return y; },
@@ -313,7 +331,8 @@ function peg$parse(input, options) {
       	  type:"identity_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c36 = function(k, a) {
@@ -321,7 +340,8 @@ function peg$parse(input, options) {
       	  type:"base_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c37 = function(k, a, s) {
@@ -329,7 +349,8 @@ function peg$parse(input, options) {
       	  type:"feature_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c38 = function(k, a) {
@@ -337,7 +358,8 @@ function peg$parse(input, options) {
       	  type:"if_feature_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c39 = function(k, a, s) {
@@ -345,7 +367,8 @@ function peg$parse(input, options) {
       	  type:"typedef_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c40 = function(k, a, s) {
@@ -353,7 +376,8 @@ function peg$parse(input, options) {
       	  type:"type_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c41 = function(l) { return l; },
@@ -363,7 +387,8 @@ function peg$parse(input, options) {
       	  type:"range_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c44 = function(f) { return f; },
@@ -372,7 +397,8 @@ function peg$parse(input, options) {
       	      type:"fraction_digits_stmt",
       		  keyword:k,
       		  arg:a,
-      	      subs:[]
+      	      subs:[],
+      	      location: location()
       	  };
         },
       peg$c46 = /^[0-8]/,
@@ -387,7 +413,8 @@ function peg$parse(input, options) {
       	  type:"length_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c52 = function(k, a, s) {
@@ -395,7 +422,8 @@ function peg$parse(input, options) {
       	  type:"pattern_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c53 = function(k, a) {
@@ -403,7 +431,8 @@ function peg$parse(input, options) {
       	  type:"default_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c54 = function(k, a, s) {
@@ -411,7 +440,8 @@ function peg$parse(input, options) {
       	  type:"enum_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c55 = function(p) { return p; },
@@ -420,7 +450,8 @@ function peg$parse(input, options) {
       	  type:"path_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c57 = function(k, a) {
@@ -428,7 +459,8 @@ function peg$parse(input, options) {
       	  type:"require_instance_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c58 = function(b) { return b; },
@@ -437,7 +469,8 @@ function peg$parse(input, options) {
       	  type:"bit_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c60 = function(k, a) {
@@ -445,7 +478,8 @@ function peg$parse(input, options) {
       	  type:"position_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c61 = function(k, a) {
@@ -453,7 +487,8 @@ function peg$parse(input, options) {
       	  type:"status_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c62 = function(k, a) {
@@ -461,7 +496,8 @@ function peg$parse(input, options) {
       	  type:"config_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c63 = function(k, a) {
@@ -469,7 +505,8 @@ function peg$parse(input, options) {
       	  type:"mandatory_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c64 = function(k, a) {
@@ -477,7 +514,8 @@ function peg$parse(input, options) {
       	  type:"presence_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c65 = function(k, a) {
@@ -485,7 +523,8 @@ function peg$parse(input, options) {
       	  type:"ordered_by_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c66 = function(k, a, s) {
@@ -493,7 +532,8 @@ function peg$parse(input, options) {
       	  type:"must_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c67 = function(k, a) {
@@ -501,7 +541,8 @@ function peg$parse(input, options) {
       	  type:"error_message_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c68 = function(k, a) {
@@ -509,7 +550,8 @@ function peg$parse(input, options) {
       	  type:"error_app_tag_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c69 = function(k, a) {
@@ -517,7 +559,8 @@ function peg$parse(input, options) {
       	  type:"min_elements_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c70 = function(k, a) {
@@ -525,7 +568,8 @@ function peg$parse(input, options) {
       	  type:"max_elements_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c71 = function(k, a) {
@@ -533,7 +577,8 @@ function peg$parse(input, options) {
       	  type:"value_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c72 = function(k, a, s) {
@@ -541,7 +586,8 @@ function peg$parse(input, options) {
       	  type:"grouping_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c73 = function(k, a, s) {
@@ -549,7 +595,8 @@ function peg$parse(input, options) {
       	  type:"container_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c74 = function(k, a, s) {
@@ -557,7 +604,8 @@ function peg$parse(input, options) {
       	  type:"leaf_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c75 = function(k, a, s) {
@@ -565,7 +613,8 @@ function peg$parse(input, options) {
       	  type:"leaf_list_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c76 = function(k, a, s) {
@@ -573,7 +622,8 @@ function peg$parse(input, options) {
       	  type:"list_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c77 = function(k, a) {
@@ -581,7 +631,8 @@ function peg$parse(input, options) {
       	  type:"key_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c78 = function() { return text(); },
@@ -590,7 +641,8 @@ function peg$parse(input, options) {
       	  type:"unique_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c80 = function() {
@@ -601,7 +653,8 @@ function peg$parse(input, options) {
       	  type:"choice_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c82 = function(k, a, s) {
@@ -609,7 +662,8 @@ function peg$parse(input, options) {
       	  type:"case_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c83 = function(k, a, s) {
@@ -617,7 +671,8 @@ function peg$parse(input, options) {
       	  type:"anyxml_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c84 = function(k, a, s) {
@@ -625,7 +680,8 @@ function peg$parse(input, options) {
       	  type:"uses_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c85 = function(k, a, s) {
@@ -633,7 +689,8 @@ function peg$parse(input, options) {
       	  type:"refine_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c86 = function(k, a, s) {
@@ -641,7 +698,8 @@ function peg$parse(input, options) {
       	  type:"uses_augment_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c87 = function(k, a, s) {
@@ -649,7 +707,8 @@ function peg$parse(input, options) {
       	  type:"augment_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c88 = function(k, a, s) {
@@ -657,7 +716,8 @@ function peg$parse(input, options) {
       	  type:"when_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c89 = function(k, a, s) {
@@ -665,7 +725,8 @@ function peg$parse(input, options) {
       	  type:"rpc_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c90 = function(k, s) {
@@ -673,7 +734,8 @@ function peg$parse(input, options) {
       	  type:"input_stmt",
       	  keyword:k,
       	  arg:null,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c91 = function(k, s) {
@@ -681,7 +743,8 @@ function peg$parse(input, options) {
       	  type:"output_stmt",
       	  keyword:k,
       	  arg:null,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c92 = function(k, a, s) {
@@ -689,7 +752,8 @@ function peg$parse(input, options) {
       	  type:"notification_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c93 = function(k, a, s) {
@@ -697,7 +761,8 @@ function peg$parse(input, options) {
       	  type:"deviation_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c94 = function(k, a) {
@@ -705,7 +770,8 @@ function peg$parse(input, options) {
       	  type:"deviate_not_supported_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:[]
+      	  subs:[],
+      	  location: location()
       	};
         },
       peg$c95 = function(k, a, s) {
@@ -713,7 +779,8 @@ function peg$parse(input, options) {
       	  type:"deviate_add_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c96 = function(k, a, s) {
@@ -721,7 +788,8 @@ function peg$parse(input, options) {
       	  type:"deviate_delete_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c97 = function(k, a, s) {
@@ -729,7 +797,8 @@ function peg$parse(input, options) {
       	  type:"deviate_replace_stmt",
       	  keyword:k,
       	  arg:a,
-      	  subs:s
+      	  subs:s,
+      	  location: location()
       	};
         },
       peg$c98 = "|",
@@ -954,7 +1023,8 @@ function peg$parse(input, options) {
       	    type:"unknown_stmt",
       	    keyword:k,
       		arg:extractOptional(m, 1),
-      		subs:s
+      		subs:s,
+      	    location: location()
       	};
         },
       peg$c290 = function(sub) {

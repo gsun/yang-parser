@@ -5,6 +5,12 @@ ehthumbs.db
 # Folder config file
 Desktop.ini
 
+# Yang source file
+*.json
+*.yang
+*.png
+*.gif
+
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 

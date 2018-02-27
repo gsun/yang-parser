@@ -1,12 +1,6 @@
 import sys.io.File;
 import haxe.io.Path;
-
-typedef Stmt = {
-    type:String,
-	keyword:String,
-	arg:String,
-	subs:Array<Stmt>,
-}
+import Stmt;
 
 @:jsRequire("./yang")
 extern class YangParser {
@@ -14,23 +8,28 @@ extern class YangParser {
 }
 
 class Parser {
-	public var stmt:Map<String, Stmt>;  //infile=>Data
-	
-	public function new() {
-		stmt = new Map<String, Stmt>();
-	}
-		
+    public var ctx:Context;
+    
+    public function new(ctx:Context) {
+        this.ctx = ctx;
+    }
+        
     function parseFile(infile:String) {
         try {
             var resource = File.getContent(infile);
             
-            /*merge multi string into one in yang model before parse*/
+            /*merge multi string into one in yang model before parse for openconfig model*/
             var ereg:EReg = ~/["'][\s\r\n]*\+[\s\r\n]*["']/g;
-            resource = ereg.replace(resource, "");
+            resource = ereg.replace(resource, "");            
+            var stmt = YangParser.parse(resource);
             
-			stmt[Path.withoutExtension(infile)] = YangParser.parse(resource);            
+            if (stmt.keyword != "module" && stmt.keyword != "submodule") throw ('$infile does not define module/submodule');    
+            if (ctx.mo[stmt.arg] !=  null) throw('${stmt.keyword} ${stmt.arg} in $infile conflict with ${ctx.mo[stmt.arg].i_path}');    
+            stmt.i_path = infile;
+            ctx.mo[stmt.arg] = stmt;    
+        } catch (e:String) {
+            trace(e);
         } catch (e:Dynamic) {
-            trace(infile + " parsed fail");
             if (e.location != null) {
                 throw(e.location.start.line + ":" + e.location.start.column + ": " + e.message);
             } else {
@@ -38,19 +37,19 @@ class Parser {
             }
         }       
     }
-	
-    public function parsePath(path:String) {
-		try {
-			if (sys.FileSystem.isDirectory(path)) {     
-				var entries = sys.FileSystem.readDirectory(path);
-				for (entry in entries) {
-				  parsePath(path + '/' + entry);
-				}
-			} else {
-				if (Path.extension(path) == "yang") parseFile(path);
-			}
-		} catch (e:String) {
-			trace(e);
-		}        
+    
+    public function parse(path:String) {
+        try {
+            if (sys.FileSystem.isDirectory(path)) {     
+                var entries = sys.FileSystem.readDirectory(path);
+                for (entry in entries) {
+                  parse(path + '/' + entry);
+                }
+            } else {
+                if (Path.extension(path) == "yang") parseFile(path);
+            }
+        } catch (e:String) {
+            trace(e);
+        }   
     }
 }
