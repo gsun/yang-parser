@@ -5,9 +5,9 @@ class AstVisitor implements Dynamic<Stmt> {
     public function new() {}
     
     public function visit(stmt:Stmt, context:Dynamic=null) {
-        var method = Reflect.field(stmt, stmt.type);
+        var method = Reflect.field(this, stmt.type);
         if (method != null) {
-            Reflect.callMethod(stmt, method, [stmt, context]);
+            Reflect.callMethod(this, method, [stmt, context]);
         }
         
         for (s in stmt.subs) {

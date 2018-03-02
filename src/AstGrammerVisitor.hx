@@ -99,7 +99,7 @@ class AstGrammerVisitor extends AstVisitor {
     }
     
     public function import_stmt(stmt:Stmt, context:Dynamic) {
-
+        if (stmt.prefix_stmt.length != 1) trace('prefix_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
     }
     
     public function include_stmt(stmt:Stmt, context:Dynamic) {
@@ -143,12 +143,8 @@ class AstGrammerVisitor extends AstVisitor {
     }
     
     public function module_stmt(stmt:Stmt, context:Dynamic) {
-        var child = ["yang_version_stmt", "namespace_stmt", "prefix_stmt",
-                     "organization_stmt", "contact_stmt", "description_stmt", "reference_stmt"];
-        for (ch in child) {
-            var st = Reflect.field(stmt, ch);
-            if (st == null || st.length != 1) trace('${ch} error ${stmt.arg} location ${stmt.location}');
-        }
+        if (stmt.namespace_stmt.length != 1) trace('namespace_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        if (stmt.prefix_stmt.length != 1) trace('prefix_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
     }
     
     public function must_stmt(stmt:Stmt, context:Dynamic) {
@@ -228,12 +224,7 @@ class AstGrammerVisitor extends AstVisitor {
     }
     
     public function submodule_stmt(stmt:Stmt, context:Dynamic) {
-        var child = ["yang_version_stmt", "belongs_to_stmt", 
-                     "organization_stmt", "contact_stmt", "description_stmt", "reference_stmt"];
-        for (ch in child) {
-            var st = Reflect.field(stmt, ch);
-            if (st == null || st.length != 1) trace('${ch} error ${stmt.arg} location ${stmt.location}');
-        }
+        if (stmt.belongs_to_stmt.length != 1) trace('belongs_to_stmt error ${stmt.arg} location ${stmt.location}');
     }   
     
     public function type_stmt(stmt:Stmt, context:Dynamic) {

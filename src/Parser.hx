@@ -4,7 +4,15 @@ import Stmt;
 
 @:jsRequire("./yang")
 extern class YangParser {
-    static function parse(grammer:String):Stmt;
+    static function parse(grammer:String):StmtRaw;
+}
+
+typedef StmtRaw = {
+    var type:String;
+    var keyword:String;
+    var arg:String;
+    var subs:Array<StmtRaw>;
+    var location:Location;
 }
 
 class Parser {
@@ -14,11 +22,18 @@ class Parser {
         this.ctx = ctx;
     }
 
-    public function setParent(stmt:Stmt, parent:Stmt=null) {
-        stmt.parent = parent;         
-        for (s in stmt.subs) {
-            setParent(s, stmt);
+    public function buildStmt(raw:StmtRaw):Stmt {
+        var stmt = new Stmt();
+        stmt.type = raw.type;
+        stmt.keyword = raw.keyword;
+        stmt.arg = raw.arg;
+        stmt.location = raw.location;
+        for (s in raw.subs) {
+            var child = buildStmt(s);
+            child.parent = stmt;
+            stmt.subs.push(child);
         } 
+        return stmt;
     }
     
     function parseFile(infile:String) {
@@ -28,13 +43,14 @@ class Parser {
             /*merge multi string into one in yang model before parse for openconfig model*/
             var ereg:EReg = ~/["'][\s\r\n]*\+[\s\r\n]*["']/g;
             resource = ereg.replace(resource, "");            
-            var stmt = YangParser.parse(resource);
+            var stmtRaw = YangParser.parse(resource);
             
-            if (stmt.keyword != "module" && stmt.keyword != "submodule") throw ('$infile does not define module/submodule');    
-            if (ctx.mo[stmt.arg] !=  null) throw('${stmt.keyword} ${stmt.arg} in $infile conflict with ${ctx.mo[stmt.arg].i_path}');    
-            setParent(stmt);
-            stmt.i_path = infile;
-            ctx.mo[stmt.arg] = stmt;    
+            if (stmtRaw.keyword != "module" && stmtRaw.keyword != "submodule") throw ('$infile does not define module/submodule');    
+            if (ctx.mo[stmtRaw.arg] !=  null) throw('${stmtRaw.keyword} ${stmtRaw.arg} in $infile conflict with ${ctx.mo[stmtRaw.arg].path}');    
+            
+            var stmt = buildStmt(stmtRaw);
+            stmt.path = infile;
+            ctx.mo[stmtRaw.arg] = stmt;    
         } catch (e:String) {
             trace(e);
         } catch (e:Dynamic) {

@@ -6,9 +6,9 @@ class TestParser {
         var c = new Context();
         var p = new Parser(c);
         p.parse("./models");    
-		for (st in c.mo) {
-			var visitor = new AstGrammerVisitor();
-			visitor.visit(st);
-		}
+        for (st in c.mo) {
+            var visitor = new AstGrammerVisitor();
+            visitor.visit(st);
+        }
     }
 }
