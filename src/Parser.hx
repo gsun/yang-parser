@@ -13,7 +13,14 @@ class Parser {
     public function new(ctx:Context) {
         this.ctx = ctx;
     }
-        
+
+    public function setParent(stmt:Stmt, parent:Stmt=null) {
+        stmt.parent = parent;         
+        for (s in stmt.subs) {
+            setParent(s, stmt);
+        } 
+    }
+    
     function parseFile(infile:String) {
         try {
             var resource = File.getContent(infile);
@@ -25,6 +32,7 @@ class Parser {
             
             if (stmt.keyword != "module" && stmt.keyword != "submodule") throw ('$infile does not define module/submodule');    
             if (ctx.mo[stmt.arg] !=  null) throw('${stmt.keyword} ${stmt.arg} in $infile conflict with ${ctx.mo[stmt.arg].i_path}');    
+            setParent(stmt);
             stmt.i_path = infile;
             ctx.mo[stmt.arg] = stmt;    
         } catch (e:String) {
