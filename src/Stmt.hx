@@ -35,9 +35,7 @@ class Stmt implements Dynamic {
     public var top(get, never):Stmt;
     function get_top() {
         var p = this;
-        while ((p != null) && 
-               (p.keyword != "module") && 
-               (p.keyword != "submodule")) {
+        while (p.parent != null) {
             p = p.parent;
         }
         return p;
