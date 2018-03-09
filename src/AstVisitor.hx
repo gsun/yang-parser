@@ -14,4 +14,22 @@ class AstVisitor implements Dynamic<Stmt> {
             visit(s, context);
         }
     }
+    
+    function assertTrue( b:Bool, msg:String, stmt:Stmt ) {
+        if (b != true){
+            trace('${msg} in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+    }
+    
+    function assertFalse( b:Bool, msg:String, stmt:Stmt ) {
+        if (b == true){
+            trace('${msg} in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+    }
+    
+    function assertEquals<T>( expected:T , actual:T,  msg:String, stmt:Stmt) {
+        if (expected != actual){
+            trace('${msg} in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+    }
 }
