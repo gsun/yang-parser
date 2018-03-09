@@ -1,4 +1,5 @@
 import AstVisitor;
+using Lambda;
 
 class AstGrammerVisitor extends AstVisitor {
     
@@ -69,6 +70,26 @@ class AstGrammerVisitor extends AstVisitor {
         if (stmt.reference_stmt.length > 1) trace('reference_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.status_stmt.length > 1) trace('status_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.config_stmt.length > 1) trace('config_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        var typedef_stmt:Array<Stmt> = stmt.typedef_stmt;
+        for (t in typedef_stmt) {
+            var count = typedef_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var grouping_stmt:Array<Stmt> = stmt.grouping_stmt;
+        for (t in grouping_stmt) {
+            var count = grouping_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_typedef_stmt:Array<Stmt> = stmt.top.typedef_stmt;
+        for (t in top_typedef_stmt) {
+            var found = typedef_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_grouping_stmt:Array<Stmt> = stmt.top.grouping_stmt;
+        for (t in top_grouping_stmt) {
+            var found = grouping_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
     }
     
     public function default_stmt(stmt:Stmt, context:Dynamic) {
@@ -131,6 +152,26 @@ class AstGrammerVisitor extends AstVisitor {
         if (stmt.description_stmt.length > 1) trace('description_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.reference_stmt.length > 1) trace('reference_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.status_stmt.length > 1) trace('status_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        var typedef_stmt:Array<Stmt> = stmt.typedef_stmt;
+        for (t in typedef_stmt) {
+            var count = typedef_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var grouping_stmt:Array<Stmt> = stmt.grouping_stmt;
+        for (t in grouping_stmt) {
+            var count = grouping_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_typedef_stmt:Array<Stmt> = stmt.top.typedef_stmt;
+        for (t in top_typedef_stmt) {
+            var found = typedef_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_grouping_stmt:Array<Stmt> = stmt.top.grouping_stmt;
+        for (t in top_grouping_stmt) {
+            var found = grouping_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
     }
 
     public function identity_stmt(stmt:Stmt, context:Dynamic) {
@@ -154,7 +195,26 @@ class AstGrammerVisitor extends AstVisitor {
     }   
     
     public function input_stmt(stmt:Stmt, context:Dynamic) {
-
+        var typedef_stmt:Array<Stmt> = stmt.typedef_stmt;
+        for (t in typedef_stmt) {
+            var count = typedef_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var grouping_stmt:Array<Stmt> = stmt.grouping_stmt;
+        for (t in grouping_stmt) {
+            var count = grouping_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_typedef_stmt:Array<Stmt> = stmt.top.typedef_stmt;
+        for (t in top_typedef_stmt) {
+            var found = typedef_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_grouping_stmt:Array<Stmt> = stmt.top.grouping_stmt;
+        for (t in top_grouping_stmt) {
+            var found = grouping_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
     }
     
     public function key_stmt(stmt:Stmt, context:Dynamic) {
@@ -202,6 +262,26 @@ class AstGrammerVisitor extends AstVisitor {
         if (stmt.config_stmt.length > 1) trace('config_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.max_elements_stmt.length > 1) trace('max_elements_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.min_elements_stmt.length > 1) trace('min_elements_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        var typedef_stmt:Array<Stmt> = stmt.typedef_stmt;
+        for (t in typedef_stmt) {
+            var count = typedef_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var grouping_stmt:Array<Stmt> = stmt.grouping_stmt;
+        for (t in grouping_stmt) {
+            var count = grouping_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_typedef_stmt:Array<Stmt> = stmt.top.typedef_stmt;
+        for (t in top_typedef_stmt) {
+            var found = typedef_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_grouping_stmt:Array<Stmt> = stmt.top.grouping_stmt;
+        for (t in top_grouping_stmt) {
+            var found = grouping_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
     }
     
     public function mandatory_stmt(stmt:Stmt, context:Dynamic) {
@@ -224,6 +304,32 @@ class AstGrammerVisitor extends AstVisitor {
         if (stmt.contact_stmt.length > 1) trace('contact_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.description_stmt.length > 1) trace('description_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.reference_stmt.length > 1) trace('reference_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        
+        var typedef_stmt:Array<Stmt> = stmt.typedef_stmt;
+        for (t in typedef_stmt) {
+            var count = typedef_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var grouping_stmt:Array<Stmt> = stmt.grouping_stmt;
+        for (t in grouping_stmt) {
+            var count = grouping_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var feature_stmt:Array<Stmt> = stmt.feature_stmt;
+        for (t in feature_stmt) {
+            var count = feature_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('feature_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var identity_stmt:Array<Stmt> = stmt.identity_stmt;
+        for (t in identity_stmt) {
+            var count = identity_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('identity_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var extension_stmt:Array<Stmt> = stmt.extension_stmt;
+        for (t in extension_stmt) {
+            var count = extension_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('extension_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
     }
     
     public function must_stmt(stmt:Stmt, context:Dynamic) {
@@ -238,7 +344,26 @@ class AstGrammerVisitor extends AstVisitor {
     }
 
     public function notification_stmt(stmt:Stmt, context:Dynamic) {
-
+        var typedef_stmt:Array<Stmt> = stmt.typedef_stmt;
+        for (t in typedef_stmt) {
+            var count = typedef_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var grouping_stmt:Array<Stmt> = stmt.grouping_stmt;
+        for (t in grouping_stmt) {
+            var count = grouping_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_typedef_stmt:Array<Stmt> = stmt.top.typedef_stmt;
+        for (t in top_typedef_stmt) {
+            var found = typedef_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_grouping_stmt:Array<Stmt> = stmt.top.grouping_stmt;
+        for (t in top_grouping_stmt) {
+            var found = grouping_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
     }
     
     public function ordered_by_stmt(stmt:Stmt, context:Dynamic) {
@@ -250,7 +375,26 @@ class AstGrammerVisitor extends AstVisitor {
     }
     
     public function output_stmt(stmt:Stmt, context:Dynamic) {
-
+        var typedef_stmt:Array<Stmt> = stmt.typedef_stmt;
+        for (t in typedef_stmt) {
+            var count = typedef_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var grouping_stmt:Array<Stmt> = stmt.grouping_stmt;
+        for (t in grouping_stmt) {
+            var count = grouping_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_typedef_stmt:Array<Stmt> = stmt.top.typedef_stmt;
+        for (t in top_typedef_stmt) {
+            var found = typedef_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_grouping_stmt:Array<Stmt> = stmt.top.grouping_stmt;
+        for (t in top_grouping_stmt) {
+            var found = grouping_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
     }   
     
     public function path_stmt(stmt:Stmt, context:Dynamic) {
@@ -317,6 +461,26 @@ class AstGrammerVisitor extends AstVisitor {
         if (stmt.description_stmt.length > 1) trace('description_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.input_stmt.length > 1) trace('input_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.output_stmt.length > 1) trace('output_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        var typedef_stmt:Array<Stmt> = stmt.typedef_stmt;
+        for (t in typedef_stmt) {
+            var count = typedef_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var grouping_stmt:Array<Stmt> = stmt.grouping_stmt;
+        for (t in grouping_stmt) {
+            var count = grouping_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_typedef_stmt:Array<Stmt> = stmt.top.typedef_stmt;
+        for (t in top_typedef_stmt) {
+            var found = typedef_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var top_grouping_stmt:Array<Stmt> = stmt.top.grouping_stmt;
+        for (t in top_grouping_stmt) {
+            var found = grouping_stmt.exists(function(x) { return (t.arg == x.arg);});
+            if (found) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
     }   
     
     public function status_stmt(stmt:Stmt, context:Dynamic) {
@@ -330,6 +494,32 @@ class AstGrammerVisitor extends AstVisitor {
         if (stmt.contact_stmt.length > 1) trace('contact_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.description_stmt.length > 1) trace('description_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
         if (stmt.reference_stmt.length > 1) trace('reference_stmt error in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        
+        var typedef_stmt:Array<Stmt> = stmt.typedef_stmt;
+        for (t in typedef_stmt) {
+            var count = typedef_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('typedef_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var grouping_stmt:Array<Stmt> = stmt.grouping_stmt;
+        for (t in grouping_stmt) {
+            var count = grouping_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('grouping_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var feature_stmt:Array<Stmt> = stmt.feature_stmt;
+        for (t in feature_stmt) {
+            var count = feature_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('feature_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var identity_stmt:Array<Stmt> = stmt.identity_stmt;
+        for (t in identity_stmt) {
+            var count = identity_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('identity_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
+        var extension_stmt:Array<Stmt> = stmt.extension_stmt;
+        for (t in extension_stmt) {
+            var count = extension_stmt.count(function(x) { return (t.arg == x.arg);});
+            if (count > 1) trace('extension_stmt error: name overlap in ${stmt.type} ${stmt.arg} location ${stmt.location}');
+        }
     }   
     
     public function type_stmt(stmt:Stmt, context:Dynamic) {
