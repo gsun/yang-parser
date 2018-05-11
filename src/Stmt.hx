@@ -24,13 +24,15 @@ abstract StmtArray(Array<Stmt>) from Array<Stmt> to Array<Stmt> {
     }   
 }
 
-class Stmt implements Dynamic {
+class Stmt implements Dynamic<Array<Stmt>> {
     public var type:String;
     public var keyword:String;
     public var arg:String;
     public var subs:Array<Stmt>;
     public var location:Location;  
 
+	public var dict:Map<String, String>;
+	public var ctx:Context;
     public var parent:Stmt;
     public var top(get, never):Stmt;
     function get_top() {
@@ -49,7 +51,11 @@ class Stmt implements Dynamic {
     }
     
     public function new() {
+		ctx = null;
         parent = null;
         subs = [];
+		dict = new Map();
     }
+    
+    
 }

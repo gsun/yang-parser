@@ -28,6 +28,7 @@ class Parser {
         stmt.keyword = raw.keyword;
         stmt.arg = raw.arg;
         stmt.location = raw.location;
+		stmt.ctx = ctx;
         for (s in raw.subs) {
             var child = buildStmt(s);
             child.parent = stmt;
@@ -49,7 +50,7 @@ class Parser {
             if (ctx.mo[stmtRaw.arg] !=  null) throw('${stmtRaw.keyword} ${stmtRaw.arg} in $infile conflict with ${ctx.mo[stmtRaw.arg].path}');    
             
             var stmt = buildStmt(stmtRaw);
-            stmt.path = infile;
+            stmt.dict["path"] = infile;
             ctx.mo[stmtRaw.arg] = stmt;    
         } catch (e:String) {
             trace(e);
