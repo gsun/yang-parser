@@ -37,7 +37,7 @@ class Parser {
         return stmt;
     }
     
-    function parseFile(infile:String) {
+    function parseYangFile(infile:String) {
         try {
             var resource = File.getContent(infile);
             
@@ -62,6 +62,28 @@ class Parser {
             }
         }       
     }
+	
+    function parseYinFile(infile:String) {
+        try {
+            var resource = File.getContent(infile);
+                      
+            var stmt = YinParser.parse(Xml.parse(resource));
+            
+            if (stmt.keyword != "module" && stmt.keyword != "submodule") throw ('$infile does not define module/submodule');    
+            if (ctx.mo[stmt.arg] !=  null) throw('${stmt.keyword} ${stmt.arg} in $infile conflict with ${ctx.mo[stmt.arg].dict["path"]}');    
+            
+            stmt.dict["path"] = infile;
+            ctx.mo[stmt.arg] = stmt;    
+        } catch (e:String) {
+            trace(e);
+        } catch (e:Dynamic) {
+            if (e.location != null) {
+                throw(e.location.start.line + ":" + e.location.start.column + ": " + e.message);
+            } else {
+                throw(e.message);
+            }
+        }       
+    }
     
     public function parse(path:String) {
         try {
@@ -71,7 +93,11 @@ class Parser {
                   parse(path + '/' + entry);
                 }
             } else {
-                if (Path.extension(path) == "yang") parseFile(path);
+				if (ctx.yin == false) {
+                    if (Path.extension(path) == "yang") parseYangFile(path);
+				} else {
+					if (Path.extension(path) == "yin") parseYinFile(path);
+				}
             }
         } catch (e:String) {
             trace(e);

@@ -8,7 +8,7 @@ class TestParser {
         p.parse("./models");    
         for (st in c.mo) {
             var visitor = new AstGrammerVisitor();
-            visitor.visit(st);
+            visitor.visit(st, c);
         }
     }
 }

@@ -5,6 +5,13 @@
 -js bin\TestParser.js
 -lib hxnodejs
 
+--next
+-dce no
+-cp src
+-cp test
+-main TestYinParser 
+-js bin\TestYinParser.js
+-lib hxnodejs
 
 --next
 -cmd copy src\yang.js bin\yang.js
