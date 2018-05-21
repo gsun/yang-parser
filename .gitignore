@@ -10,6 +10,8 @@ Desktop.ini
 *.yang
 *.png
 *.gif
+*.js
+*.yin
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/

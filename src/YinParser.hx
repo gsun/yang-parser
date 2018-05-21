@@ -47,7 +47,7 @@ class YinParser {
 				 stmt.arg = ii.get("name");
 				 parent.subs.push(stmt);
 			 case "augment":
-				 stmt.type = "augment_stmt";  
+				 stmt.type = parent.type == "uses_stmt"?"uses_augment_stmt":"augment_stmt";  
 				 stmt.arg = ii.get("target-node");
 				 parent.subs.push(stmt);			 
 			 case "base":

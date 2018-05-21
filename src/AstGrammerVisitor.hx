@@ -251,6 +251,7 @@ class AstGrammerVisitor extends AstVisitor {
 		for (i in stmt.import_stmt) {
 			var m = stmt.ctx.mo[i.arg];
 			assertTrue(m != null, 'import_stmt ${i.arg} exist-error ', stmt);
+			assertTrue(m.keyword == "module", 'import_stmt ${i.arg} type-error ', stmt);
 		}
 		
 		for (i in stmt.include_stmt) {
