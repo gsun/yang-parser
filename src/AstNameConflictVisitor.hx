@@ -1,7 +1,7 @@
 import AstVisitor;
 using Lambda;
 
-class AstNameConfilctVisitor extends AstVisitor {
+class AstNameConflictVisitor extends AstVisitor {
         
     public function container_stmt(stmt:Stmt, context:Dynamic) {      
         nameConflict(stmt.typedef_stmt, stmt.typedef_stmt, stmt);

@@ -104,11 +104,7 @@ class AstStmtCountVisitor extends AstVisitor {
         assertTrue(stmt.reference_stmt.length <= 1, 'reference_stmt count-error ', stmt);
         assertTrue(stmt.status_stmt.length <= 1, 'status_stmt count-error ', stmt);
     }
-    
-    public function if_feature_stmt(stmt:Stmt, context:Dynamic) {
-
-    }
-    
+        
     public function import_stmt(stmt:Stmt, context:Dynamic) {
         assertTrue(stmt.prefix_stmt.length == 1, 'prefix_stmt error ', stmt);
         assertTrue(stmt.revision_date_stmt.length <= 1, 'revision_date_stmt count-error ', stmt);
@@ -116,7 +112,6 @@ class AstStmtCountVisitor extends AstVisitor {
     
     public function include_stmt(stmt:Stmt, context:Dynamic) {
         assertTrue(stmt.revision_date_stmt.length <= 1, 'revision_date_stmt count-error ', stmt);
-
     }   
     
     public function leaf_stmt(stmt:Stmt, context:Dynamic) {
