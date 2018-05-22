@@ -6,16 +6,17 @@ class AstUsesGroupVisitor extends AstVisitor {
     public function uses_stmt(stmt:Stmt, context:Dynamic) {
 		var local = true;
 		var prefix;
-		var name = stmt.arg;		
+		var arg = stmt.arg;		
 		if (stmt.arg.indexOf(':') != -1) {
 			var prefixName:Array<String> = stmt.arg.split(':');
 			prefix = prefixName[0];
-			name = prefixName[1];
+			arg = prefixName[1];
 			if (stmt.top.type == 'module_stmt') {
 				if (stmt.top.prefix_stmt[0].arg != prefix) {
 				    local = false;
 				}
-			} else {
+			}
+			if (stmt.top.type == 'submodule_stmt') {
 				var belongs_to = stmt.top.belongs_to_stmt[0];
 				if (belongs_to.prefix_stmt[0].arg != prefix) {
 					local = false;
@@ -27,7 +28,7 @@ class AstUsesGroupVisitor extends AstVisitor {
 			var parent = stmt.parent;
 			while (parent != null) {
 				for (g in parent.grouping_stmt) {
-					if (g.arg == name) {
+					if (g.arg == arg) {
 						found = true;
 						break;
 					}
@@ -40,7 +41,7 @@ class AstUsesGroupVisitor extends AstVisitor {
 					var sub = stmt.ctx.mo[i.arg];
 					if (sub != null) {
 						for (g in sub.grouping_stmt) {
-							if (g.arg == name) {
+							if (g.arg == arg) {
 								found = true;
 								break;
 							}

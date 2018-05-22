@@ -26,6 +26,9 @@ class TestParser {
             var visitor = new AstUsesGroupVisitor();
             visitor.visit(st, c);
         }
-		
+        for (st in c.mo) {
+            var visitor = new AstGroupingRecursionVisitor();
+            visitor.visit(st, c);
+        }		
     }
 }

@@ -4,6 +4,7 @@ using Lambda;
 class AstGroupingRecursionVisitor extends AstVisitor {  
     var group:List<String>;
     public function new() {
+		super();
 		group = new List();
 	}      
     public function grouping_stmt(stmt:Stmt, context:Dynamic) {
@@ -13,7 +14,7 @@ class AstGroupingRecursionVisitor extends AstVisitor {
 			visitor.group = group.list();
 			visitor.visit(s);
 		}
-		group.pop(stmt.arg);
+		group.pop();
     } 
 
     public function uses_stmt(stmt:Stmt, context:Dynamic) {
