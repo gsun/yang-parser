@@ -22,15 +22,16 @@ class Parser {
         this.ctx = ctx;
     }
 
-    public function buildStmt(raw:StmtRaw):Stmt {
+    public function buildStmt(raw:StmtRaw, path:String):Stmt {
         var stmt = new Stmt();
         stmt.type = raw.type;
         stmt.keyword = raw.keyword;
         stmt.arg = raw.arg;
         stmt.location = raw.location;
 		stmt.ctx = ctx;
+		stmt.path = path;
         for (s in raw.subs) {
-            var child = buildStmt(s);
+            var child = buildStmt(s, path);
             child.parent = stmt;
             stmt.subs.push(child);
         } 
@@ -49,8 +50,7 @@ class Parser {
             if (stmtRaw.keyword != "module" && stmtRaw.keyword != "submodule") throw ('$infile does not define module/submodule');    
             if (ctx.mo[stmtRaw.arg] !=  null) throw('${stmtRaw.keyword} ${stmtRaw.arg} in $infile conflict with ${ctx.mo[stmtRaw.arg].path}');    
             
-            var stmt = buildStmt(stmtRaw);
-            stmt.dict["path"] = infile;
+            var stmt = buildStmt(stmtRaw, infile);
             ctx.mo[stmtRaw.arg] = stmt;    
         } catch (e:String) {
             trace(e);
@@ -103,4 +103,35 @@ class Parser {
             trace(e);
         }   
     }
+	
+	public function preProcess() {
+		for (v in ctx.mo) {
+			if (v.keyword == "submodule" && v.belongs_to.length == 1) {
+				var m = ctx.mo[v.belongs_to[0].arg];
+				if (m != null) {
+					for (i in m.include_stmt) {
+						if (i.arg == v.arg) {
+							mergeInclude(m, v);
+                            break;							
+						}
+					}
+				}
+			}
+		}
+		for (k in ctx.mo.keys()) {
+			var module = mo[k];
+			if (module.keyword == "submodule") {
+				ctx.mo.remove(k);
+			}
+		}
+	}
+	
+	public function mergeInclude(main:Stmt, child:Stmt) {
+	}
+	
+	public function process() {
+	}
+
+	public function postProcess() {
+	}	
 }

@@ -20,7 +20,6 @@ class AstImportVisitor extends AstVisitor {
 			    var p:Stmt = stmt.ctx.mo[sub.belongs_to_stmt[0].arg];
 			    assertTrue(stmt == p, 'include_stmt ${i.arg} belongs-to-error', stmt);				
 			}
-
 		}
     }
 }

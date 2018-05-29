@@ -31,6 +31,7 @@ class Stmt implements Dynamic<Array<Stmt>> {
     public var subs:Array<Stmt>;
     public var location:Location;  
 
+	public var path:String;
 	public var dict:Map<String, String>;
 	public var ctx:Context;
     public var parent:Stmt;
