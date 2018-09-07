@@ -1,13 +1,14 @@
 import Stmt;
 
 class YinParser {
-	public static function parse(e:Xml) :Stmt {
+	public static function parse(e:Xml, path:String) :Stmt {
 		var fast = new haxe.xml.Fast(e);
 		if (fast.hasNode.module) {
 	        var stmt = new Stmt();
 	        stmt.keyword = 'module';
 			stmt.type = 'module_stmt';
 			stmt.arg = fast.node.module.att.name;
+			stmt.path = path;
 			parseSubs(fast.node.module.x, stmt);
 			return stmt;
 		} else if (fast.hasNode.submodule) {
@@ -15,6 +16,7 @@ class YinParser {
 	        stmt.keyword = 'submodule';
 			stmt.type = 'submodule_stmt';
 			stmt.arg = fast.node.submodule.att.name;
+			stmt.path = path;
 			parseSubs(fast.node.submodule.x, stmt);
 			return stmt;
 		} else {
@@ -28,6 +30,7 @@ class YinParser {
 			var stmt = new Stmt();
 			stmt.parent = parent;
 			stmt.keyword = ii.nodeName;
+			stmt.path = parent.path;
 			
 			switch (stmt.keyword) {
 			 case "action":

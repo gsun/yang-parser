@@ -67,12 +67,11 @@ class Parser {
         try {
             var resource = File.getContent(infile);
                       
-            var stmt = YinParser.parse(Xml.parse(resource));
+            var stmt = YinParser.parse(Xml.parse(resource), infile);
             
             if (stmt.keyword != "module" && stmt.keyword != "submodule") throw ('$infile does not define module/submodule');    
-            if (ctx.mo[stmt.arg] !=  null) throw('${stmt.keyword} ${stmt.arg} in $infile conflict with ${ctx.mo[stmt.arg].dict["path"]}');    
+            if (ctx.mo[stmt.arg] !=  null) throw('${stmt.keyword} ${stmt.arg} in $infile conflict with ${ctx.mo[stmt.arg].path');    
             
-            stmt.dict["path"] = infile;
             ctx.mo[stmt.arg] = stmt;    
         } catch (e:String) {
             trace(e);
@@ -119,7 +118,7 @@ class Parser {
 			}
 		}
 		for (k in ctx.mo.keys()) {
-			var module = mo[k];
+			var module = ctx.mo[k];
 			if (module.keyword == "submodule") {
 				ctx.mo.remove(k);
 			}
