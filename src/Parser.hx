@@ -7,14 +7,6 @@ extern class YangParser {
     static function parse(grammer:String):StmtRaw;
 }
 
-typedef StmtRaw = {
-    var type:String;
-    var keyword:String;
-    var arg:String;
-    var subs:Array<StmtRaw>;
-    var location:Location;
-}
-
 class Parser {
     public var ctx:Context;
     
@@ -28,8 +20,8 @@ class Parser {
         stmt.keyword = raw.keyword;
         stmt.arg = raw.arg;
         stmt.location = raw.location;
-		stmt.ctx = ctx;
-		stmt.path = path;
+        stmt.ctx = ctx;
+        stmt.path = path;
         for (s in raw.subs) {
             var child = buildStmt(s, path);
             child.parent = stmt;
@@ -62,7 +54,7 @@ class Parser {
             }
         }       
     }
-	
+    
     function parseYinFile(infile:String) {
         try {
             var resource = File.getContent(infile);
@@ -70,7 +62,7 @@ class Parser {
             var stmt = YinParser.parse(Xml.parse(resource), infile);
             
             if (stmt.keyword != "module" && stmt.keyword != "submodule") throw ('$infile does not define module/submodule');    
-            if (ctx.mo[stmt.arg] !=  null) throw('${stmt.keyword} ${stmt.arg} in $infile conflict with ${ctx.mo[stmt.arg].path');    
+            if (ctx.mo[stmt.arg] !=  null) throw('${stmt.keyword} ${stmt.arg} in $infile conflict with ${ctx.mo[stmt.arg].path}');    
             
             ctx.mo[stmt.arg] = stmt;    
         } catch (e:String) {
@@ -92,45 +84,45 @@ class Parser {
                   parse(path + '/' + entry);
                 }
             } else {
-				if (ctx.yin == false) {
+                if (ctx.yin == false) {
                     if (Path.extension(path) == "yang") parseYangFile(path);
-				} else {
-					if (Path.extension(path) == "yin") parseYinFile(path);
-				}
+                } else {
+                    if (Path.extension(path) == "yin") parseYinFile(path);
+                }
             }
         } catch (e:String) {
             trace(e);
         }   
     }
-	
-	public function preProcess() {
-		for (v in ctx.mo) {
-			if (v.keyword == "submodule" && v.belongs_to.length == 1) {
-				var m = ctx.mo[v.belongs_to[0].arg];
-				if (m != null) {
-					for (i in m.include_stmt) {
-						if (i.arg == v.arg) {
-							mergeInclude(m, v);
-                            break;							
-						}
-					}
-				}
-			}
-		}
-		for (k in ctx.mo.keys()) {
-			var module = ctx.mo[k];
-			if (module.keyword == "submodule") {
-				ctx.mo.remove(k);
-			}
-		}
-	}
-	
-	public function mergeInclude(main:Stmt, child:Stmt) {
-	}
-	
-	public function process() {
-	}
+    
+    public function preProcess() {
+        for (v in ctx.mo) {
+            if (v.keyword == "submodule" && v.belongs_to.length == 1) {
+                var m = ctx.mo[v.belongs_to[0].arg];
+                if (m != null) {
+                    for (i in m.include_stmt) {
+                        if (i.arg == v.arg) {
+                            mergeInclude(m, v);
+                            break;                          
+                        }
+                    }
+                }
+            }
+        }
+        for (k in ctx.mo.keys()) {
+            var module = ctx.mo[k];
+            if (module.keyword == "submodule") {
+                ctx.mo.remove(k);
+            }
+        }
+    }
+    
+    public function mergeInclude(main:Stmt, child:Stmt) {
+    }
+    
+    public function process() {
+    }
 
-	public function postProcess() {
-	}	
+    public function postProcess() {
+    }   
 }

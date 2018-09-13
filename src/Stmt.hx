@@ -14,6 +14,14 @@ typedef Location = {
     var end:Loc;
 }
 
+typedef StmtRaw = {
+    var type:String;
+    var keyword:String;
+    var arg:String;
+    var subs:Array<StmtRaw>;
+    var location:Location;
+}
+
 abstract StmtArray(Array<Stmt>) from Array<Stmt> to Array<Stmt> {
 @:arrayAccess
     public inline function get(key:String):Stmt {
@@ -31,9 +39,9 @@ class Stmt implements Dynamic<Array<Stmt>> {
     public var subs:Array<Stmt>;
     public var location:Location;  
 
-	public var path:String;
-	public var dict:Map<String, String>;
-	public var ctx:Context;
+    public var path:String;
+    public var dict:Map<String, String>;
+    public var ctx:Context;
     public var parent:Stmt;
     public var top(get, never):Stmt;
     function get_top() {
@@ -52,10 +60,10 @@ class Stmt implements Dynamic<Array<Stmt>> {
     }
     
     public function new() {
-		ctx = null;
+        ctx = null;
         parent = null;
         subs = [];
-		dict = new Map();
+        dict = new Map();
     }
     
     

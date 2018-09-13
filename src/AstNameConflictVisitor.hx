@@ -36,7 +36,7 @@ class AstNameConflictVisitor extends AstVisitor {
         nameConflict(stmt.grouping_stmt, stmt.grouping_stmt, stmt);
         nameConflict(stmt.feature_stmt, stmt.feature_stmt, stmt);
         nameConflict(stmt.identity_stmt, stmt.identity_stmt, stmt);
-        nameConflict(stmt.extension_stmt, stmt.extension_stmt, stmt);		
+        nameConflict(stmt.extension_stmt, stmt.extension_stmt, stmt);       
     }
 
     public function notification_stmt(stmt:Stmt, context:Dynamic) {
