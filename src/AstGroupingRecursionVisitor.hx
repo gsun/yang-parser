@@ -3,10 +3,12 @@ using Lambda;
 
 class AstGroupingRecursionVisitor extends AstVisitor {  
     var group:List<String>;
+    
     public function new() {
         super();
         group = new List();
     }      
+    
     public function grouping_stmt(stmt:Stmt, context:Dynamic) {
         group.push(stmt.arg);
         for (s in stmt.uses_stmt) {

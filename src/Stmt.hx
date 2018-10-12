@@ -65,6 +65,4 @@ class Stmt implements Dynamic<Array<Stmt>> {
         subs = [];
         dict = new Map();
     }
-    
-    
 }
