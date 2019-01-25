@@ -7,6 +7,7 @@ class AstImportVisitor extends AstVisitor {
             var m = stmt.ctx.mo[i.arg];
             assertTrue(m != null, 'import_stmt ${i.arg} exist-error ', stmt);
             assertTrue(m.keyword == "module", 'import_stmt ${i.arg} type-error ', stmt);
+            i.ref = m;
         }
         
         for (i in stmt.include_stmt) {
@@ -20,6 +21,8 @@ class AstImportVisitor extends AstVisitor {
                 var p:Stmt = stmt.ctx.mo[sub.belongs_to_stmt[0].arg];
                 assertTrue(stmt == p, 'include_stmt ${i.arg} belongs-to-error', stmt);              
             }
+            i.ref = sub;
+            sub.ref = stmt;
         }
     }
 }

@@ -39,10 +39,12 @@ class Stmt implements Dynamic<Array<Stmt>> {
     public var subs:Array<Stmt>;
     public var location:Location;  
 
+    public var level:Int; //yang file formatter
     public var path:String;
     public var dict:Map<String, String>;
     public var ctx:Context;
     public var parent:Stmt;
+    public var ref:Stmt;  //the ref to stmt for uses/import/include
     public var top(get, never):Stmt;
     function get_top() {
         var p = this;
@@ -62,6 +64,7 @@ class Stmt implements Dynamic<Array<Stmt>> {
     public function new() {
         ctx = null;
         parent = null;
+        ref = null;
         subs = [];
         dict = new Map();
     }

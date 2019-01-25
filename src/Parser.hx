@@ -14,7 +14,7 @@ class Parser {
         this.ctx = ctx;
     }
 
-    public function buildStmt(raw:StmtRaw, path:String):Stmt {
+    public function buildStmt(raw:StmtRaw, path:String, level:Int=0):Stmt {
         var stmt = new Stmt();
         stmt.type = raw.type;
         stmt.keyword = raw.keyword;
@@ -22,8 +22,9 @@ class Parser {
         stmt.location = raw.location;
         stmt.ctx = ctx;
         stmt.path = path;
+        stmt.level = level;
         for (s in raw.subs) {
-            var child = buildStmt(s, path);
+            var child = buildStmt(s, path, level+1);
             child.parent = stmt;
             stmt.subs.push(child);
         } 
