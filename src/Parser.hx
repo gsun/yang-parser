@@ -26,7 +26,7 @@ class Parser {
         for (s in raw.subs) {
             var child = buildStmt(s, path, level+1);
             child.parent = stmt;
-            stmt.subs.push(child);
+            stmt.subs.add(child);
         } 
         return stmt;
     }
@@ -92,16 +92,16 @@ class Parser {
                 }
             }
         } catch (e:String) {
-            trace(e);
+            trace(path + " " + e);
         }   
     }
     
     public function preProcess() {
         for (v in ctx.mo) {
-            if (v.keyword == "submodule" && v.belongs_to.length == 1) {
-                var m = ctx.mo[v.belongs_to[0].arg];
+            if (v.keyword == "submodule" && v.findSubs("belongs_to").length == 1) {
+                var m = ctx.mo[v.findSubs("belongs_to").first().arg];
                 if (m != null) {
-                    for (i in m.include_stmt) {
+                    for (i in m.findSubs("include_stmt")) {
                         if (i.arg == v.arg) {
                             mergeInclude(m, v);
                             break;                          

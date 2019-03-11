@@ -1,6 +1,6 @@
 import Stmt;
 
-class AstVisitor implements Dynamic<Stmt> {
+class AstVisitor {
     
     public function new() {}
     

@@ -2,7 +2,7 @@ import Stmt;
 
 class YinParser {
     public static function parse(e:Xml, path:String) :Stmt {
-        var fast = new haxe.xml.Fast(e);
+        var fast = new haxe.xml.Access(e);
         if (fast.hasNode.module) {
             var stmt = new Stmt();
             stmt.keyword = 'module';
@@ -79,7 +79,7 @@ class YinParser {
                  parent.subs.push(stmt);             
              case "contact":
                  stmt.type = "contact_stmt";
-                 var fast = new haxe.xml.Fast(ii);  
+                 var fast = new haxe.xml.Access(ii);  
                  stmt.arg = fast.node.text.innerData;   
                  parent.subs.push(stmt);
                  continue;
@@ -93,7 +93,7 @@ class YinParser {
                  parent.subs.push(stmt);
              case "description":
                  stmt.type = "description_stmt";   
-                 var fast = new haxe.xml.Fast(ii);  
+                 var fast = new haxe.xml.Access(ii);  
                  stmt.arg = fast.node.text.innerData;   
                  parent.subs.push(stmt);
                  continue;               
@@ -115,7 +115,7 @@ class YinParser {
                  parent.subs.push(stmt);             
              case "error-message":
                  stmt.type = "error_message_stmt";
-                 var fast = new haxe.xml.Fast(ii);  
+                 var fast = new haxe.xml.Access(ii);  
                  stmt.arg = fast.node.value.innerData;  
                  parent.subs.push(stmt);
                  continue;
@@ -211,7 +211,7 @@ class YinParser {
                  parent.subs.push(stmt);
              case "organization":
                  stmt.type = "organization_stmt";  
-                 var fast = new haxe.xml.Fast(ii);  
+                 var fast = new haxe.xml.Access(ii);  
                  stmt.arg = fast.node.text.innerData;   
                  parent.subs.push(stmt);    
                  continue;               
@@ -244,7 +244,7 @@ class YinParser {
                  parent.subs.push(stmt);
              case "reference":
                  stmt.type = "reference_stmt";   
-                 var fast = new haxe.xml.Fast(ii);  
+                 var fast = new haxe.xml.Access(ii);  
                  stmt.arg = fast.node.text.innerData;   
                  parent.subs.push(stmt);    
                  continue;               

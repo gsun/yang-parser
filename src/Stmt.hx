@@ -1,3 +1,5 @@
+using Lambda;
+
 typedef StmtRevision = {
     var name:String;
     @:optional var revision:String;
@@ -22,21 +24,18 @@ typedef StmtRaw = {
     var location:Location;
 }
 
-abstract StmtArray(Array<Stmt>) from Array<Stmt> to Array<Stmt> {
+abstract StmtArray(List<Stmt>) from List<Stmt> to List<Stmt> {
 @:arrayAccess
-    public inline function get(key:String):Stmt {
-        for (i in this) {
-            if (i.arg == key) return i;
-        }
-        return null;
+    public inline function get(arg:String):Stmt {
+        return this.find(function(ch) { return ch.arg == arg; });
     }   
 }
 
-class Stmt implements Dynamic<Array<Stmt>> {
+class Stmt {
     public var type:String;
     public var keyword:String;
     public var arg:String;
-    public var subs:Array<Stmt>;
+    public var subs:List<Stmt>;
     public var location:Location;  
 
     public var level:Int; //yang file formatter
@@ -54,18 +53,22 @@ class Stmt implements Dynamic<Array<Stmt>> {
         return p;
     }
     
-    //auto resolve the stmt with type and arg, 
-    //for example, st.import_stmt get the array of import stmts,
-    //st.import_stmt["xyz"] get the specific import stmt with arg "xyz".
-    function resolve(type:String) : StmtArray {
-        return [ for (ch in subs) if (ch.type == type) ch ];
+    public function findSubs(type:String) : List<Stmt> {
+        return subs.filter(function(ch) { return ch.type == type;});
+    }
+    public function findSub(type:String, ?arg:String) : Null<Stmt> {
+        if (arg != null) {
+            return subs.find(function(ch) { return (ch.type == type && ch.arg == arg); });
+        } else {
+            return subs.find(function(ch) { return (ch.type == type); });
+        }
     }
     
     public function new() {
         ctx = null;
         parent = null;
         ref = null;
-        subs = [];
+        subs = new List();
         dict = new Map();
     }
 }
