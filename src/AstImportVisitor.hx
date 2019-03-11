@@ -2,7 +2,7 @@ import AstVisitor;
 using Lambda;
 
 class AstImportVisitor extends AstVisitor {
-    public function module_stmt(stmt:Stmt, context:Dynamic) {
+    function module_stmt(stmt:Stmt, context:Dynamic) {
         for (i in stmt.findSubs("import_stmt")) {
             var m = stmt.ctx.mo[i.arg];
             assertTrue(m != null, 'import_stmt ${i.arg} exist-error');

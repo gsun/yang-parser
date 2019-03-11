@@ -3,7 +3,7 @@ using Lambda;
 
 class AstUsesGroupVisitor extends AstVisitor {  
     
-    public function uses_stmt(stmt:Stmt, context:Dynamic) {
+    function uses_stmt(stmt:Stmt, context:Dynamic) {
         var local = true;
         var prefix;
         var arg = stmt.arg;     
@@ -50,7 +50,7 @@ class AstUsesGroupVisitor extends AstVisitor {
                     if (found) break;
                 }
             }
-            assertTrue(found == true, 'uses_stmt ${stmt.arg} local-group-reference-error');
+            assertTrue(found, 'uses_stmt ${stmt.arg} local-group-reference-error');
         } else {
             var prefixName:Array<String> = stmt.arg.split(':');
             var found = false;
@@ -69,7 +69,7 @@ class AstUsesGroupVisitor extends AstVisitor {
                 }
                 if (found) break;
             }   
-            assertTrue(found == true, 'uses_stmt ${stmt.arg} global-group-reference-error');         
+            assertTrue(found, 'uses_stmt ${stmt.arg} global-group-reference-error');         
         }
     }   
 }
