@@ -50,7 +50,7 @@ class AstUsesGroupVisitor extends AstVisitor {
                     if (found) break;
                 }
             }
-            assertTrue(found == true, 'uses_stmt ${stmt.arg} local-group-reference-error ', stmt);
+            assertTrue(found == true, 'uses_stmt ${stmt.arg} local-group-reference-error');
         } else {
             var prefixName:Array<String> = stmt.arg.split(':');
             var found = false;
@@ -58,7 +58,7 @@ class AstUsesGroupVisitor extends AstVisitor {
                 if (m.findSubs("prefix_stmt").length == 1) {
                     if (m.findSub("prefix_stmt").arg == prefixName[0]) {
                         var mo = stmt.ctx.mo[m.arg];
-                        assertTrue(mo != null, 'uses_stmt ${stmt.arg} global-group-module-error ', stmt);
+                        assertTrue(mo != null, 'uses_stmt ${stmt.arg} global-group-module-error');
                         for (g in mo.findSubs("grouping_stmt")) {
                             if (g.arg == prefixName[1]) {
                                 found = true;
@@ -69,7 +69,7 @@ class AstUsesGroupVisitor extends AstVisitor {
                 }
                 if (found) break;
             }   
-            assertTrue(found == true, 'uses_stmt ${stmt.arg} global-group-reference-error ', stmt);         
+            assertTrue(found == true, 'uses_stmt ${stmt.arg} global-group-reference-error');         
         }
     }   
 }

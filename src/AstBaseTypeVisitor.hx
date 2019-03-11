@@ -9,7 +9,7 @@ class AstBaseTypeVisitor extends AstVisitor {
                           "leafref", "identityref", "instance-identifier",
                           "empty", "union"];
         for (t in base_types) {
-            assertTrue(stmt.arg != t, 'typedef_stmt ${stmt.arg} base-type-error ', stmt);
+            assertTrue(stmt.arg != t, 'typedef_stmt ${stmt.arg} base-type-error');
         }
     }   
 }

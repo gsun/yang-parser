@@ -72,7 +72,7 @@ class AstNameConflictVisitor extends AstVisitor {
         var a = stmt.findSubs(type);
         for (t in a) {
             var count = a.count(function(x) { return ((t != x) && (t.arg == x.arg));});
-            assertTrue((count == 0), '${t.type} ${t.arg} name-conflict-error ', stmt);
+            assertTrue((count == 0), '${t.type} ${t.arg} name-conflict-error');
         }
     }
     public function nameTopConflict(stmt:Stmt, type:String) {
@@ -80,7 +80,7 @@ class AstNameConflictVisitor extends AstVisitor {
         var b = stmt.findSubs(type);
         for (t in a) {
             var count = b.count(function(x) { return ((t != x) && (t.arg == x.arg));});
-            assertTrue((count == 0), '${t.type} ${t.arg} name-top-conflict-error ', stmt);
+            assertTrue((count == 0), '${t.type} ${t.arg} name-top-conflict-error');
         }
     }
 }

@@ -21,10 +21,10 @@ class AstGroupingRecursionVisitor extends AstVisitor {
 
     public function uses_stmt(stmt:Stmt, context:Dynamic) {
         if (stmt.arg.indexOf(':') == -1) {
-            assertTrue(group.has(stmt.arg) == false, 'uses_stmt ${stmt.arg} group-recursion-error ', stmt);
+            assertTrue(group.has(stmt.arg) == false, 'uses_stmt ${stmt.arg} group-recursion-error');
         } else {
             var prefixName = stmt.arg.split(':');
-            assertTrue(group.has(prefixName[1]) == false, 'uses_stmt ${stmt.arg} group-recursion-error ', stmt);            
+            assertTrue(group.has(prefixName[1]) == false, 'uses_stmt ${stmt.arg} group-recursion-error');            
         }
     }   
 }
