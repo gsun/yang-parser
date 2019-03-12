@@ -4,14 +4,14 @@ using Lambda;
 class AstImportVisitor extends AstVisitor {
     function module_stmt(stmt:Stmt, context:Dynamic) {
         for (i in stmt.findSubs("import_stmt")) {
-            var m = stmt.ctx.mo[i.arg];
+            var m = stmt.getMo(i.arg);
             assertTrue(m != null, 'import_stmt ${i.arg} exist-error');
             assertEquals(m.keyword, "module", 'import_stmt ${i.arg} type-error');
             i.ref = m;
         }
         
         for (i in stmt.findSubs("include_stmt")) {
-            var sub:Stmt = stmt.ctx.mo[i.arg];
+            var sub:Stmt = stmt.getMo(i.arg);
             assertTrue(sub != null, 'include_stmt ${i.arg} exist-error');
             assertEquals(sub.keyword, "submodule", 'include_stmt ${i.arg} type-error');
             
@@ -28,19 +28,19 @@ class AstImportVisitor extends AstVisitor {
         var belongsto = stmt.findSub("belongs_to_stmt");
         assertTrue(belongsto != null, 'include_stmt ${stmt.arg} belongs-to-error');
         
-        var mo:Stmt = stmt.ctx.mo[belongsto.arg];
+        var mo:Stmt = stmt.getMo(belongsto.arg);
         assertTrue(mo != null, 'include_stmt ${stmt.arg} belongs-to-error');
         belongsto.ref = mo;
         
         for (i in stmt.findSubs("import_stmt")) {
-            var m = stmt.ctx.mo[i.arg];
+            var m = stmt.getMo(i.arg);
             assertTrue(m != null, 'import_stmt ${i.arg} exist-error');
             assertEquals(m.keyword, "module", 'import_stmt ${i.arg} type-error');
             i.ref = m;
         }
         
         for (i in stmt.findSubs("include_stmt")) {
-            var sub:Stmt = stmt.ctx.mo[i.arg];
+            var sub:Stmt = stmt.getMo(i.arg);
             assertTrue(sub != null, 'include_stmt ${i.arg} exist-error');
             assertEquals(sub.keyword, "submodule", 'include_stmt ${i.arg} type-error');
             

@@ -52,10 +52,14 @@ class Stmt {
         }
         return p;
     }
+    public function getMo(type:String):Null<Stmt> {
+        return ctx.mo[type];
+    }
     
     public function findSubs(type:String) : List<Stmt> {
         return subs.filter(function(ch) { return ch.type == type;});
     }
+
     public function findSub(type:String, ?arg:String) : Null<Stmt> {
         if (arg != null) {
             return subs.find(function(ch) { return (ch.type == type && ch.arg == arg); });

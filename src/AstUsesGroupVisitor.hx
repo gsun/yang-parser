@@ -32,7 +32,7 @@ class AstUsesGroupVisitor extends AstVisitor {
             }
             if (stmt.ref ==  null) {  //check the submodule
                 for (i in stmt.top.findSubs("include_stmt")) {
-                    var sub = stmt.ctx.mo[i.arg];
+                    var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'uses_stmt ${stmt.arg} include-module-error');
                     stmt.ref = sub.findSub("grouping_stmt", arg);
                     if (stmt.ref != null) break;
@@ -43,7 +43,7 @@ class AstUsesGroupVisitor extends AstVisitor {
             var prefixName:Array<String> = stmt.arg.split(':');
             for (m in stmt.top.findSubs("import_stmt")) {
                 if (m.findSub("prefix_stmt", prefixName[0]) != null) {
-                    var mo = stmt.ctx.mo[m.arg];
+                    var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'uses_stmt ${stmt.arg} global-group-module-error');
                     stmt.ref = mo.findSub("grouping_stmt", arg);
                     if (stmt.ref != null) break;
