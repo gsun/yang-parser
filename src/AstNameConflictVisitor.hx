@@ -4,68 +4,73 @@ using Lambda;
 class AstNameConflictVisitor extends AstVisitor {
         
     function container_stmt(stmt:Stmt, context:Dynamic) {      
-        nameConflict(stmt, "typedef_stmt");
-        nameConflict(stmt, "grouping_stmt");
-        nameTopConflict(stmt, "typedef_stmt");
-        nameTopConflict(stmt, "grouping_stmt");
+        var types = ["typedef_stmt", "grouping_stmt"]; 
+        for (i in types) {
+            nameConflict(stmt, i);
+            nameTopConflict(stmt, i);
+        }
     }
         
     function grouping_stmt(stmt:Stmt, context:Dynamic) {
-        nameConflict(stmt, "typedef_stmt");
-        nameConflict(stmt, "grouping_stmt");
-        nameTopConflict(stmt, "typedef_stmt");
-        nameTopConflict(stmt, "grouping_stmt");
+        var types = ["typedef_stmt", "grouping_stmt"]; 
+        for (i in types) {
+            nameConflict(stmt, i);
+            nameTopConflict(stmt, i);
+        }
     }
     
     function input_stmt(stmt:Stmt, context:Dynamic) {
-        nameConflict(stmt, "typedef_stmt");
-        nameConflict(stmt, "grouping_stmt");
-        nameTopConflict(stmt, "typedef_stmt");
-        nameTopConflict(stmt, "grouping_stmt");
+        var types = ["typedef_stmt", "grouping_stmt"]; 
+        for (i in types) {
+            nameConflict(stmt, i);
+            nameTopConflict(stmt, i);
+        }
     }
            
     function list_stmt(stmt:Stmt, context:Dynamic) {
-        nameConflict(stmt, "typedef_stmt");
-        nameConflict(stmt, "grouping_stmt");
-        nameTopConflict(stmt, "typedef_stmt");
-        nameTopConflict(stmt, "grouping_stmt");
+        var types = ["typedef_stmt", "grouping_stmt"]; 
+        for (i in types) {
+            nameConflict(stmt, i);
+            nameTopConflict(stmt, i);
+        }
     }
     
     function module_stmt(stmt:Stmt, context:Dynamic) { 
-        nameConflict(stmt, "typedef_stmt");
-        nameConflict(stmt, "grouping_stmt");
-        nameConflict(stmt, "feature_stmt");
-        nameConflict(stmt, "identity_stmt");
-        nameConflict(stmt, "extension_stmt");
+        var types = ["typedef_stmt", "grouping_stmt", "feature_stmt", "identity_stmt", "extension_stmt"]; 
+        for (i in types) {
+            nameConflict(stmt, i);
+        }
     }
 
     function notification_stmt(stmt:Stmt, context:Dynamic) {
-        nameConflict(stmt, "typedef_stmt");
-        nameConflict(stmt, "grouping_stmt");
-        nameTopConflict(stmt, "typedef_stmt");
-        nameTopConflict(stmt, "grouping_stmt");
+        var types = ["typedef_stmt", "grouping_stmt"]; 
+        for (i in types) {
+            nameConflict(stmt, i);
+            nameTopConflict(stmt, i);
+        }
     }
         
     function output_stmt(stmt:Stmt, context:Dynamic) {
-        nameConflict(stmt, "typedef_stmt");
-        nameConflict(stmt, "grouping_stmt");
-        nameConflict(stmt, "typedef_stmt");
-        nameConflict(stmt, "grouping_stmt");
+        var types = ["typedef_stmt", "grouping_stmt"]; 
+        for (i in types) {
+            nameConflict(stmt, i);
+            nameTopConflict(stmt, i);
+        }
     }   
                 
     function rpc_stmt(stmt:Stmt, context:Dynamic) {
-        nameConflict(stmt, "typedef_stmt");
-        nameConflict(stmt, "grouping_stmt");
-        nameConflict(stmt, "typedef_stmt");
-        nameConflict(stmt, "grouping_stmt");
+        var types = ["typedef_stmt", "grouping_stmt"]; 
+        for (i in types) {
+            nameConflict(stmt, i);
+            nameTopConflict(stmt, i);
+        }
     }   
     
     function submodule_stmt(stmt:Stmt, context:Dynamic) {
-        nameConflict(stmt, "typedef_stmt");
-        nameConflict(stmt, "grouping_stmt");
-        nameConflict(stmt, "feature_stmt");
-        nameConflict(stmt, "identity_stmt");
-        nameConflict(stmt, "extension_stmt");
+        var types = ["typedef_stmt", "grouping_stmt", "feature_stmt", "identity_stmt", "extension_stmt"]; 
+        for (i in types) {
+            nameConflict(stmt, i);
+        }
     }   
             
     function nameConflict(stmt:Stmt, type:String) {
