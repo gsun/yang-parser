@@ -6,23 +6,50 @@ class AstImportVisitor extends AstVisitor {
         for (i in stmt.findSubs("import_stmt")) {
             var m = stmt.ctx.mo[i.arg];
             assertTrue(m != null, 'import_stmt ${i.arg} exist-error');
-            assertTrue(m.keyword == "module", 'import_stmt ${i.arg} type-error');
+            assertEquals(m.keyword, "module", 'import_stmt ${i.arg} type-error');
             i.ref = m;
         }
         
         for (i in stmt.findSubs("include_stmt")) {
             var sub:Stmt = stmt.ctx.mo[i.arg];
             assertTrue(sub != null, 'include_stmt ${i.arg} exist-error');
-            assertTrue(sub.keyword == "submodule", 'include_stmt ${i.arg} type-error');
-            if ((stmt.findSub("yang_version_stmt") != null) && (sub.findSub("yang_version_stmt") != null)) {
-                assertTrue(stmt.findSub("yang_version_stmt").arg == sub.findSub("yang_version_stmt").arg, 'include_stmt ${i.arg} version-error');
-            }
-            if (sub.findSubs("belongs_to_stmt").length == 1) {
-                var p:Stmt = stmt.ctx.mo[sub.findSub("belongs_to_stmt").arg];
-                assertTrue(stmt == p, 'include_stmt ${i.arg} belongs-to-error');              
+            assertEquals(sub.keyword, "submodule", 'include_stmt ${i.arg} type-error');
+            
+            var module_version = stmt.findSub("yang_version_stmt");
+            var sub_version = sub.findSub("yang_version_stmt");
+            if (module_version != null && sub_version != null) {
+                assertEquals(module_version.arg, sub_version.arg, 'include_stmt ${i.arg} version-error');
             }
             i.ref = sub;
-            sub.ref = stmt;
+        }
+    }
+    
+    function submodule_stmt(stmt:Stmt, context:Dynamic) {
+        var belongsto = stmt.findSub("belongs_to_stmt");
+        assertTrue(belongsto != null, 'include_stmt ${stmt.arg} belongs-to-error');
+        
+        var mo:Stmt = stmt.ctx.mo[belongsto.arg];
+        assertTrue(mo != null, 'include_stmt ${stmt.arg} belongs-to-error');
+        belongsto.ref = mo;
+        
+        for (i in stmt.findSubs("import_stmt")) {
+            var m = stmt.ctx.mo[i.arg];
+            assertTrue(m != null, 'import_stmt ${i.arg} exist-error');
+            assertEquals(m.keyword, "module", 'import_stmt ${i.arg} type-error');
+            i.ref = m;
+        }
+        
+        for (i in stmt.findSubs("include_stmt")) {
+            var sub:Stmt = stmt.ctx.mo[i.arg];
+            assertTrue(sub != null, 'include_stmt ${i.arg} exist-error');
+            assertEquals(sub.keyword, "submodule", 'include_stmt ${i.arg} type-error');
+            
+            var module_version = stmt.findSub("yang_version_stmt");
+            var sub_version = sub.findSub("yang_version_stmt");
+            if (module_version != null && sub_version != null) {
+                assertEquals(module_version.arg, sub_version.arg, 'include_stmt ${i.arg} version-error');
+            }
+            i.ref = sub;
         }
     }
 }

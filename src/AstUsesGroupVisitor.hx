@@ -12,64 +12,44 @@ class AstUsesGroupVisitor extends AstVisitor {
             prefix = prefixName[0];
             arg = prefixName[1];
             if (stmt.top.type == 'module_stmt') {
-                if (stmt.top.findSub("prefix_stmt").arg != prefix) {
+                if (stmt.top.findSub("prefix_stmt", prefix) == null) {
                     local = false;
                 }
             }
             if (stmt.top.type == 'submodule_stmt') {
                 var belongs_to = stmt.top.findSub("belongs_to_stmt");
-                if (belongs_to.findSub("prefix_stmt").arg != prefix) {
+                if (belongs_to.findSub("prefix_stmt", prefix) == null) {
                     local = false;
                 }
             }
         }
         if (local) {
-            var found = false;
             var parent = stmt.parent;
             while (parent != null) {
-                for (g in parent.findSubs("grouping_stmt")) {
-                    if (g.arg == arg) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (found) break;
+                stmt.ref = parent.findSub("grouping_stmt", arg);
+                if (stmt.ref != null) break;
                 parent = parent.parent;
             }
-            if (!found) {  //check the submodule
+            if (stmt.ref ==  null) {  //check the submodule
                 for (i in stmt.top.findSubs("include_stmt")) {
                     var sub = stmt.ctx.mo[i.arg];
-                    if (sub != null) {
-                        for (g in sub.findSubs("grouping_stmt")) {
-                            if (g.arg == arg) {
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (found) break;
+                    assertTrue(sub != null, 'uses_stmt ${stmt.arg} include-module-error');
+                    stmt.ref = sub.findSub("grouping_stmt", arg);
+                    if (stmt.ref != null) break;
                 }
             }
-            assertTrue(found, 'uses_stmt ${stmt.arg} local-group-reference-error');
+            assertTrue(stmt.ref != null, 'uses_stmt ${stmt.arg} local-group-reference-error');
         } else {
             var prefixName:Array<String> = stmt.arg.split(':');
-            var found = false;
             for (m in stmt.top.findSubs("import_stmt")) {
-                if (m.findSubs("prefix_stmt").length == 1) {
-                    if (m.findSub("prefix_stmt").arg == prefixName[0]) {
-                        var mo = stmt.ctx.mo[m.arg];
-                        assertTrue(mo != null, 'uses_stmt ${stmt.arg} global-group-module-error');
-                        for (g in mo.findSubs("grouping_stmt")) {
-                            if (g.arg == prefixName[1]) {
-                                found = true;
-                                break;
-                            }
-                        }
-                    }
+                if (m.findSub("prefix_stmt", prefixName[0]) != null) {
+                    var mo = stmt.ctx.mo[m.arg];
+                    assertTrue(mo != null, 'uses_stmt ${stmt.arg} global-group-module-error');
+                    stmt.ref = mo.findSub("grouping_stmt", arg);
+                    if (stmt.ref != null) break;
                 }
-                if (found) break;
             }   
-            assertTrue(found, 'uses_stmt ${stmt.arg} global-group-reference-error');         
+            assertTrue(stmt.ref != null, 'uses_stmt ${stmt.arg} global-group-reference-error');         
         }
     }   
 }

@@ -43,7 +43,7 @@ class Stmt {
     public var dict:Map<String, String>;
     public var ctx:Context;
     public var parent:Stmt;
-    public var ref:Stmt;  //the ref to stmt for uses/import/include
+    public var ref:Stmt;  //the ref to stmt for uses/import/include/belongs-to
     public var top(get, never):Stmt;
     function get_top() {
         var p = this;

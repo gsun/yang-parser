@@ -95,35 +95,4 @@ class Parser {
             trace(path + " " + e);
         }   
     }
-    
-    public function preProcess() {
-        for (v in ctx.mo) {
-            if (v.keyword == "submodule" && v.findSubs("belongs_to").length == 1) {
-                var m = ctx.mo[v.findSubs("belongs_to").first().arg];
-                if (m != null) {
-                    for (i in m.findSubs("include_stmt")) {
-                        if (i.arg == v.arg) {
-                            mergeInclude(m, v);
-                            break;                          
-                        }
-                    }
-                }
-            }
-        }
-        for (k in ctx.mo.keys()) {
-            var module = ctx.mo[k];
-            if (module.keyword == "submodule") {
-                ctx.mo.remove(k);
-            }
-        }
-    }
-    
-    public function mergeInclude(main:Stmt, child:Stmt) {
-    }
-    
-    public function process() {
-    }
-
-    public function postProcess() {
-    }   
 }

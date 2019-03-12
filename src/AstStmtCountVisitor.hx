@@ -159,8 +159,8 @@ class AstStmtCountVisitor extends AstVisitor {
     
     function module_stmt(stmt:Stmt, context:Dynamic) {
         assertTrue(stmt.findSubs("yang_version_stmt").length <= 1, 'yang_version_stmt count-error');
-        assertTrue(stmt.findSubs("namespace_stmt").length == 1, 'namespace_stmt count-error');
-        assertTrue(stmt.findSubs("prefix_stmt").length == 1, 'prefix_stmt count-error');
+        assertEquals(stmt.findSubs("namespace_stmt").length, 1, 'namespace_stmt count-error');
+        assertEquals(stmt.findSubs("prefix_stmt").length, 1, 'prefix_stmt count-error');
         assertTrue(stmt.findSubs("organization_stmt").length <= 1, 'organization_stmt count-error');
         assertTrue(stmt.findSubs("contact_stmt").length <= 1, 'contact_stmt count-error');
         assertTrue(stmt.findSubs("description_stmt").length <= 1, 'description_stmt count-error');
@@ -231,7 +231,7 @@ class AstStmtCountVisitor extends AstVisitor {
     }
     
     function typedef_stmt(stmt:Stmt, context:Dynamic) {
-        assertTrue(stmt.findSubs("type_stmt").length == 1, 'type_stmt count-error');
+        assertEquals(stmt.findSubs("type_stmt").length, 1, 'type_stmt count-error');
         assertTrue(stmt.findSubs("units_stmt").length <= 1, 'units_stmt count-error');
         assertTrue(stmt.findSubs("default_stmt").length <= 1, 'default_stmt count-error');
         assertTrue(stmt.findSubs("description_stmt").length <= 1, 'description_stmt count-error');
