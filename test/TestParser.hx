@@ -30,5 +30,13 @@ class TestParser {
             var visitor = new AstGroupingRecursionVisitor();
             visitor.visit(st, c);
         }		
+        for (st in c.mo) {
+            var visitor = new AstFeatureRecursionVisitor();
+            visitor.visit(st, c);
+        }
+        for (st in c.mo) {
+            var visitor = new AstIfFeatureVisitor();
+            visitor.visit(st, c);
+        }		
     }
 }
