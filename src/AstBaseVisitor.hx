@@ -1,9 +1,9 @@
 import AstVisitor;
 using Lambda;
 
-class AstIfFeatureVisitor extends AstVisitor {  
+class AstBaseVisitor extends AstVisitor {  
     
-    function if_feature_stmt(stmt:Stmt, context:Dynamic) {
+    function base_stmt(stmt:Stmt, context:Dynamic) {
         var local = true;
         var prefix;
         var arg = stmt.arg;     
@@ -26,30 +26,30 @@ class AstIfFeatureVisitor extends AstVisitor {
         if (local) {
             var parent = stmt.parent;
             while (parent != null) {
-                stmt.ref = parent.findSub("feature_stmt", arg);
+                stmt.ref = parent.findSub("identity_stmt", arg);
                 if (stmt.ref != null) break;
                 parent = parent.parent;
             }
             if (stmt.ref ==  null) {  //check the submodule
                 for (i in stmt.top.findSubs("include_stmt")) {
                     var sub = stmt.getMo(i.arg);
-                    assertTrue(sub != null, 'if_feature_stmt ${stmt.arg} include-module-error');
-                    stmt.ref = sub.findSub("feature_stmt", arg);
+                    assertTrue(sub != null, 'base_stmt ${stmt.arg} include-module-error');
+                    stmt.ref = sub.findSub("identity_stmt", arg);
                     if (stmt.ref != null) break;
                 }
             }
-            if (stmt.ref == null) stmt.parent.status = Prune;
+            assertTrue(stmt.ref != null, 'base_stmt ${stmt.arg} local-identity-reference-error');
         } else {
             var prefixName:Array<String> = stmt.arg.split(':');
             for (m in stmt.top.findSubs("import_stmt")) {
                 if (m.findSub("prefix_stmt", prefixName[0]) != null) {
                     var mo = stmt.getMo(m.arg);
-                    assertTrue(mo != null, 'if_feature_stmt ${stmt.arg} global-feature-module-error');
-                    stmt.ref = mo.findSub("feature_stmt", arg);
+                    assertTrue(mo != null, 'base_stmt ${stmt.arg} global-identity-module-error');
+                    stmt.ref = mo.findSub("identity_stmt", arg);
                     if (stmt.ref != null) break;
                 }
             }
-            if (stmt.ref == null) stmt.parent.status = Prune;
+            assertTrue(stmt.ref != null, 'base_stmt ${stmt.arg} global-identity-reference-error');      
         }
     }   
 }

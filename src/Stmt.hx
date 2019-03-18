@@ -31,6 +31,13 @@ abstract StmtArray(List<Stmt>) from List<Stmt> to List<Stmt> {
     }   
 }
 
+enum StmtStatus {
+    Current;
+    Prune;
+    Deprecated;
+    Obsolete;
+}
+
 class Stmt {
     public var type:String;
     public var keyword:String;
@@ -38,6 +45,7 @@ class Stmt {
     public var subs:List<Stmt>;
     public var location:Location;  
 
+    public var status:StmtStatus;
     public var level:Int; //yang file formatter
     public var path:String;
     public var dict:Map<String, String>;
@@ -74,5 +82,6 @@ class Stmt {
         ref = null;
         subs = new List();
         dict = new Map();
+        status = Current;
     }
 }

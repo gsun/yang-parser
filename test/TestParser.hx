@@ -38,5 +38,17 @@ class TestParser {
             var visitor = new AstIfFeatureVisitor();
             visitor.visit(st, c);
         }		
+        for (st in c.mo) {
+            var visitor = new AstStatusVisitor();
+            visitor.visit(st, c);
+        }		
+        for (st in c.mo) {
+            var visitor = new AstIdentityRecursionVisitor();
+            visitor.visit(st, c);
+        }		
+        for (st in c.mo) {
+            var visitor = new AstBaseVisitor();
+            visitor.visit(st, c);
+        }		
     }
 }
