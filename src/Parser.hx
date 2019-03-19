@@ -13,23 +13,6 @@ class Parser {
     public function new(ctx:Context) {
         this.ctx = ctx;
     }
-
-    public function buildStmt(raw:StmtRaw, path:String, level:Int=0):Stmt {
-        var stmt = new Stmt();
-        stmt.type = raw.type;
-        stmt.keyword = raw.keyword;
-        stmt.arg = raw.arg;
-        stmt.location = raw.location;
-        stmt.ctx = ctx;
-        stmt.path = path;
-        stmt.level = level;
-        for (s in raw.subs) {
-            var child = buildStmt(s, path, level+1);
-            child.parent = stmt;
-            stmt.subs.add(child);
-        } 
-        return stmt;
-    }
     
     function parseYangFile(infile:String) {
         try {
@@ -43,7 +26,7 @@ class Parser {
             if (stmtRaw.keyword != "module" && stmtRaw.keyword != "submodule") throw ('$infile does not define module/submodule');    
             if (ctx.mo[stmtRaw.arg] !=  null) throw('${stmtRaw.keyword} ${stmtRaw.arg} in $infile conflict with ${ctx.mo[stmtRaw.arg].path}');    
             
-            var stmt = buildStmt(stmtRaw, infile);
+            var stmt = Stmt.buildStmt(stmtRaw, infile, ctx);
             ctx.mo[stmtRaw.arg] = stmt;    
         } catch (e:String) {
             trace(e);

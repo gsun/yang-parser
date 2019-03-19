@@ -24,13 +24,6 @@ typedef StmtRaw = {
     var location:Location;
 }
 
-abstract StmtArray(List<Stmt>) from List<Stmt> to List<Stmt> {
-@:arrayAccess
-    public inline function get(arg:String):Stmt {
-        return this.find(function(ch) { return ch.arg == arg; });
-    }   
-}
-
 enum StmtStatus {
     Current;
     Prune;
@@ -83,5 +76,22 @@ class Stmt {
         subs = new List();
         dict = new Map();
         status = Current;
+    }
+
+    static public function buildStmt(raw:StmtRaw, path:String, ctx:Context, level:Int=0):Stmt {
+        var stmt = new Stmt();
+        stmt.type = raw.type;
+        stmt.keyword = raw.keyword;
+        stmt.arg = raw.arg;
+        stmt.location = raw.location;
+        stmt.ctx = ctx;
+        stmt.path = path;
+        stmt.level = level;
+        for (s in raw.subs) {
+            var child = buildStmt(s, path, ctx, level+1);
+            child.parent = stmt;
+            stmt.subs.add(child);
+        } 
+        return stmt;
     }
 }
