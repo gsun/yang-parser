@@ -24,10 +24,11 @@ class Parser {
             var stmtRaw = YangParser.parse(resource);
             
             if (stmtRaw.keyword != "module" && stmtRaw.keyword != "submodule") throw ('$infile does not define module/submodule');    
-            if (ctx.mo[stmtRaw.arg] !=  null) throw('${stmtRaw.keyword} ${stmtRaw.arg} in $infile conflict with ${ctx.mo[stmtRaw.arg].path}');    
+            if (ctx.mo[stmtRaw.arg] !=  null) throw('${stmtRaw.keyword} ${stmtRaw.arg} in $infile conflict with ${ctx.path[stmtRaw.arg]}');    
             
-            var stmt = Stmt.buildStmt(stmtRaw, infile, ctx);
-            ctx.mo[stmtRaw.arg] = stmt;    
+            var stmt = Stmt.buildStmt(stmtRaw, ctx);
+            ctx.mo[stmtRaw.arg] = stmt;  
+            ctx.path[stmtRaw.arg] = infile;
         } catch (e:String) {
             trace(e);
         } catch (e:Dynamic) {
@@ -43,12 +44,13 @@ class Parser {
         try {
             var resource = File.getContent(infile);
                       
-            var stmt = YinParser.parse(Xml.parse(resource), infile);
+            var stmt = YinParser.parse(Xml.parse(resource), ctx);
             
             if (stmt.keyword != "module" && stmt.keyword != "submodule") throw ('$infile does not define module/submodule');    
-            if (ctx.mo[stmt.arg] !=  null) throw('${stmt.keyword} ${stmt.arg} in $infile conflict with ${ctx.mo[stmt.arg].path}');    
+            if (ctx.mo[stmt.arg] !=  null) throw('${stmt.keyword} ${stmt.arg} in $infile conflict with ${ctx.path[stmt.arg]}');    
             
             ctx.mo[stmt.arg] = stmt;    
+            ctx.path[stmt.arg] = infile;
         } catch (e:String) {
             trace(e);
         } catch (e:Dynamic) {

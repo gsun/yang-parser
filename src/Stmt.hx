@@ -40,7 +40,6 @@ class Stmt {
 
     public var status:StmtStatus;
     public var level:Int; //yang file formatter
-    public var path:String;
     public var dict:Map<String, String>;
     public var ctx:Context;
     public var parent:Stmt;
@@ -53,6 +52,11 @@ class Stmt {
         }
         return p;
     }
+    public var path(get, never):String;
+    function get_path() {
+        return ctx.path[top.arg];
+    }
+
     public function getMo(type:String):Null<Stmt> {
         return ctx.mo[type];
     }
@@ -78,17 +82,16 @@ class Stmt {
         status = Current;
     }
 
-    static public function buildStmt(raw:StmtRaw, path:String, ctx:Context, level:Int=0):Stmt {
+    static public function buildStmt(raw:StmtRaw, ctx:Context, level:Int=0):Stmt {
         var stmt = new Stmt();
         stmt.type = raw.type;
         stmt.keyword = raw.keyword;
         stmt.arg = raw.arg;
         stmt.location = raw.location;
         stmt.ctx = ctx;
-        stmt.path = path;
         stmt.level = level;
         for (s in raw.subs) {
-            var child = buildStmt(s, path, ctx, level+1);
+            var child = buildStmt(s, ctx, level+1);
             child.parent = stmt;
             stmt.subs.add(child);
         } 
