@@ -40,7 +40,6 @@ class Stmt {
 
     public var status:StmtStatus;
     public var level:Int; //yang file formatter
-    public var dict:Map<String, String>;
     public var ctx:Context;
     public var parent:Stmt;
     public var ref:Stmt;  //the ref to stmt for uses/import/include/belongs-to
@@ -52,6 +51,7 @@ class Stmt {
         }
         return p;
     }
+
     public var path(get, never):String;
     function get_path() {
         return ctx.path[top.arg];
@@ -73,12 +73,15 @@ class Stmt {
         }
     }
     
+    public function addSub(sub:Stmt) {
+        subs.push(sub);
+    }
+    
     public function new() {
         ctx = null;
         parent = null;
         ref = null;
         subs = new List();
-        dict = new Map();
         status = Current;
     }
 
@@ -93,7 +96,7 @@ class Stmt {
         for (s in raw.subs) {
             var child = buildStmt(s, ctx, level+1);
             child.parent = stmt;
-            stmt.subs.add(child);
+            stmt.addSub(child);
         } 
         return stmt;
     }
