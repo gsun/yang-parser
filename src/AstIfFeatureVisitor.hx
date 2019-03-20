@@ -27,7 +27,10 @@ class AstIfFeatureVisitor extends AstVisitor {
             var parent = stmt.parent;
             while (parent != null) {
                 stmt.ref = parent.findSub("feature_stmt", arg);
-                if (stmt.ref != null) break;
+                if (stmt.ref != null) {
+                    stmt.ref.addRefed(stmt);
+                    break;
+                }
                 parent = parent.parent;
             }
             if (stmt.ref ==  null) {  //check the submodule
@@ -35,7 +38,10 @@ class AstIfFeatureVisitor extends AstVisitor {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'if_feature_stmt ${stmt.arg} include-module-error');
                     stmt.ref = sub.findSub("feature_stmt", arg);
-                    if (stmt.ref != null) break;
+                    if (stmt.ref != null) {
+                        stmt.ref.addRefed(stmt);
+                        break;
+                    }
                 }
             }
             if (stmt.ref == null) stmt.parent.status = Prune;
@@ -46,7 +52,10 @@ class AstIfFeatureVisitor extends AstVisitor {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'if_feature_stmt ${stmt.arg} global-feature-module-error');
                     stmt.ref = mo.findSub("feature_stmt", arg);
-                    if (stmt.ref != null) break;
+                    if (stmt.ref != null) {
+                        stmt.ref.addRefed(stmt);
+                        break;
+                    }
                 }
             }
             if (stmt.ref == null) stmt.parent.status = Prune;

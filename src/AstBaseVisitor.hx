@@ -27,7 +27,10 @@ class AstBaseVisitor extends AstVisitor {
             var parent = stmt.parent;
             while (parent != null) {
                 stmt.ref = parent.findSub("identity_stmt", arg);
-                if (stmt.ref != null) break;
+                if (stmt.ref != null) {
+                    stmt.ref.addRefed(stmt);
+                    break;
+                }
                 parent = parent.parent;
             }
             if (stmt.ref ==  null) {  //check the submodule
@@ -35,7 +38,10 @@ class AstBaseVisitor extends AstVisitor {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'base_stmt ${stmt.arg} include-module-error');
                     stmt.ref = sub.findSub("identity_stmt", arg);
-                    if (stmt.ref != null) break;
+                    if (stmt.ref != null) {
+                        stmt.ref.addRefed(stmt);
+                        break;
+                    }
                 }
             }
             assertTrue(stmt.ref != null, 'base_stmt ${stmt.arg} local-identity-reference-error');
@@ -46,7 +52,10 @@ class AstBaseVisitor extends AstVisitor {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'base_stmt ${stmt.arg} global-identity-module-error');
                     stmt.ref = mo.findSub("identity_stmt", arg);
-                    if (stmt.ref != null) break;
+                    if (stmt.ref != null) {
+                        stmt.ref.addRefed(stmt);
+                        break;
+                    }
                 }
             }
             assertTrue(stmt.ref != null, 'base_stmt ${stmt.arg} global-identity-reference-error');      

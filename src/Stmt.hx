@@ -43,6 +43,7 @@ class Stmt {
     public var ctx:Context;
     public var parent:Stmt;
     public var ref:Stmt;  //the ref to stmt for uses/import/include/belongs-to
+    public var refed:List<Stmt>;
     public var top(get, never):Stmt;
     function get_top() {
         var p = this;
@@ -74,13 +75,33 @@ class Stmt {
     }
     
     public function addSub(sub:Stmt) {
-        subs.push(sub);
+        subs.add(sub);
+    }
+    
+    public function addRefed(stmt:Stmt) {
+        refed.add(stmt);
+    }
+    
+    public function removeSub(sub:Stmt) {
+        subs.remove(sub);
+        sub.parent = null;
+        sub.ctx = null;
+        sub.ref = null;
+        for (r in sub.refed) {
+            r.ref = null;
+        }
+        sub.refed.clear();
+        for (s in sub.subs) {
+            removeSub(s);
+        }
+        sub.subs.clear();
     }
     
     public function new() {
         ctx = null;
         parent = null;
         ref = null;
+        refed = new List();
         subs = new List();
         status = Current;
     }
