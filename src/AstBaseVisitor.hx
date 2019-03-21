@@ -12,13 +12,13 @@ class AstBaseVisitor extends AstVisitor {
             prefix = prefixName[0];
             arg = prefixName[1];
             if (stmt.top.type == 'module_stmt') {
-                if (stmt.top.findSub("prefix_stmt", prefix) == null) {
+                if (stmt.top.subs.prefix_stmt[prefix] == null) {
                     local = false;
                 }
             }
             if (stmt.top.type == 'submodule_stmt') {
-                var belongs_to = stmt.top.findSub("belongs_to_stmt");
-                if (belongs_to.findSub("prefix_stmt", prefix) == null) {
+                var belongs_to = stmt.top.sub.belongs_to_stmt;
+                if (belongs_to.subs.prefix_stmt[prefix] == null) {
                     local = false;
                 }
             }
@@ -26,7 +26,7 @@ class AstBaseVisitor extends AstVisitor {
         if (local) {
             var parent = stmt.parent;
             while (parent != null) {
-                stmt.ref = parent.findSub("identity_stmt", arg);
+                stmt.ref = parent.subs.identity_stmt[arg];
                 if (stmt.ref != null) {
                     stmt.ref.addRefed(stmt);
                     break;
@@ -34,10 +34,10 @@ class AstBaseVisitor extends AstVisitor {
                 parent = parent.parent;
             }
             if (stmt.ref ==  null) {  //check the submodule
-                for (i in stmt.top.findSubs("include_stmt")) {
+                for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'base_stmt ${stmt.arg} include-module-error');
-                    stmt.ref = sub.findSub("identity_stmt", arg);
+                    stmt.ref = sub.subs.identity_stmt[arg];
                     if (stmt.ref != null) {
                         stmt.ref.addRefed(stmt);
                         break;
@@ -47,11 +47,11 @@ class AstBaseVisitor extends AstVisitor {
             assertTrue(stmt.ref != null, 'base_stmt ${stmt.arg} local-identity-reference-error');
         } else {
             var prefixName:Array<String> = stmt.arg.split(':');
-            for (m in stmt.top.findSubs("import_stmt")) {
-                if (m.findSub("prefix_stmt", prefixName[0]) != null) {
+            for (m in stmt.top.subs.import_stmt.iterator()) {
+                if (m.subs.prefix_stmt[prefixName[0]] != null) {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'base_stmt ${stmt.arg} global-identity-module-error');
-                    stmt.ref = mo.findSub("identity_stmt", arg);
+                    stmt.ref = mo.subs.identity_stmt[arg];
                     if (stmt.ref != null) {
                         stmt.ref.addRefed(stmt);
                         break;

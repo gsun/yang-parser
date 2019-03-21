@@ -11,7 +11,7 @@ class AstIdentityRecursionVisitor extends AstVisitor {
     
     function identity_stmt(stmt:Stmt, context:Dynamic) {
         identity.push(stmt.arg);
-        for (s in stmt.findSubs("base_stmt")) {
+        for (s in stmt.subs.base_stmt.iterator()) {
             var visitor = new AstIdentityRecursionVisitor();
             visitor.identity = identity.list();
             visitor.visit(s);

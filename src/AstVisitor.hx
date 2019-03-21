@@ -12,7 +12,7 @@ class AstVisitor {
             Reflect.callMethod(this, method, [stmt, context]);
         }
         
-        for (s in stmt.subs) {
+        for (s in stmt.subList) {
             visit(s, context);
         }
     }

@@ -12,13 +12,13 @@ class AstUsesGroupVisitor extends AstVisitor {
             prefix = prefixName[0];
             arg = prefixName[1];
             if (stmt.top.type == 'module_stmt') {
-                if (stmt.top.findSub("prefix_stmt", prefix) == null) {
+                if (stmt.top.subs.prefix_stmt[prefix] == null) {
                     local = false;
                 }
             }
             if (stmt.top.type == 'submodule_stmt') {
-                var belongs_to = stmt.top.findSub("belongs_to_stmt");
-                if (belongs_to.findSub("prefix_stmt", prefix) == null) {
+                var belongs_to = stmt.top.sub.belongs_to_stmt;
+                if (belongs_to.subs.prefix_stmt[prefix] == null) {
                     local = false;
                 }
             }
@@ -26,26 +26,26 @@ class AstUsesGroupVisitor extends AstVisitor {
         if (local) {
             var parent = stmt.parent;
             while (parent != null) {
-                stmt.ref = parent.findSub("grouping_stmt", arg);
+                stmt.ref = parent.subs.grouping_stmt[arg];
                 if (stmt.ref != null) break;
                 parent = parent.parent;
             }
             if (stmt.ref ==  null) {  //check the submodule
-                for (i in stmt.top.findSubs("include_stmt")) {
+                for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'uses_stmt ${stmt.arg} include-module-error');
-                    stmt.ref = sub.findSub("grouping_stmt", arg);
+                    stmt.ref = sub.subs.grouping_stmt[arg];
                     if (stmt.ref != null) break;
                 }
             }
             assertTrue(stmt.ref != null, 'uses_stmt ${stmt.arg} local-group-reference-error');
         } else {
             var prefixName:Array<String> = stmt.arg.split(':');
-            for (m in stmt.top.findSubs("import_stmt")) {
-                if (m.findSub("prefix_stmt", prefixName[0]) != null) {
+            for (m in stmt.top.subs.import_stmt.iterator()) {
+                if (m.subs.prefix_stmt[prefixName[0]] != null) {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'uses_stmt ${stmt.arg} global-group-module-error');
-                    stmt.ref = mo.findSub("grouping_stmt", arg);
+                    stmt.ref = mo.subs.grouping_stmt[arg];
                     if (stmt.ref != null) break;
                 }
             }   

@@ -30,12 +30,30 @@ enum StmtStatus {
     Deprecated;
     Obsolete;
 }
+@:forward(iterator, length)
+abstract NodeListAccess(List<Stmt>) from List<Stmt> {
+    @:op(a.b)
+    public function resolve( type : String ) : NodeListAccess {
+        return this.filter(function(e) { return e.type == type;});
+    }
+    @:arrayAccess
+    public inline function get(arg:String): Null<Stmt> {
+        return this.find(function(e) { return e.arg == arg; });
+    }
+}
+
+private abstract NodeAccess(List<Stmt>) from List<Stmt> {
+    @:op(a.b)
+    public function resolve( type : String ) : Null<Stmt> {
+        return this.find(function(e) { return e.type == type;});
+    } 
+}
 
 class Stmt {
     public var type:String;
     public var keyword:String;
     public var arg:String;
-    public var subs:List<Stmt>;
+    public var subList:List<Stmt>;
     public var location:Location;  
 
     public var status:StmtStatus;
@@ -54,28 +72,30 @@ class Stmt {
     }
 
     public var path(get, never):String;
-    function get_path() {
-        return ctx.path[top.arg];
-    }
+    function get_path() return ctx.path[top.arg];
 
-    public function getMo(type:String):Null<Stmt> {
-        return ctx.mo[type];
-    }
+    public function getMo(type:String):Null<Stmt> return ctx.mo[type];
+    
+    public var subs(get, never):NodeListAccess;
+    function get_subs() return subList;
+    
+    public var sub(get, never):NodeAccess;
+    function get_sub() return subList;
     
     public function findSubs(type:String) : List<Stmt> {
-        return subs.filter(function(ch) { return ch.type == type;});
+        return subList.filter(function(ch) { return ch.type == type;});
     }
 
     public function findSub(type:String, ?arg:String) : Null<Stmt> {
         if (arg != null) {
-            return subs.find(function(ch) { return (ch.type == type && ch.arg == arg); });
+            return subList.find(function(ch) { return (ch.type == type && ch.arg == arg); });
         } else {
-            return subs.find(function(ch) { return (ch.type == type); });
+            return subList.find(function(ch) { return (ch.type == type); });
         }
     }
-    
+
     public function addSub(sub:Stmt) {
-        subs.add(sub);
+        subList.add(sub);
     }
     
     public function addRefed(stmt:Stmt) {
@@ -83,7 +103,7 @@ class Stmt {
     }
     
     public function removeSub(sub:Stmt) {
-        subs.remove(sub);
+        subList.remove(sub);
         sub.parent = null;
         sub.ctx = null;
         sub.ref = null;
@@ -91,10 +111,10 @@ class Stmt {
             r.ref = null;
         }
         sub.refed.clear();
-        for (s in sub.subs) {
+        for (s in sub.subList) {
             removeSub(s);
         }
-        sub.subs.clear();
+        sub.subList.clear();
     }
     
     public function new() {
@@ -102,7 +122,7 @@ class Stmt {
         parent = null;
         ref = null;
         refed = new List();
-        subs = new List();
+        subList = new List();
         status = Current;
     }
 
