@@ -17,8 +17,7 @@ class AstBaseVisitor extends AstVisitor {
                 }
             }
             if (stmt.top.type == 'submodule_stmt') {
-                var belongs_to = stmt.top.sub.belongs_to_stmt;
-                if (belongs_to.subs.prefix_stmt[prefix] == null) {
+                if (stmt.top.sub.belongs_to_stmt.subs.prefix_stmt[prefix] == null) {
                     local = false;
                 }
             }

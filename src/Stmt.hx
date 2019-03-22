@@ -31,7 +31,7 @@ enum StmtStatus {
     Obsolete;
 }
 
-@:forward(iterator, length)
+@:forward
 abstract NodeListAccess(List<Stmt>) from List<Stmt> {
     @:op(a.b)
     public function resolve( type : String ) : NodeListAccess {
