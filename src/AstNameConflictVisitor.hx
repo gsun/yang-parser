@@ -55,7 +55,7 @@ class AstNameConflictVisitor extends AstVisitor {
     }
             
     function nameConflict(stmt:Stmt, type:String) {
-        var a = stmt.findSubs(type);
+        var a = stmt.getSubs(type);
         for (t in a) {
             var count = a.count(function(x) { return ((t != x) && (t.arg == x.arg));});
             assertEquals(count, 0, '${t.type} ${t.arg} name-conflict-error');
@@ -63,8 +63,8 @@ class AstNameConflictVisitor extends AstVisitor {
     }
     
     function nameTopConflict(stmt:Stmt, parent:Stmt, type:String) {
-        var a = parent.findSubs(type);
-        var b = stmt.findSubs(type);
+        var a = parent.getSubs(type);
+        var b = stmt.getSubs(type);
         for (t in a) {
             var count = b.count(function(x) { return ((t != x) && (t.arg == x.arg));});
             assertEquals(count, 0, '${t.type} ${t.arg} name-top-conflict-error');

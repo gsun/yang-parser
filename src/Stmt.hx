@@ -30,6 +30,7 @@ enum StmtStatus {
     Deprecated;
     Obsolete;
 }
+
 @:forward(iterator, length)
 abstract NodeListAccess(List<Stmt>) from List<Stmt> {
     @:op(a.b)
@@ -60,7 +61,7 @@ class Stmt {
     public var level:Int; //yang file formatter
     public var ctx:Context;
     public var parent:Stmt;
-    public var ref:Stmt;  //the ref to stmt for uses/import/include/belongs-to
+    public var ref:Stmt;  //the ref to stmt for uses/import/include/belongs-to/type
     public var refed:List<Stmt>;
     public var top(get, never):Stmt;
     function get_top() {
@@ -82,11 +83,11 @@ class Stmt {
     public var sub(get, never):NodeAccess;
     function get_sub() return subList;
     
-    public function findSubs(type:String) : List<Stmt> {
+    public function getSubs(type:String) : List<Stmt> {
         return subList.filter(function(ch) { return ch.type == type;});
     }
 
-    public function findSub(type:String, ?arg:String) : Null<Stmt> {
+    public function getSub(type:String, ?arg:String) : Null<Stmt> {
         if (arg != null) {
             return subList.find(function(ch) { return (ch.type == type && ch.arg == arg); });
         } else {
