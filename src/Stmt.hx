@@ -35,6 +35,7 @@ enum StmtStatus {
 abstract NodeListAccess(List<Stmt>) from List<Stmt> {
     @:op(a.b)
     public function resolve( type : String ) : NodeListAccess {
+        if (!Stmt.validType(type)) throw('invalid stmt type');
         return this.filter(function(e) { return e.type == type;});
     }
     @:arrayAccess
@@ -46,6 +47,7 @@ abstract NodeListAccess(List<Stmt>) from List<Stmt> {
 private abstract NodeAccess(List<Stmt>) from List<Stmt> {
     @:op(a.b)
     public function resolve( type : String ) : Null<Stmt> {
+        if (!Stmt.validType(type)) throw('invalid stmt type ${type}');
         return this.find(function(e) { return e.type == type;});
     } 
 }
@@ -63,6 +65,22 @@ class Stmt {
     public var parent:Stmt;
     public var ref:Stmt;  //the ref to stmt for uses/import/include/belongs-to/type
     public var refed:List<Stmt>;
+    
+    
+    static var validTypes:Array<String> = ["anyxml_stmt","argument_stmt","augment_stmt","base_stmt","belongs_to_stmt",
+                                      "bit_stmt","case_stmt", "choice_stmt","config_stmt","contact_stmt","container_stmt",
+                                      "default_stmt","description_stmt","enum_stmt","error_app_tag_stmt","error_message_stmt",
+                                      "extension_stmt","deviation_stmt","deviate_stmt","feature_stmt","fraction_digits_stmt",
+                                      "grouping_stmt","identity_stmt","if_feature_stmt","import_stmt","include_stmt","input_stmt",
+                                      "key_stmt","leaf_stmt","leaf_list_stmt","length_stmt","list_stmt","mandatory_stmt","max_elements_stmt",
+                                      "min_elements_stmt","module_stmt","must_stmt","namespace_stmt","notification_stmt","ordered_by_stmt",
+                                      "organization_stmt","output_stmt","path_stmt","pattern_stmt","position_stmt","prefix_stmt","presence_stmt",
+                                      "range_stmt","reference_stmt","refine_stmt","require_instance_stmt","revision_stmt","revision_date_stmt",
+                                      "rpc_stmt","status_stmt","submodule_stmt","type_stmt","typedef_stmt","unique_stmt","units_stmt",
+                                      "uses_stmt","value_stmt","when_stmt","yang_version_stmt","yin_element_stmt","add_stmt","current_stmt",
+                                      "delete_stmt","deprecated_stmt","false_stmt","max_stmt","min_stmt","not_supported_stmt","obsolete_stmt",
+                                      "replace_stmt","system_stmt","true_stmt","unbounded_stmt","user_stmt"];
+                                      
     public var top(get, never):Stmt;
     function get_top() {
         var p = this;
@@ -141,5 +159,9 @@ class Stmt {
             stmt.addSub(child);
         } 
         return stmt;
+    }
+    
+    static public function validType(t:String) {
+        return validTypes.has(t);
     }
 }
