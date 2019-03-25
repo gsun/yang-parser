@@ -79,7 +79,7 @@ class Stmt {
                                       "rpc_stmt","status_stmt","submodule_stmt","type_stmt","typedef_stmt","unique_stmt","units_stmt",
                                       "uses_stmt","value_stmt","when_stmt","yang_version_stmt","yin_element_stmt","add_stmt","current_stmt",
                                       "delete_stmt","deprecated_stmt","false_stmt","max_stmt","min_stmt","not_supported_stmt","obsolete_stmt",
-                                      "replace_stmt","system_stmt","true_stmt","unbounded_stmt","user_stmt"];
+                                      "replace_stmt","system_stmt","true_stmt","unbounded_stmt","user_stmt", "unknown_stmt"];
                                       
     public var top(get, never):Stmt;
     function get_top() {

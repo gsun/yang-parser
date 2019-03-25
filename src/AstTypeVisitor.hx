@@ -29,7 +29,17 @@ class AstTypeVisitor extends AstVisitor {
                               "string", "boolean", "enumeration", "bits", "binary", 
                               "leafref", "identityref", "instance-identifier",
                               "empty", "union"];
-            if (base_types.has(stmt.arg)) return;
+            if (base_types.has(stmt.arg)) {
+                switch stmt.arg {
+                    case "enumeration": assertTrue(stmt.subs.enum_stmt.length >= 1, 'type_stmt ${stmt.arg} type-error');
+                    case "bits": assertTrue(stmt.subs.bit_stmt.length >= 1, 'type_stmt ${stmt.arg} type-error');
+                    case "union": assertTrue(stmt.subs.type_stmt.length >= 1, 'type_stmt ${stmt.arg} type-error');
+                    case "identityref": assertEquals(stmt.subs.base_stmt.length, 1, 'type_stmt ${stmt.arg} type-error');
+                    case "leafref": assertEquals(stmt.subs.path_stmt.length, 1, 'type_stmt ${stmt.arg} type-error');
+                    case "decimal64": assertEquals(stmt.subs.fraction_digits_stmt.length, 1, 'type_stmt ${stmt.arg} type-error');
+                }
+                return;
+            }
         }
         if (local) {
             var parent = stmt.parent;
