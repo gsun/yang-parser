@@ -50,5 +50,9 @@ class TestParser {
             var visitor = new AstBaseVisitor();
             visitor.visit(st, c);
         }		
+        for (st in c.mo) {
+            var visitor = new AstTypeVisitor();
+            visitor.visit(st, c);
+        }		
     }
 }

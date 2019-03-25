@@ -8,8 +8,6 @@ class AstBaseTypeVisitor extends AstVisitor {
                           "string", "boolean", "enumeration", "bits", "binary", 
                           "leafref", "identityref", "instance-identifier",
                           "empty", "union"];
-        for (t in base_types) {
-            assertTrue(stmt.arg != t, 'typedef_stmt ${stmt.arg} base-type-error');
-        }
+        assertFalse(base_types.has(stmt.arg), 'typedef_stmt ${stmt.arg} base-type-error');
     }   
 }
