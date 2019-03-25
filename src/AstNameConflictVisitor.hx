@@ -43,7 +43,7 @@ class AstNameConflictVisitor extends AstVisitor {
         var types = ["typedef_stmt", "grouping_stmt"]; 
         for (i in types) {
             nameConflict(stmt, i);
-            nameTopConflict(stmt, stmt.parent, i);
+            nameAncestorConflict(stmt, stmt.parent, i);
         }
     }
     
@@ -62,13 +62,13 @@ class AstNameConflictVisitor extends AstVisitor {
         }
     }
     
-    function nameTopConflict(stmt:Stmt, parent:Stmt, type:String) {
+    function nameAncestorConflict(stmt:Stmt, parent:Stmt, type:String) {
         var a = parent.getSubs(type);
         var b = stmt.getSubs(type);
         for (t in a) {
             var count = b.count(function(x) { return ((t != x) && (t.arg == x.arg));});
             assertEquals(count, 0, '${t.type} ${t.arg} name-top-conflict-error');
         }
-        if (parent.parent != null) nameTopConflict(stmt, parent.parent, type);
+        if (parent.parent != null) nameAncestorConflict(stmt, parent.parent, type);
     }
 }
