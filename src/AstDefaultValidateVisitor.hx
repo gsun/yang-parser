@@ -34,21 +34,25 @@ class AstDefaultValidateVisitor extends AstVisitor {
         }
     }
     
-    function validateIntRange(stmt:Stmt, value:String) {
-        var rangeArray:Array<ValueRange<Int>> = [];
-        var defautRange:ValueRange<Int> = {min:0, max:0};
-        switch stmt.arg {
+    function validateIntRange(stmt:Stmt, value:String) {       
+        var intValue = Std.parseInt(value);
+        var defautRange:ValueRange<Int> = switch stmt.arg {
             case "int8":
-                defautRange = {min:-128, max:127};
+                {min:-128, max:127};
             case "int16":
-                defautRange = {min:-32768, max:32767};
+                {min:-32768, max:32767};
             case "uint8": 
-                defautRange = {min:0, max:255};
+                {min:0, max:255};
             case "uint16":
-                defautRange = {min:0, max:65535};
+                {min:0, max:65535};
+            default:
+                {min:0, max:0};
         }
+        assertTrue(intValue >= defautRange.min && intValue <= defautRange.max, 'type_stmt ${stmt.arg} default-range-error');
+        
         var range_stmt = stmt.sub.range_stmt;
         if (range_stmt != null) {
+            var rangeArray:Array<ValueRange<Int>> = [];
             var ranges = range_stmt.arg.split("|");
             for (r in ranges) {
                 var range = r.split("..");
@@ -64,31 +68,30 @@ class AstDefaultValidateVisitor extends AstVisitor {
                     rangeArray.push({min:v1, max:v1});
                 }
             }
-        }
-        var intValue = Std.parseInt(value);
-        if (rangeArray.length >0 ) {
             var e = rangeArray.find(function(e) { return e.min <= intValue && e.max >= intValue; });
             assertTrue(e != null, 'type_stmt ${stmt.arg} range-error');
-        } else {
-            assertTrue(intValue >= defautRange.min && intValue <= defautRange.max, 'type_stmt ${stmt.arg} default-range-error');
         }
     }
 
     function validateBigIntRange(stmt:Stmt, value:String) {
-        var rangeArray:Array<ValueRange<Float>> = [];
-        var defautRange:ValueRange<Float>  = {min:0, max:0};
-        switch stmt.arg {
+        var intValue = Std.parseFloat(value);
+        var defautRange:ValueRange<Float> = switch stmt.arg {
             case "int32":
-                defautRange = {min:-2147483648, max:2147483647};
+                {min:-2147483648, max:2147483647};
             case "uint32": 
-                defautRange = {min:0, max:4294967295};
+                {min:0, max:4294967295};
             case "int64":
-                defautRange = {min:-9223372036854775808, max:9223372036854775807};
+                {min:-9223372036854775808, max:9223372036854775807};
             case "uint64": 
-                defautRange = {min:0, max:18446744073709551615};
+                {min:0, max:18446744073709551615};
+            default:
+                {min:0, max:0};
         }
+        assertTrue(intValue >= defautRange.min && intValue <= defautRange.max, 'type_stmt ${stmt.arg} default-range-error');
+        
         var range_stmt = stmt.sub.range_stmt;
         if (range_stmt != null) {
+            var rangeArray:Array<ValueRange<Float>> = [];
             var ranges = range_stmt.arg.split("|");
             for (r in ranges) {
                 var range = r.split("..");
@@ -104,47 +107,48 @@ class AstDefaultValidateVisitor extends AstVisitor {
                     rangeArray.push({min:v1, max:v1});
                 }
             }
-        }
-        var intValue = Std.parseFloat(value);
-        if (rangeArray.length >0 ) {
             var e = rangeArray.find(function(e) { return e.min <= intValue && e.max >= intValue; });
             assertTrue(e != null, 'type_stmt ${stmt.arg} range-error');
-        } else {
-            assertTrue(intValue >= defautRange.min && intValue <= defautRange.max, 'type_stmt ${stmt.arg} default-range-error');
         }
     }
 
     function validateDecimalRange(stmt:Stmt, value:String) {
-        var rangeArray:Array<ValueRange<Float>> = [];
+        var intValue = Std.parseFloat(value);
+        
         var fraction_digits_stmt = stmt.sub.fraction_digits_stmt;
         assertTrue(fraction_digits_stmt != null, 'type_stmt ${stmt.arg} no-fraction-digits-error');
+
         var defautRange:ValueRange<Float> = {min:0, max:0};
         if (fraction_digits_stmt != null) {
             var fraction_digits = Std.parseInt(fraction_digits_stmt.arg);
             assertTrue(fraction_digits >= 1 && fraction_digits <= 18, 'type_stmt ${stmt.arg} fraction-digits-range-error');
-            switch (fraction_digits) {
-                case 1:  defautRange = {min:-922337203685477580.8 , max:922337203685477580.7};
-                case 2:  defautRange = {min:-92233720368547758.08 , max:92233720368547758.07};
-                case 3:  defautRange = {min:-9223372036854775.808 , max:9223372036854775.807};
-                case 4:  defautRange = {min:-922337203685477.5808 , max:922337203685477.5807};
-                case 5:  defautRange = {min:-92233720368547.75808 , max:92233720368547.75807};
-                case 6:  defautRange = {min:-9223372036854.775808 , max:9223372036854.775807};
-                case 7:  defautRange = {min:-922337203685.4775808 , max:922337203685.4775807};
-                case 8:  defautRange = {min:-92233720368.54775808 , max:92233720368.54775807};
-                case 9:  defautRange = {min:-9223372036.854775808 , max:9223372036.854775807};
-                case 10: defautRange = {min:-922337203.6854775808 , max:922337203.6854775807};
-                case 11: defautRange = {min:-92233720.36854775808 , max:92233720.36854775807};
-                case 12: defautRange = {min:-9223372.036854775808 , max:9223372.036854775807};
-                case 13: defautRange = {min:-922337.2036854775808 , max:922337.2036854775807};
-                case 14: defautRange = {min:-92233.72036854775808 , max:92233.72036854775807};
-                case 15: defautRange = {min:-9223.372036854775808 , max:9223.372036854775807};
-                case 16: defautRange = {min:-922.3372036854775808 , max:922.3372036854775807};
-                case 17: defautRange = {min:-92.23372036854775808 , max:92.23372036854775807};
-                case 18: defautRange = {min:-9.223372036854775808 , max:9.223372036854775807};
+            defautRange = switch fraction_digits {
+                case 1:  {min:-922337203685477580.8 , max:922337203685477580.7};
+                case 2:  {min:-92233720368547758.08 , max:92233720368547758.07};
+                case 3:  {min:-9223372036854775.808 , max:9223372036854775.807};
+                case 4:  {min:-922337203685477.5808 , max:922337203685477.5807};
+                case 5:  {min:-92233720368547.75808 , max:92233720368547.75807};
+                case 6:  {min:-9223372036854.775808 , max:9223372036854.775807};
+                case 7:  {min:-922337203685.4775808 , max:922337203685.4775807};
+                case 8:  {min:-92233720368.54775808 , max:92233720368.54775807};
+                case 9:  {min:-9223372036.854775808 , max:9223372036.854775807};
+                case 10: {min:-922337203.6854775808 , max:922337203.6854775807};
+                case 11: {min:-92233720.36854775808 , max:92233720.36854775807};
+                case 12: {min:-9223372.036854775808 , max:9223372.036854775807};
+                case 13: {min:-922337.2036854775808 , max:922337.2036854775807};
+                case 14: {min:-92233.72036854775808 , max:92233.72036854775807};
+                case 15: {min:-9223.372036854775808 , max:9223.372036854775807};
+                case 16: {min:-922.3372036854775808 , max:922.3372036854775807};
+                case 17: {min:-92.23372036854775808 , max:92.23372036854775807};
+                case 18: {min:-9.223372036854775808 , max:9.223372036854775807};
+                default: {min:0, max:0};
             }
         }
+        assertTrue(intValue >= defautRange.min && intValue <= defautRange.max, 'type_stmt ${stmt.arg} default-range-error');
+
         var range_stmt = stmt.sub.range_stmt;
         if (range_stmt != null) {
+            var rangeArray:Array<ValueRange<Float>> = [];
             var ranges = range_stmt.arg.split("|");
             for (r in ranges) {
                 var range = r.split("..");
@@ -160,13 +164,8 @@ class AstDefaultValidateVisitor extends AstVisitor {
                     rangeArray.push({min:v1, max:v1});
                 }
             }
-        }
-        var intValue = Std.parseFloat(value);
-        if (rangeArray.length >0 ) {
             var e = rangeArray.find(function(e) { return e.min <= intValue && e.max >= intValue; });
             assertTrue(e != null, 'type_stmt ${stmt.arg} fraction-digits-range-error');
-        } else {
-            assertTrue(intValue >= defautRange.min && intValue <= defautRange.max, 'type_stmt ${stmt.arg} default-range-error');
         }
     }
 }
