@@ -23,7 +23,9 @@ class AstDefaultValidateVisitor extends AstVisitor {
                 case "boolean":
                     assertTrue(stmt.arg == "true" || stmt.arg == "false", 'default_stmt ${stmt.arg} boolean-error');
                 case "enumeration":
+                    validateEnum(type_stmt, stmt.arg);
                 case "bits":
+                    validatebit(type_stmt, stmt.arg);
                 case "binary":
                 case "leafref":
                 case "identityref":
@@ -130,5 +132,20 @@ class AstDefaultValidateVisitor extends AstVisitor {
             }
         }
         return rangeArray.copy();
+    }
+    
+    function validateEnum(stmt:Stmt, value:String) {
+        var enum_stmts:List<Stmt> = stmt.subs.enum_stmt;
+        var e = enum_stmts.find(function(e) { return e.arg == value; });
+        assertTrue(e != null, 'type_stmt ${stmt.arg} enum-default-error');
+    }
+    
+    function validatebit(stmt:Stmt, value:String) {
+        var valueList = value.split(" ");
+        var bit_stmts:List<Stmt> = stmt.subs.bit_stmt;
+        for (v in valueList) {
+            var e = bit_stmts.find(function(e) { return e.arg == v; });
+            assertTrue(e != null, 'type_stmt ${stmt.arg} bit-default-error');
+        }
     }
 }

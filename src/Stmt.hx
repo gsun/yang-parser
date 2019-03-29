@@ -32,7 +32,7 @@ enum StmtStatus {
 }
 
 @:forward
-abstract NodeListAccess(List<Stmt>) from List<Stmt> {
+abstract NodeListAccess(List<Stmt>) from List<Stmt> to List<Stmt> {
     @:op(a.b)
     public function resolve( type : String ) : NodeListAccess {
         if (!Stmt.validType(type)) throw('invalid stmt type');
