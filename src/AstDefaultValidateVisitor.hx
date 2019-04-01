@@ -9,23 +9,23 @@ typedef ValueRange = {
 
 class AstDefaultValidateVisitor extends AstVisitor {
 
-    function default_stmt(stmt:Stmt, context:Dynamic) {
-        var type_stmt = stmt.parent.sub.type_stmt;
-        if (type_stmt != null) {
-            switch type_stmt.arg {
+    function type_stmt(stmt:Stmt, context:Dynamic) {
+        var default_stmt = stmt.parent.sub.default_stmt;
+        if (default_stmt != null) {
+            switch stmt.arg {
                 case "int8"|"int16"|"uint8"|"uint16":
-                    validateIntRange(type_stmt, stmt.arg);
+                    validateIntRange(stmt, default_stmt.arg);
                 case "int32"|"uint32"|"int64"|"uint64":
-                    validateBigIntRange(type_stmt, stmt.arg);
+                    validateBigIntRange(stmt, default_stmt.arg);
                 case "decimal64":
-                    validateDecimalRange(type_stmt, stmt.arg);
+                    validateDecimalRange(stmt, default_stmt.arg);
                 case "string":
                 case "boolean":
-                    assertTrue(stmt.arg == "true" || stmt.arg == "false", 'default_stmt ${stmt.arg} boolean-error');
+                    assertTrue(default_stmt.arg == "true" || default_stmt.arg == "false", 'default_stmt ${default_stmt.arg} boolean-error');
                 case "enumeration":
-                    validateEnum(type_stmt, stmt.arg);
+                    validateEnum(stmt, default_stmt.arg);
                 case "bits":
-                    validatebit(type_stmt, stmt.arg);
+                    validatebit(stmt, default_stmt.arg);
                 case "binary":
                 case "leafref":
                 case "identityref":
