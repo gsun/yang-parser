@@ -7,10 +7,17 @@ typedef ValueRange = {
     var max:String;
 }
 
-class AstDefaultValidateVisitor extends AstVisitor {
 
+class AstDefaultValidateVisitor extends AstVisitor {
+    public var validUnion : Bool;
+    
+    public function new() {
+        super();
+        validUnion = true;
+    }
+    
     function type_stmt(stmt:Stmt, context:Dynamic) {
-        var default_stmt = stmt.parent.sub.default_stmt;
+        var default_stmt = context!=null?context:stmt.parent.sub.default_stmt;
         if (default_stmt != null) {
             switch stmt.arg {
                 case "int8"|"int16"|"uint8"|"uint16":
@@ -26,12 +33,23 @@ class AstDefaultValidateVisitor extends AstVisitor {
                     validateEnum(stmt, default_stmt.arg);
                 case "bits":
                     validatebit(stmt, default_stmt.arg);
-                case "binary":
-                case "leafref":
-                case "identityref":
-                case "instance-identifier":
-                case "empty":
-                case "union":
+                case "binary": validUnion = false;
+                case "leafref": validUnion = false;
+                case "identityref": validUnion = false;
+                case "instance-identifier": validUnion = false;
+                case "empty": validUnion = false;
+                case "union": {
+                    var valid = false;
+                    for (u in stmt.subs.type_stmt.iterator()) {
+                        var visitor = new AstDefaultValidateVisitor();
+                        visitor.visit(u, default_stmt);
+                        if (visitor.validUnion) {
+                            valid = true;
+                            break;
+                        }
+                    }
+                    assertTrue(valid, 'default_stmt ${default_stmt.arg} union-error');
+                }
             }
         }
     }
@@ -148,6 +166,16 @@ class AstDefaultValidateVisitor extends AstVisitor {
         for (v in valueList) {
             var e = bit_stmts.find(function(e) { return e.arg == v; });
             assertTrue(e != null, 'type_stmt ${stmt.arg} bit-default-error');
+        }
+    }
+    
+    override function assertTrue(b:Bool, msg:String) {
+        if (b != true) {
+            if (stmt.parent.arg == "union") {
+                validUnion = false;
+            } else {
+                trace('${msg} in ${stmt.type} ${stmt.arg} location ${stmt.location} path ${stmt.path}');
+            }
         }
     }
 }
