@@ -38,6 +38,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
     
     function validateIntRange(stmt:Stmt, value:String) {       
         var intValue = Std.parseInt(value);
+        assertTrue(intValue != null, 'type_stmt ${stmt.arg} default-parse-error');
         var defautRange:ValueRange = switch stmt.arg {
             case "int8":  {min:"-128", max:"127"};
             case "int16": {min:"-32768", max:"32767"};
@@ -57,6 +58,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
 
     function validateBigIntRange(stmt:Stmt, value:String) {
         var intValue = Std.parseFloat(value);
+        assertTrue(intValue != null, 'type_stmt ${stmt.arg} default-parse-error');
         var defautRange:ValueRange = switch stmt.arg {
             case "int32": {min:"-2147483648", max:"2147483647"};
             case "uint32":{min:"0", max:"4294967295"};
@@ -77,7 +79,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
 
     function validateDecimalRange(stmt:Stmt, value:String) {
         var intValue = Std.parseFloat(value);
-        
+        assertTrue(intValue != null, 'type_stmt ${stmt.arg} default-parse-error');
         var fraction_digits_stmt = stmt.sub.fraction_digits_stmt;
         assertTrue(fraction_digits_stmt != null, 'type_stmt ${stmt.arg} no-fraction-digits-error');
 
