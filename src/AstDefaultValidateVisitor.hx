@@ -33,7 +33,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
                 case "leafref": validUnion = false;
                 case "identityref": validUnion = false;
                 case "instance-identifier": validUnion = false;
-                case "empty": validUnion = false;
+                case "empty": assertTrue(false, 'default_stmt ${default_stmt.arg} empty-error');
                 case "union": validateUnion(stmt, default_stmt);
             }
         }

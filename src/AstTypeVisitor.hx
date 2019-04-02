@@ -50,7 +50,7 @@ class AstTypeVisitor extends AstVisitor {
                         for (e in stmt.subs.bit_stmt.iterator()) {
                             if (e.sub.position_stmt != null) position = Std.parseInt(e.sub.position_stmt.arg);
                             assertTrue(position >= 0 && position <= 4294967295, 'type_stmt ${stmt.arg} position-error');
-                            assertFalse(positionArray.has(position), 'type_stmt ${stmt.arg} type-error');
+                            assertFalse(positionArray.has(position), 'type_stmt ${stmt.arg} position-error');
                             positionArray.push(position);
                             position++;
                         }
@@ -91,5 +91,9 @@ class AstTypeVisitor extends AstVisitor {
             }   
             assertTrue(stmt.ref != null, 'type_stmt ${stmt.arg} global-typedf-reference-error');         
         }
-    }   
+    }
+    
+    function mandatory_stmt(stmt:Stmt, context:Dynamic) {
+        assertTrue(stmt.parent.sub.default_stmt == null, '${stmt.parent.type} ${stmt.parent.arg} mandatory-error');
+    }
 }
