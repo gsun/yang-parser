@@ -31,8 +31,30 @@ class AstTypeVisitor extends AstVisitor {
                               "empty", "union"];
             if (base_types.has(stmt.arg)) {
                 switch stmt.arg {
-                    case "enumeration": assertTrue(stmt.subs.enum_stmt.length >= 1, 'type_stmt ${stmt.arg} type-error');
-                    case "bits": assertTrue(stmt.subs.bit_stmt.length >= 1, 'type_stmt ${stmt.arg} type-error');
+                    case "enumeration": {
+                        assertTrue(stmt.subs.enum_stmt.length >= 1, 'type_stmt ${stmt.arg} type-error');
+                        var value = 0;
+                        var valueArray = [];
+                        for (e in stmt.subs.enum_stmt.iterator()) {
+                            if (e.sub.value_stmt != null) value = Std.parseInt(e.sub.value_stmt.arg);
+                            assertTrue(value >= -2147483648 && value <= 2147483647, 'type_stmt ${stmt.arg} value-error');
+                            assertFalse(valueArray.has(value), 'type_stmt ${stmt.arg} type-error');
+                            valueArray.push(value);
+                            value++;
+                        }
+                    }
+                    case "bits": {
+                        assertTrue(stmt.subs.bit_stmt.length >= 1, 'type_stmt ${stmt.arg} type-error');
+                        var position = 0;
+                        var positionArray = [];
+                        for (e in stmt.subs.bit_stmt.iterator()) {
+                            if (e.sub.position_stmt != null) position = Std.parseInt(e.sub.position_stmt.arg);
+                            assertTrue(position >= 0 && position <= 4294967295, 'type_stmt ${stmt.arg} position-error');
+                            assertFalse(positionArray.has(position), 'type_stmt ${stmt.arg} type-error');
+                            positionArray.push(position);
+                            position++;
+                        }
+                    }
                     case "union": assertTrue(stmt.subs.type_stmt.length >= 1, 'type_stmt ${stmt.arg} type-error');
                     case "identityref": assertEquals(stmt.subs.base_stmt.length, 1, 'type_stmt ${stmt.arg} type-error');
                     case "leafref": assertEquals(stmt.subs.path_stmt.length, 1, 'type_stmt ${stmt.arg} type-error');
