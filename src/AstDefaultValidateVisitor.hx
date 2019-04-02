@@ -22,37 +22,19 @@ class AstDefaultValidateVisitor extends AstVisitor {
         var default_stmt = default_stmt!=null?default_stmt:stmt.parent.sub.default_stmt;
         if (default_stmt != null) {
             switch stmt.arg {
-                case "int8"|"int16"|"uint8"|"uint16":
-                    validateIntRange(stmt, default_stmt.arg);
-                case "int32"|"uint32"|"int64"|"uint64":
-                    validateBigIntRange(stmt, default_stmt.arg);
-                case "decimal64":
-                    validateDecimalRange(stmt, default_stmt.arg);
-                case "string":
-                case "boolean":
-                    assertTrue(default_stmt.arg == "true" || default_stmt.arg == "false", 'default_stmt ${default_stmt.arg} boolean-error');
-                case "enumeration":
-                    validateEnum(stmt, default_stmt.arg);
-                case "bits":
-                    validatebit(stmt, default_stmt.arg);
+                case "int8"|"int16"|"uint8"|"uint16"|"int32"|"uint32": validateIntRange(stmt, default_stmt.arg);
+                case "int64"|"uint64": validateInt64Range(stmt, default_stmt.arg);
+                case "decimal64": validateDecimalRange(stmt, default_stmt.arg);
+                case "string": validUnion = false;
+                case "boolean": assertTrue(default_stmt.arg == "true" || default_stmt.arg == "false", 'default_stmt ${default_stmt.arg} boolean-error');
+                case "enumeration": validateEnum(stmt, default_stmt.arg);
+                case "bits": validatebit(stmt, default_stmt.arg);
                 case "binary": validUnion = false;
                 case "leafref": validUnion = false;
                 case "identityref": validUnion = false;
                 case "instance-identifier": validUnion = false;
                 case "empty": validUnion = false;
-                case "union": {
-                    var valid = false;
-                    for (u in stmt.subs.type_stmt.iterator()) {
-                        var visitor = new AstDefaultValidateVisitor();
-                        visitor.default_stmt = default_stmt;
-                        visitor.visit(u);
-                        if (visitor.validUnion) {
-                            valid = true;
-                            break;
-                        }
-                    }
-                    assertTrue(valid, 'default_stmt ${default_stmt.arg} union-error');
-                }
+                case "union": validateUnion(stmt, default_stmt);
             }
         }
     }
@@ -65,6 +47,8 @@ class AstDefaultValidateVisitor extends AstVisitor {
             case "int16": {min:"-32768", max:"32767"};
             case "uint8": {min:"0", max:"255"};
             case "uint16":{min:"0", max:"65535"};
+            case "int32": {min:"-2147483648", max:"2147483647"};
+            case "uint32":{min:"0", max:"4294967295"};
             default:      {min:"min", max:"max"};
         }
         assertTrue(defautRange.min == "min" || intValue >= Std.parseInt(defautRange.min), 'type_stmt ${stmt.arg} default-min-range-error');
@@ -77,12 +61,10 @@ class AstDefaultValidateVisitor extends AstVisitor {
         }
     }
 
-    function validateBigIntRange(stmt:Stmt, value:String) {
+    function validateInt64Range(stmt:Stmt, value:String) {
         var intValue = Std.parseFloat(value);
         assertTrue(intValue != null, 'type_stmt ${stmt.arg} default-parse-error');
         var defautRange:ValueRange = switch stmt.arg {
-            case "int32": {min:"-2147483648", max:"2147483647"};
-            case "uint32":{min:"0", max:"4294967295"};
             case "int64": {min:"-9223372036854775808", max:"9223372036854775807"};
             case "uint64":{min:"0", max:"18446744073709551615"};
             default:      {min:"min", max:"max"};
@@ -170,6 +152,20 @@ class AstDefaultValidateVisitor extends AstVisitor {
             var e = bit_stmts.find(function(e) { return e.arg == v; });
             assertTrue(e != null, 'type_stmt ${stmt.arg} bit-default-error');
         }
+    }
+    
+    function validateUnion(stmt:Stmt, default_stmt:Stmt) {
+        var valid = false;
+        for (u in stmt.subs.type_stmt.iterator()) {
+            var visitor = new AstDefaultValidateVisitor();
+            visitor.default_stmt = default_stmt;
+            visitor.visit(u);
+            if (visitor.validUnion) {
+                valid = true;
+                break;
+            }
+        }
+        assertTrue(valid, 'default_stmt ${default_stmt.arg} union-error');
     }
     
     override function assertTrue(b:Bool, msg:String) {
