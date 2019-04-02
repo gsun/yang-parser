@@ -25,7 +25,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
                 case "int8"|"int16"|"uint8"|"uint16"|"int32"|"uint32": validateIntRange(stmt, default_stmt.arg);
                 case "int64"|"uint64": validateInt64Range(stmt, default_stmt.arg);
                 case "decimal64": validateDecimalRange(stmt, default_stmt.arg);
-                case "string": validUnion = false;
+                case "string": validateString(stmt, default_stmt.arg);
                 case "boolean": assertTrue(default_stmt.arg == "true" || default_stmt.arg == "false", 'default_stmt ${default_stmt.arg} boolean-error');
                 case "enumeration": validateEnum(stmt, default_stmt.arg);
                 case "bits": validatebit(stmt, default_stmt.arg);
@@ -35,6 +35,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
                 case "instance-identifier": validUnion = false;
                 case "empty": assertTrue(false, 'default_stmt ${default_stmt.arg} empty-error');
                 case "union": validateUnion(stmt, default_stmt);
+                default: validateUserType(stmt, default_stmt);
             }
         }
     }
@@ -54,7 +55,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
         assertTrue(defautRange.min == "min" || intValue >= Std.parseInt(defautRange.min), 'type_stmt ${stmt.arg} default-min-range-error');
         assertTrue(defautRange.min == "max" || intValue <= Std.parseInt(defautRange.max), 'type_stmt ${stmt.arg} default-max-range-error');
         
-        var rangeArray:Array<ValueRange> = buildRanges(stmt);
+        var rangeArray:Array<ValueRange> = buildRanges(stmt.sub.range_stmt);
         if (rangeArray.length > 0) {
             var e = rangeArray.find(function(e) { return (e.min == "min" || Std.parseInt(e.min) <= intValue) && (e.max == "max" || Std.parseInt(e.max) >= intValue); });
             assertTrue(e != null, 'type_stmt ${stmt.arg} range-error');
@@ -73,7 +74,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
         assertTrue(defautRange.min == "min" || intValue >= Std.parseFloat(defautRange.min), 'type_stmt ${stmt.arg} default-min-range-error');
         assertTrue(defautRange.min == "max" || intValue <= Std.parseFloat(defautRange.max), 'type_stmt ${stmt.arg} default-max-range-error');
         
-        var rangeArray:Array<ValueRange> = buildRanges(stmt);
+        var rangeArray:Array<ValueRange> = buildRanges(stmt.sub.range_stmt);
         if (rangeArray.length > 0) {
             var e = rangeArray.find(function(e) { return (e.min == "min" || Std.parseFloat(e.min) <= intValue) && (e.max == "max" || Std.parseFloat(e.max) >= intValue); });
             assertTrue(e != null, 'type_stmt ${stmt.arg} range-error');
@@ -115,7 +116,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
             assertTrue(defautRange.min == "max" || intValue <= Std.parseFloat(defautRange.max), 'type_stmt ${stmt.arg} default-max-range-error');
         }
         
-        var rangeArray:Array<ValueRange> = buildRanges(stmt);
+        var rangeArray:Array<ValueRange> = buildRanges(stmt.sub.range_stmt);
         if (rangeArray.length > 0) {
             var e = rangeArray.find(function(e) { return (e.min == "min" || Std.parseFloat(e.min) <= intValue) && (e.max == "max" || Std.parseFloat(e.max) >= intValue); });
             assertTrue(e != null, 'type_stmt ${stmt.arg} fraction-digits-range-error');
@@ -124,9 +125,8 @@ class AstDefaultValidateVisitor extends AstVisitor {
     
     function buildRanges(stmt:Stmt) {
         var rangeArray:Array<ValueRange> = [];
-        var range_stmt = stmt.sub.range_stmt;
-        if (range_stmt != null) {
-            var ranges = range_stmt.arg.split("|");
+        if (stmt != null) {
+            var ranges = stmt.arg.split("|");
             for (r in ranges) {
                 var range = r.split("..");
                 if (range.length == 2) {
@@ -166,6 +166,18 @@ class AstDefaultValidateVisitor extends AstVisitor {
             }
         }
         assertTrue(valid, 'default_stmt ${default_stmt.arg} union-error');
+    }
+    
+    function validateUserType(stmt:Stmt, default_stmt:Stmt) {
+
+    }
+
+    function validateString(stmt:Stmt, value:String) {
+        var rangeArray:Array<ValueRange> = buildRanges(stmt.sub.length_stmt);
+        if (rangeArray.length > 0) {
+            var e = rangeArray.find(function(e) { return (e.min == "min" || Std.parseFloat(e.min) <= value.length) && (e.max == "max" || Std.parseFloat(e.max) >= value.length); });
+            assertTrue(e != null, 'type_stmt ${stmt.arg} string-length-error');
+        }
     }
     
     override function assertTrue(b:Bool, msg:String) {
