@@ -10,14 +10,16 @@ typedef ValueRange = {
 
 class AstDefaultValidateVisitor extends AstVisitor {
     public var validUnion : Bool;
+    public var default_stmt : Stmt;
     
     public function new() {
         super();
         validUnion = true;
+        default_stmt = null;
     }
     
     function type_stmt(stmt:Stmt, context:Dynamic) {
-        var default_stmt = context!=null?context:stmt.parent.sub.default_stmt;
+        var default_stmt = default_stmt!=null?default_stmt:stmt.parent.sub.default_stmt;
         if (default_stmt != null) {
             switch stmt.arg {
                 case "int8"|"int16"|"uint8"|"uint16":
@@ -42,7 +44,8 @@ class AstDefaultValidateVisitor extends AstVisitor {
                     var valid = false;
                     for (u in stmt.subs.type_stmt.iterator()) {
                         var visitor = new AstDefaultValidateVisitor();
-                        visitor.visit(u, default_stmt);
+                        visitor.default_stmt = default_stmt;
+                        visitor.visit(u);
                         if (visitor.validUnion) {
                             valid = true;
                             break;
