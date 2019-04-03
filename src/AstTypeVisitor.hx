@@ -92,8 +92,4 @@ class AstTypeVisitor extends AstVisitor {
             assertTrue(stmt.ref != null, 'type_stmt ${stmt.arg} global-typedf-reference-error');         
         }
     }
-    
-    function mandatory_stmt(stmt:Stmt, context:Dynamic) {
-        assertTrue(stmt.parent.sub.default_stmt == null, '${stmt.parent.type} ${stmt.parent.arg} mandatory-error');
-    }
 }

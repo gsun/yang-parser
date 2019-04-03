@@ -29,7 +29,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
                 case "boolean": assertTrue(default_stmt.arg == "true" || default_stmt.arg == "false", 'default_stmt ${default_stmt.arg} boolean-error');
                 case "enumeration": validateEnum(stmt, default_stmt.arg);
                 case "bits": validatebit(stmt, default_stmt.arg);
-                case "binary": validUnion = false;
+                case "binary": validateBinary(stmt, default_stmt.arg);
                 case "leafref": validUnion = false;
                 case "identityref": validUnion = false;
                 case "instance-identifier": validUnion = false;
@@ -38,6 +38,10 @@ class AstDefaultValidateVisitor extends AstVisitor {
                 default: validateUserType(stmt, default_stmt);
             }
         }
+    }
+    
+    function mandatory_stmt(stmt:Stmt, context:Dynamic) {
+        assertTrue(stmt.parent.sub.default_stmt == null, '${stmt.parent.type} ${stmt.parent.arg} mandatory-error');
     }
     
     function validateIntRange(stmt:Stmt, value:String) {       
@@ -182,6 +186,19 @@ class AstDefaultValidateVisitor extends AstVisitor {
         if (pattern_stmt != null) {
             var pat = new js.RegExp(pattern_stmt.arg);
             assertTrue(pat.test(value), 'type_stmt ${stmt.arg} pattern-error');
+        }
+    }
+
+    function validateBinary(stmt:Stmt, value:String) {
+        var rangeArray:Array<ValueRange> = buildRanges(stmt.sub.length_stmt);
+        if (rangeArray.length > 0) {
+            var e = rangeArray.find(function(e) { return (e.min == "min" || Std.parseInt(e.min) <= value.length) && (e.max == "max" || Std.parseInt(e.max) >= value.length); });
+            assertTrue(e != null, 'type_stmt ${stmt.arg} binary-length-error');
+        }
+        try {
+            haxe.crypto.Base64.decode(value);
+        } catch (e:String) {
+            assertTrue(false, 'type_stmt ${stmt.arg} binary-error');
         }
     }
     
