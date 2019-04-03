@@ -175,8 +175,13 @@ class AstDefaultValidateVisitor extends AstVisitor {
     function validateString(stmt:Stmt, value:String) {
         var rangeArray:Array<ValueRange> = buildRanges(stmt.sub.length_stmt);
         if (rangeArray.length > 0) {
-            var e = rangeArray.find(function(e) { return (e.min == "min" || Std.parseFloat(e.min) <= value.length) && (e.max == "max" || Std.parseFloat(e.max) >= value.length); });
+            var e = rangeArray.find(function(e) { return (e.min == "min" || Std.parseInt(e.min) <= value.length) && (e.max == "max" || Std.parseInt(e.max) >= value.length); });
             assertTrue(e != null, 'type_stmt ${stmt.arg} string-length-error');
+        }
+        var pattern_stmt = stmt.sub.pattern_stmt;
+        if (pattern_stmt != null) {
+            var pat = new js.RegExp(pattern_stmt.arg);
+            assertTrue(pat.test(value), 'type_stmt ${stmt.arg} pattern-error');
         }
     }
     
