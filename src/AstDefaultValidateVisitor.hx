@@ -9,12 +9,14 @@ typedef ValueRange = {
 
 
 class AstDefaultValidateVisitor extends AstVisitor {
-    public var validUnion : Bool;
+    public var validUnionBranch : Bool;
+    public var isUnionBranch : Bool;
     public var default_stmt : Stmt;
     
     public function new() {
         super();
-        validUnion = true;
+        validUnionBranch = true;
+        isUnionBranch = false;
         default_stmt = null;
     }
     
@@ -30,9 +32,9 @@ class AstDefaultValidateVisitor extends AstVisitor {
                 case "enumeration": validateEnum(stmt, default_stmt.arg);
                 case "bits": validatebit(stmt, default_stmt.arg);
                 case "binary": validateBinary(stmt, default_stmt.arg);
-                case "leafref": validUnion = false;
-                case "identityref": validUnion = false;
-                case "instance-identifier": validUnion = false;
+                case "leafref": if (isUnionBranch) validUnionBranch = false;
+                case "identityref": if (isUnionBranch) validUnionBranch = false;
+                case "instance-identifier": if (isUnionBranch) validUnionBranch = false;
                 case "empty": assertTrue(false, 'default_stmt ${default_stmt.arg} empty-error');
                 case "union": validateUnion(stmt, default_stmt);
                 default: validateUserType(stmt, default_stmt);
@@ -46,7 +48,8 @@ class AstDefaultValidateVisitor extends AstVisitor {
     
     function validateIntRange(stmt:Stmt, value:String) {       
         var intValue = Std.parseInt(value);
-        assertTrue(intValue != null, 'type_stmt ${stmt.arg} default-parse-error');
+        assertTrue(intValue != null, 'type_stmt ${stmt.arg} value ${value} default-parse-error');
+        if (intValue == null) return;
         var defautRange:ValueRange = switch stmt.arg {
             case "int8":  {min:"-128", max:"127"};
             case "int16": {min:"-32768", max:"32767"};
@@ -56,44 +59,46 @@ class AstDefaultValidateVisitor extends AstVisitor {
             case "uint32":{min:"0", max:"4294967295"};
             default:      {min:"min", max:"max"};
         }
-        assertTrue(defautRange.min == "min" || intValue >= Std.parseInt(defautRange.min), 'type_stmt ${stmt.arg} default-min-range-error');
-        assertTrue(defautRange.min == "max" || intValue <= Std.parseInt(defautRange.max), 'type_stmt ${stmt.arg} default-max-range-error');
+        assertTrue(defautRange.min == "min" || intValue >= Std.parseInt(defautRange.min), 'type_stmt ${stmt.arg} value ${value} default-min-range-error');
+        assertTrue(defautRange.min == "max" || intValue <= Std.parseInt(defautRange.max), 'type_stmt ${stmt.arg} value ${value} default-max-range-error');
         
         var rangeArray:Array<ValueRange> = buildRanges(stmt.sub.range_stmt);
         if (rangeArray.length > 0) {
             var e = rangeArray.find(function(e) { return (e.min == "min" || Std.parseInt(e.min) <= intValue) && (e.max == "max" || Std.parseInt(e.max) >= intValue); });
-            assertTrue(e != null, 'type_stmt ${stmt.arg} range-error');
+            assertTrue(e != null, 'type_stmt ${stmt.arg} value ${value} range-error');
         }
     }
 
     function validateInt64Range(stmt:Stmt, value:String) {
         var intValue = Std.parseFloat(value);
-        assertTrue(intValue != null, 'type_stmt ${stmt.arg} default-parse-error');
+        assertTrue(!Math.isNaN(intValue), 'type_stmt ${stmt.arg} value ${value} default-parse-error');
+        if (Math.isNaN(intValue)) return;
         var defautRange:ValueRange = switch stmt.arg {
             case "int64": {min:"-9223372036854775808", max:"9223372036854775807"};
             case "uint64":{min:"0", max:"18446744073709551615"};
             default:      {min:"min", max:"max"};
         }
         
-        assertTrue(defautRange.min == "min" || intValue >= Std.parseFloat(defautRange.min), 'type_stmt ${stmt.arg} default-min-range-error');
-        assertTrue(defautRange.min == "max" || intValue <= Std.parseFloat(defautRange.max), 'type_stmt ${stmt.arg} default-max-range-error');
+        assertTrue(defautRange.min == "min" || intValue >= Std.parseFloat(defautRange.min), 'type_stmt ${stmt.arg} value ${value} default-min-range-error');
+        assertTrue(defautRange.min == "max" || intValue <= Std.parseFloat(defautRange.max), 'type_stmt ${stmt.arg} value ${value} default-max-range-error');
         
         var rangeArray:Array<ValueRange> = buildRanges(stmt.sub.range_stmt);
         if (rangeArray.length > 0) {
             var e = rangeArray.find(function(e) { return (e.min == "min" || Std.parseFloat(e.min) <= intValue) && (e.max == "max" || Std.parseFloat(e.max) >= intValue); });
-            assertTrue(e != null, 'type_stmt ${stmt.arg} range-error');
+            assertTrue(e != null, 'type_stmt ${stmt.arg} value ${value} range-error');
         }
     }
 
     function validateDecimalRange(stmt:Stmt, value:String) {
         var intValue = Std.parseFloat(value);
-        assertTrue(intValue != null, 'type_stmt ${stmt.arg} default-parse-error');
+        assertTrue(!Math.isNaN(intValue), 'type_stmt ${stmt.arg} value ${value} default-parse-error');
+        if (Math.isNaN(intValue)) return;
         var fraction_digits_stmt = stmt.sub.fraction_digits_stmt;
-        assertTrue(fraction_digits_stmt != null, 'type_stmt ${stmt.arg} no-fraction-digits-error');
+        assertTrue(fraction_digits_stmt != null, 'type_stmt ${stmt.arg} value ${value} no-fraction-digits-error');
 
         if (fraction_digits_stmt != null) {
             var fraction_digits = Std.parseInt(fraction_digits_stmt.arg);
-            assertTrue(fraction_digits >= 1 && fraction_digits <= 18, 'type_stmt ${stmt.arg} fraction-digits-range-error');
+            assertTrue(fraction_digits >= 1 && fraction_digits <= 18, 'type_stmt ${stmt.arg} value ${value} fraction-digits-range-error');
             
             var defautRange:ValueRange = switch fraction_digits {
                 case 1:  {min:"-922337203685477580.8", max:"922337203685477580.7"};
@@ -116,14 +121,14 @@ class AstDefaultValidateVisitor extends AstVisitor {
                 case 18: {min:"-9.223372036854775808", max:"9.223372036854775807"};
                 default: {min:"min", max:"max"};
             }
-            assertTrue(defautRange.min == "min" || intValue >= Std.parseFloat(defautRange.min), 'type_stmt ${stmt.arg} default-min-range-error');
-            assertTrue(defautRange.min == "max" || intValue <= Std.parseFloat(defautRange.max), 'type_stmt ${stmt.arg} default-max-range-error');
+            assertTrue(defautRange.min == "min" || intValue >= Std.parseFloat(defautRange.min), 'type_stmt ${stmt.arg} value ${value} default-min-range-error');
+            assertTrue(defautRange.min == "max" || intValue <= Std.parseFloat(defautRange.max), 'type_stmt ${stmt.arg} value ${value} default-max-range-error');
         }
         
         var rangeArray:Array<ValueRange> = buildRanges(stmt.sub.range_stmt);
         if (rangeArray.length > 0) {
             var e = rangeArray.find(function(e) { return (e.min == "min" || Std.parseFloat(e.min) <= intValue) && (e.max == "max" || Std.parseFloat(e.max) >= intValue); });
-            assertTrue(e != null, 'type_stmt ${stmt.arg} fraction-digits-range-error');
+            assertTrue(e != null, 'type_stmt ${stmt.arg} value ${value} fraction-digits-range-error');
         }
     }
     
@@ -162,9 +167,10 @@ class AstDefaultValidateVisitor extends AstVisitor {
         var valid = false;
         for (u in stmt.subs.type_stmt.iterator()) {
             var visitor = new AstDefaultValidateVisitor();
+            visitor.isUnionBranch = true;
             visitor.default_stmt = default_stmt;
             visitor.visit(u);
-            if (visitor.validUnion) {
+            if (visitor.validUnionBranch) {
                 valid = true;
                 break;
             }
@@ -173,7 +179,11 @@ class AstDefaultValidateVisitor extends AstVisitor {
     }
     
     function validateUserType(stmt:Stmt, default_stmt:Stmt) {
-
+        var type_stmt = stmt.ref.sub.type_stmt;
+        var visitor = new AstDefaultValidateVisitor();
+        visitor.isUnionBranch = isUnionBranch;
+        visitor.default_stmt = default_stmt;
+        visitor.visit(type_stmt);
     }
 
     function validateString(stmt:Stmt, value:String) {
@@ -185,7 +195,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
         var pattern_stmt = stmt.sub.pattern_stmt;
         if (pattern_stmt != null) {
             var pat = new js.RegExp(pattern_stmt.arg);
-            assertTrue(pat.test(value), 'type_stmt ${stmt.arg} pattern-error');
+            assertTrue(pat.test(value), 'type_stmt ${stmt.arg} ${value} pattern-error');
         }
     }
 
@@ -204,8 +214,8 @@ class AstDefaultValidateVisitor extends AstVisitor {
     
     override function assertTrue(b:Bool, msg:String) {
         if (b != true) {
-            if (stmt.parent.arg == "union") {
-                validUnion = false;
+            if (isUnionBranch) {
+                validUnionBranch = false;
             } else {
                 trace('${msg} in ${stmt.type} ${stmt.arg} location ${stmt.location} path ${stmt.path}');
             }
