@@ -89,6 +89,17 @@ class Stmt {
         }
         return p;
     }
+    
+    public var config(get, never):Bool;
+    function get_config() {
+        var p = this;
+        while (p != null) {
+            var config_stmt = p.sub.config_stmt;
+            if (config_stmt != null) return (config_stmt.arg=='true')?true:false;
+            p = p.parent;
+        }
+        return false;
+    }
 
     public var path(get, never):String;
     function get_path() return ctx.path[top.arg];

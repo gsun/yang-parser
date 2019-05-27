@@ -39,7 +39,7 @@ class AstUnknownVisitor extends AstVisitor {
                     if (stmt.ref != null) break;
                 }
             }
-            assertTrue(stmt.ref != null || stmt.parent.type == 'unknown_stmt', 'unknown_stmt ${stmt.arg} local-extension-reference-error');
+            assertTrue(stmt.ref != null || stmt.parent.type == 'unknown_stmt', 'unknown_stmt ${stmt.keyword} ${stmt.arg} local-extension-reference-error');
         } else {
             var prefixName:Array<String> = stmt.keyword.split(':');
             for (m in stmt.top.subs.import_stmt.iterator()) {
@@ -50,7 +50,7 @@ class AstUnknownVisitor extends AstVisitor {
                     if (stmt.ref != null) break;
                 }
             }   
-            assertTrue(stmt.ref != null || stmt.parent.type == 'unknown_stmt', 'unknown_stmt ${stmt.keyword} global-extension-reference-error');         
+            assertTrue(stmt.ref != null || stmt.parent.type == 'unknown_stmt', 'unknown_stmt ${stmt.keyword} ${stmt.arg} global-extension-reference-error');         
         }
     }
 }
