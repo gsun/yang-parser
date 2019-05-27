@@ -58,5 +58,9 @@ class TestParser {
             var visitor = new AstDefaultValidateVisitor();
             visitor.visit(st);
         }       
+        for (st in c.mo) {
+            var visitor = new AstUnknownVisitor();
+            visitor.visit(st);
+        }       
     }
 }

@@ -14,4 +14,12 @@
 -lib hxnodejs
 
 --next
+-dce no
+-cp src
+-cp test
+-main Test
+-js bin\Test.js
+-lib hxnodejs
+
+--next
 -cmd copy src\yang.js bin\yang.js

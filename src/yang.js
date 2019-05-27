@@ -14024,7 +14024,7 @@ function peg$parse(input, options) {
       if (s2 !== peg$FAILED) {
         s3 = peg$parseoptsep();
         if (s3 !== peg$FAILED) {
-          s4 = peg$parseunknown_stmt2_subs();
+          s4 = peg$parseunknown_stmt_subs();
           if (s4 !== peg$FAILED) {
             s5 = peg$parseoptsep();
             if (s5 !== peg$FAILED) {
@@ -14050,6 +14050,17 @@ function peg$parse(input, options) {
     } else {
       peg$currPos = s0;
       s0 = peg$FAILED;
+    }
+
+    return s0;
+  }
+
+  function peg$parseunknown_stmt_sub() {
+    var s0;
+
+    s0 = peg$parsedescription_stmt();
+    if (s0 === peg$FAILED) {
+      s0 = peg$parseunknown_stmt2();
     }
 
     return s0;
@@ -14125,7 +14136,7 @@ function peg$parse(input, options) {
       if (s2 !== peg$FAILED) {
         s3 = peg$parseoptsep();
         if (s3 !== peg$FAILED) {
-          s4 = peg$parseunknown_stmt2_subs();
+          s4 = peg$parseunknown_stmt_subs();
           if (s4 !== peg$FAILED) {
             s5 = peg$parseoptsep();
             if (s5 !== peg$FAILED) {
@@ -14156,7 +14167,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseunknown_stmt2_subs() {
+  function peg$parseunknown_stmt_subs() {
     var s0, s1, s2, s3, s4, s5, s6;
 
     s0 = peg$currPos;
@@ -14186,7 +14197,7 @@ function peg$parse(input, options) {
         if (s2 !== peg$FAILED) {
           s3 = [];
           s4 = peg$currPos;
-          s5 = peg$parseunknown_stmt2();
+          s5 = peg$parseunknown_stmt_sub();
           if (s5 !== peg$FAILED) {
             s6 = peg$parsestmtsep_no_stmt_();
             if (s6 !== peg$FAILED) {
@@ -14203,7 +14214,7 @@ function peg$parse(input, options) {
           while (s4 !== peg$FAILED) {
             s3.push(s4);
             s4 = peg$currPos;
-            s5 = peg$parseunknown_stmt2();
+            s5 = peg$parseunknown_stmt_sub();
             if (s5 !== peg$FAILED) {
               s6 = peg$parsestmtsep_no_stmt_();
               if (s6 !== peg$FAILED) {

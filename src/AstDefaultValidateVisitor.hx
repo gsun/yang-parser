@@ -39,7 +39,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
                 case "union": validateUnion(stmt, default_stmt);
                 default: validateUserType(stmt, default_stmt);
             }
-            if (this.default_stmt != null) this.default_stmt = null;
+            this.default_stmt = null; //reset default_stmt to avoid recheck in sub stmts.
         }
     }
     
