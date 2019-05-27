@@ -8473,7 +8473,13 @@ function peg$parse(input, options) {
     if (s1 !== peg$FAILED) {
       s2 = peg$parsesep();
       if (s2 !== peg$FAILED) {
-        s3 = peg$parserefine_arg_str();
+        s3 = peg$currPos;
+        s4 = peg$parserefine_arg_str();
+        if (s4 !== peg$FAILED) {
+          s3 = input.substring(s3, peg$currPos);
+        } else {
+          s3 = s4;
+        }
         if (s3 !== peg$FAILED) {
           s4 = peg$parseoptsep();
           if (s4 !== peg$FAILED) {
