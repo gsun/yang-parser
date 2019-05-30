@@ -13,6 +13,7 @@ class AstRefineVisitor extends AstVisitor {
     var stmt_refine_with_min_elements = ['leaf_list_stmt', 'list_stmt'];
     var stmt_refine_with_max_elements = ['leaf_list_stmt', 'list_stmt'];
     var stmt_refine_with_if_feature = ['container_stmt', 'leaf_stmt', 'leaf_list_stmt', 'list_stmt', 'choice_stmt', 'case_stmt', 'anyxml_stmt', 'anydata_stmt'];
+    var stmt_refine = ['container_stmt', 'leaf_stmt', 'leaf_list_stmt', 'list_stmt', 'choice_stmt', 'case_stmt', 'anyxml_stmt', 'anydata_stmt'];
 
     function refine_stmt(stmt:Stmt, context:Dynamic) {
         if (stmt.arg.indexOf('/') == -1) {
@@ -39,7 +40,7 @@ class AstRefineVisitor extends AstVisitor {
     }
     
     function findRefinedStmt(stmt:Stmt, arg:String):Null<Stmt> {
-        var t = stmt.subList.find(function(ch) { return (ch.arg == arg); });
+        var t = stmt.subList.find(function(ch) { return (stmt_refine.has(ch.type) && ch.arg == arg); });
         if (t != null) return t;
         for (e in stmt.subs.uses_stmt.iterator()) {
             var t = findRefinedStmt(e.ref, arg);
@@ -50,7 +51,7 @@ class AstRefineVisitor extends AstVisitor {
     
     function findRefinedStmt2(stmt:Stmt, path:Array<String>):Null<Stmt> {
         if (path.length == 1) {
-            return stmt.subList.find(function(ch) { return (ch.arg == path[0]); });
+            return stmt.subList.find(function(ch) { return (stmt_refine.has(ch.type) && ch.arg == path[0]); });
         }
         var e = stmt.subs.uses_stmt.find(function(ch) { return (ch.arg == path[0]); });
         if (e == null) return null;
