@@ -57,10 +57,6 @@ class TestParser {
         for (st in c.mo) {
             var visitor = new AstUnknownVisitor();
             visitor.visit(st);
-        }       
-        for (st in c.mo) {
-            var visitor = new AstReduceGroupingRecursionVisitor();
-            visitor.visit(st);
-        }       
+        }
     }
 }

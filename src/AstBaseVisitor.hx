@@ -27,7 +27,6 @@ class AstBaseVisitor extends AstVisitor {
             while (parent != null) {
                 stmt.ref = parent.subs.identity_stmt[arg];
                 if (stmt.ref != null) {
-                    stmt.ref.addRefed(stmt);
                     break;
                 }
                 parent = parent.parent;
@@ -38,7 +37,6 @@ class AstBaseVisitor extends AstVisitor {
                     assertTrue(sub != null, 'base_stmt ${stmt.arg} include-module-error');
                     stmt.ref = sub.subs.identity_stmt[arg];
                     if (stmt.ref != null) {
-                        stmt.ref.addRefed(stmt);
                         break;
                     }
                 }
@@ -52,7 +50,6 @@ class AstBaseVisitor extends AstVisitor {
                     assertTrue(mo != null, 'base_stmt ${stmt.arg} global-identity-module-error');
                     stmt.ref = mo.subs.identity_stmt[arg];
                     if (stmt.ref != null) {
-                        stmt.ref.addRefed(stmt);
                         break;
                     }
                 }

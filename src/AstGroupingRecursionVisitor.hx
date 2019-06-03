@@ -11,7 +11,7 @@ class AstGroupingRecursionVisitor extends AstVisitor {
     
     function grouping_stmt(stmt:Stmt, context:Dynamic) {
         group.push(stmt.arg);
-        for (s in stmt.subs.uses_stmt.iterator()) {
+        for (s in stmt.subList) {
             var visitor = new AstGroupingRecursionVisitor();
             visitor.group = group.list();
             visitor.visit(s);

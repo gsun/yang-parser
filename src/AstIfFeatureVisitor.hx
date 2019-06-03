@@ -28,7 +28,6 @@ class AstIfFeatureVisitor extends AstVisitor {
             while (parent != null) {
                 stmt.ref = parent.subs.feature_stmt[arg];
                 if (stmt.ref != null) {
-                    stmt.ref.addRefed(stmt);
                     break;
                 }
                 parent = parent.parent;
@@ -39,7 +38,6 @@ class AstIfFeatureVisitor extends AstVisitor {
                     assertTrue(sub != null, 'if_feature_stmt ${stmt.arg} include-module-error');
                     stmt.ref = sub.subs.feature_stmt[arg];
                     if (stmt.ref != null) {
-                        stmt.ref.addRefed(stmt);
                         break;
                     }
                 }
@@ -53,7 +51,6 @@ class AstIfFeatureVisitor extends AstVisitor {
                     assertTrue(mo != null, 'if_feature_stmt ${stmt.arg} global-feature-module-error');
                     stmt.ref = mo.subs.feature_stmt[arg];
                     if (stmt.ref != null) {
-                        stmt.ref.addRefed(stmt);
                         break;
                     }
                 }

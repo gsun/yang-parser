@@ -64,7 +64,6 @@ class Stmt {
     public var ctx:Context;
     public var parent:Stmt;
     public var ref:Stmt;  //the ref to stmt for uses/import/include/belongs-to/type
-    public var refed:List<Stmt>;
     
     
     static var validTypes:Array<String> = ["anyxml_stmt","argument_stmt","augment_stmt","base_stmt","belongs_to_stmt",
@@ -128,30 +127,14 @@ class Stmt {
         subList.add(sub);
     }
     
-    public function addRefed(stmt:Stmt) {
-        refed.add(stmt);
-    }
-    
     public function removeSub(sub:Stmt) {
         subList.remove(sub);
-        sub.parent = null;
-        sub.ctx = null;
-        sub.ref = null;
-        for (r in sub.refed) {
-            r.ref = null;
-        }
-        sub.refed.clear();
-        for (s in sub.subList) {
-            removeSub(s);
-        }
-        sub.subList.clear();
     }
     
     public function new() {
         ctx = null;
         parent = null;
         ref = null;
-        refed = new List();
         subList = new List();
         status = Current;
     }
