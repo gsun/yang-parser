@@ -35,7 +35,8 @@ class AstBaseVisitor extends AstVisitor {
                 for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'base_stmt ${stmt.arg} include-module-error');
-                    stmt.ref = sub.subs.identity_stmt[arg];
+                    var ii = sub.subs.identity_stmt[arg];
+                    if (ii != null && ii.status == Current) stmt.ref = ii;
                     if (stmt.ref != null) {
                         break;
                     }
@@ -48,7 +49,8 @@ class AstBaseVisitor extends AstVisitor {
                 if (m.subs.prefix_stmt[prefixName[0]] != null) {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'base_stmt ${stmt.arg} global-identity-module-error');
-                    stmt.ref = mo.subs.identity_stmt[arg];
+                    var ii = mo.subs.identity_stmt[arg];
+                    if (ii != null && ii.status == Current) stmt.ref = ii;
                     if (stmt.ref != null) {
                         break;
                     }

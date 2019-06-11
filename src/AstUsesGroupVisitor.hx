@@ -34,7 +34,8 @@ class AstUsesGroupVisitor extends AstVisitor {
                 for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'uses_stmt ${stmt.arg} include-module-error');
-                    stmt.ref = sub.subs.grouping_stmt[arg];
+                    var gg = sub.subs.grouping_stmt[arg];
+                    if (gg != null && gg.status == Current) stmt.ref = gg;
                     if (stmt.ref != null) break;
                 }
             }
@@ -45,7 +46,8 @@ class AstUsesGroupVisitor extends AstVisitor {
                 if (m.subs.prefix_stmt[prefixName[0]] != null) {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'uses_stmt ${stmt.arg} global-group-module-error');
-                    stmt.ref = mo.subs.grouping_stmt[arg];
+                    var gg = mo.subs.grouping_stmt[arg];
+                    if (gg != null && gg.status == Current) stmt.ref = gg;
                     if (stmt.ref != null) break;
                 }
             }   

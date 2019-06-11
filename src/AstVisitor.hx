@@ -6,6 +6,8 @@ class AstVisitor {
     public function new() {}
     
     public function visit(stmt:Stmt, context:Dynamic=null) {
+        if (stmt.status != Current) return;
+        
         this.stmt = stmt;
         var method = Reflect.field(this, stmt.type);
         if (method != null) {

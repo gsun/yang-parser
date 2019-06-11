@@ -74,7 +74,8 @@ class AstTypeVisitor extends AstVisitor {
                 for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'type_stmt ${stmt.arg} include-module-error');
-                    stmt.ref = sub.subs.typedef_stmt[arg];
+                    var tt = sub.subs.typedef_stmt[arg];
+                    if (tt != null && tt.status == Current) stmt.ref = tt;
                     if (stmt.ref != null) break;
                 }
             }
@@ -85,7 +86,8 @@ class AstTypeVisitor extends AstVisitor {
                 if (m.subs.prefix_stmt[prefixName[0]] != null) {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'type_stmt ${stmt.arg} global-typedef-module-error');
-                    stmt.ref = mo.subs.typedef_stmt[arg];
+                    var tt = mo.subs.typedef_stmt[arg];
+                    if (tt != null && tt.status == Current) stmt.ref = tt;
                     if (stmt.ref != null) break;
                 }
             }   

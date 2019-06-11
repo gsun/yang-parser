@@ -35,7 +35,8 @@ class AstUnknownVisitor extends AstVisitor {
                 for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'type_stmt ${stmt.keyword} include-module-error');
-                    stmt.ref = sub.subs.extension_stmt[keyword];
+                    var ee = sub.subs.extension_stmt[keyword];
+                    if (ee != null && ee.status == Current) stmt.ref = ee;
                     if (stmt.ref != null) break;
                 }
             }
@@ -46,7 +47,8 @@ class AstUnknownVisitor extends AstVisitor {
                 if (m.subs.prefix_stmt[prefixName[0]] != null) {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'type_stmt ${stmt.keyword} global-extension-module-error');
-                    stmt.ref = mo.subs.extension_stmt[keyword];
+                    var ee = mo.subs.extension_stmt[keyword];
+                    if (ee != null && ee.status == Current) stmt.ref = ee;
                     if (stmt.ref != null) break;
                 }
             }   

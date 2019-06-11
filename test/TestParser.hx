@@ -7,6 +7,14 @@ class TestParser {
         var p = new Parser(c);
         p.parse("./models");    
         for (st in c.mo) {
+            var visitor = new AstStatusVisitor();
+            visitor.visit(st);
+        }   
+        for (st in c.mo) {
+            var visitor = new AstIfFeatureVisitor();
+            visitor.visit(st);
+        }       
+        for (st in c.mo) {
             var visitor = new AstStmtCountVisitor();
             visitor.visit(st);
         }
@@ -34,10 +42,6 @@ class TestParser {
             var visitor = new AstFeatureRecursionVisitor();
             visitor.visit(st);
         }
-        for (st in c.mo) {
-            var visitor = new AstIfFeatureVisitor();
-            visitor.visit(st);
-        }       
         for (st in c.mo) {
             var visitor = new AstIdentityRecursionVisitor();
             visitor.visit(st);
