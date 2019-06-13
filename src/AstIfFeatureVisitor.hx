@@ -3,7 +3,7 @@ using Lambda;
 
 class AstIfFeatureVisitor extends AstVisitor {  
     
-    function if_feature_stmt(stmt:Stmt, context:Dynamic) {
+    function if_feature_stmt(stmt:IfFeatureStmt, context:Dynamic) {
         var local = true;
         var prefix;
         var arg = stmt.arg;     
@@ -26,36 +26,39 @@ class AstIfFeatureVisitor extends AstVisitor {
         if (local) {
             var parent = stmt.parent;
             while (parent != null) {
-                stmt.ref = parent.subs.feature_stmt[arg];
-                if (stmt.ref != null) {
+                var ff = parent.subs.feature_stmt[arg];
+                if (ff != null && ff.status == Current) stmt.feature = ff;
+                if (stmt.feature != null) {
                     break;
                 }
                 parent = parent.parent;
             }
-            if (stmt.ref ==  null) {  //check the submodule
+            if (stmt.feature ==  null) {  //check the submodule
                 for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'if_feature_stmt ${stmt.arg} include-module-error');
-                    stmt.ref = sub.subs.feature_stmt[arg];
-                    if (stmt.ref != null) {
+                    var ff = sub.subs.feature_stmt[arg];
+                    if (ff != null && ff.status == Current) stmt.feature = ff;
+                    if (stmt.feature != null) {
                         break;
                     }
                 }
             }
-            if (stmt.ref == null) stmt.parent.status = Prune;
+            if (stmt.feature == null) stmt.parent.status = Prune;
         } else {
             var prefixName:Array<String> = stmt.arg.split(':');
             for (m in stmt.top.subs.import_stmt.iterator()) {
                 if (m.subs.prefix_stmt[prefixName[0]] != null) {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'if_feature_stmt ${stmt.arg} global-feature-module-error');
-                    stmt.ref = mo.subs.feature_stmt[arg];
-                    if (stmt.ref != null) {
+                    var ff = mo.subs.feature_stmt[arg];
+                    if (ff != null && ff.status == Current) stmt.feature = ff;
+                    if (stmt.feature != null) {
                         break;
                     }
                 }
             }
-            if (stmt.ref == null) stmt.parent.status = Prune;
+            if (stmt.feature == null) stmt.parent.status = Prune;
         }
     }   
 }

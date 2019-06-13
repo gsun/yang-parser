@@ -3,7 +3,7 @@ using Lambda;
 
 class AstUsesGroupVisitor extends AstVisitor {  
     
-    function uses_stmt(stmt:Stmt, context:Dynamic) {
+    function uses_stmt(stmt:UsesStmt, context:Dynamic) {
         var local = true;
         var prefix;
         var arg = stmt.arg;     
@@ -26,20 +26,21 @@ class AstUsesGroupVisitor extends AstVisitor {
         if (local) {
             var parent = stmt.parent;
             while (parent != null) {
-                stmt.ref = parent.subs.grouping_stmt[arg];
-                if (stmt.ref != null) break;
+                var gg = parent.subs.grouping_stmt[arg];
+                if (gg != null && gg.status == Current) stmt.grouping = gg;
+                if (stmt.grouping != null) break;
                 parent = parent.parent;
             }
-            if (stmt.ref ==  null) {  //check the submodule
+            if (stmt.grouping ==  null) {  //check the submodule
                 for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'uses_stmt ${stmt.arg} include-module-error');
                     var gg = sub.subs.grouping_stmt[arg];
-                    if (gg != null && gg.status == Current) stmt.ref = gg;
-                    if (stmt.ref != null) break;
+                    if (gg != null && gg.status == Current) stmt.grouping = gg;
+                    if (stmt.grouping != null) break;
                 }
             }
-            assertTrue(stmt.ref != null, 'uses_stmt ${stmt.arg} local-group-reference-error');
+            assertTrue(stmt.grouping != null, 'uses_stmt ${stmt.arg} local-group-reference-error');
         } else {
             var prefixName:Array<String> = stmt.arg.split(':');
             for (m in stmt.top.subs.import_stmt.iterator()) {
@@ -47,11 +48,11 @@ class AstUsesGroupVisitor extends AstVisitor {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'uses_stmt ${stmt.arg} global-group-module-error');
                     var gg = mo.subs.grouping_stmt[arg];
-                    if (gg != null && gg.status == Current) stmt.ref = gg;
-                    if (stmt.ref != null) break;
+                    if (gg != null && gg.status == Current) stmt.grouping = gg;
+                    if (stmt.grouping != null) break;
                 }
             }   
-            assertTrue(stmt.ref != null, 'uses_stmt ${stmt.arg} global-group-reference-error');         
+            assertTrue(stmt.grouping != null, 'uses_stmt ${stmt.arg} global-group-reference-error');         
         }
     }   
 }

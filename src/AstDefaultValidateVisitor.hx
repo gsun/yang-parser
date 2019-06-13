@@ -20,7 +20,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
         default_stmt = null;
     }
     
-    function type_stmt(stmt:Stmt, context:Dynamic) {
+    function type_stmt(stmt:TypeStmt, context:Dynamic) {
         var default_stmt = default_stmt!=null?default_stmt:stmt.parent.sub.default_stmt;
         if (default_stmt != null) {
             switch stmt.arg {
@@ -179,8 +179,8 @@ class AstDefaultValidateVisitor extends AstVisitor {
         assertTrue(valid, 'default_stmt ${default_stmt.arg} union-error');
     }
     
-    function validateUserType(stmt:Stmt, default_stmt:Stmt) {
-        var type_stmt = stmt.ref.sub.type_stmt;
+    function validateUserType(stmt:TypeStmt, default_stmt:Stmt) {
+        var type_stmt = stmt.typedefine.sub.type_stmt;
         var visitor = new AstDefaultValidateVisitor();
         visitor.isUnionBranch = isUnionBranch;
         visitor.default_stmt = default_stmt;

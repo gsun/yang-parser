@@ -3,7 +3,7 @@ using Lambda;
 
 class AstUnknownVisitor extends AstVisitor {  
     
-    function unknown_stmt(stmt:Stmt, context:Dynamic) {
+    function unknown_stmt(stmt:UnknownStmt, context:Dynamic) {
         var local = true;
         var prefix;
         var keyword = stmt.keyword;
@@ -27,20 +27,21 @@ class AstUnknownVisitor extends AstVisitor {
         if (local) {
             var parent = stmt.parent;
             while (parent != null) {
-                stmt.ref = parent.subs.extension_stmt[keyword];
-                if (stmt.ref != null) break;
+                var ee = parent.subs.extension_stmt[keyword];
+                if (ee != null && ee.status == Current) stmt.extension = ee;
+                if (stmt.extension != null) break;
                 parent = parent.parent;
             }
-            if (stmt.ref ==  null) {  //check the submodule
+            if (stmt.extension ==  null) {  //check the submodule
                 for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'type_stmt ${stmt.keyword} include-module-error');
                     var ee = sub.subs.extension_stmt[keyword];
-                    if (ee != null && ee.status == Current) stmt.ref = ee;
-                    if (stmt.ref != null) break;
+                    if (ee != null && ee.status == Current) stmt.extension = ee;
+                    if (stmt.extension != null) break;
                 }
             }
-            assertTrue(stmt.ref != null || stmt.parent.type == 'unknown_stmt', 'unknown_stmt ${stmt.keyword} ${stmt.arg} local-extension-reference-error');
+            assertTrue(stmt.extension != null || stmt.parent.type == 'unknown_stmt', 'unknown_stmt ${stmt.keyword} ${stmt.arg} local-extension-reference-error');
         } else {
             var prefixName:Array<String> = stmt.keyword.split(':');
             for (m in stmt.top.subs.import_stmt.iterator()) {
@@ -48,11 +49,11 @@ class AstUnknownVisitor extends AstVisitor {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'type_stmt ${stmt.keyword} global-extension-module-error');
                     var ee = mo.subs.extension_stmt[keyword];
-                    if (ee != null && ee.status == Current) stmt.ref = ee;
-                    if (stmt.ref != null) break;
+                    if (ee != null && ee.status == Current) stmt.extension = ee;
+                    if (stmt.extension != null) break;
                 }
             }   
-            assertTrue(stmt.ref != null || stmt.parent.type == 'unknown_stmt', 'unknown_stmt ${stmt.keyword} ${stmt.arg} global-extension-reference-error');         
+            assertTrue(stmt.extension != null || stmt.parent.type == 'unknown_stmt', 'unknown_stmt ${stmt.keyword} ${stmt.arg} global-extension-reference-error');         
         }
     }
 }

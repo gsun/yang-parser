@@ -63,7 +63,6 @@ class Stmt {
     public var level:Int; //yang file formatter
     public var ctx:Context;
     public var parent:Stmt;
-    public var ref:Stmt;  //the ref to stmt for uses/import/include/belongs-to/type/refine
     
     
     static var validTypes:Array<String> = ["anyxml_stmt","argument_stmt","augment_stmt","base_stmt","belongs_to_stmt",
@@ -136,7 +135,6 @@ class Stmt {
     public function new() {
         ctx = null;
         parent = null;
-        ref = null;
         subList = new List();
         status = Current;
     }
@@ -209,7 +207,7 @@ class Stmt {
             case "yang_version_stmt": new YangVersionStmt();
             case "yin_element_stmt": new YinElementStmt();
             case "unknown_stmt": new UnknownStmt();
-			default: new Stmt();
+            default: new Stmt();
         }
         stmt.type = raw.type;
         stmt.keyword = raw.keyword;

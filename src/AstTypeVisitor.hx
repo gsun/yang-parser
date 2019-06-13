@@ -3,7 +3,7 @@ using Lambda;
 
 class AstTypeVisitor extends AstVisitor {  
     
-    function type_stmt(stmt:Stmt, context:Dynamic) {
+    function type_stmt(stmt:TypeStmt, context:Dynamic) {
         var local = true;
         var prefix;
         var arg = stmt.arg;
@@ -66,20 +66,21 @@ class AstTypeVisitor extends AstVisitor {
         if (local) {
             var parent = stmt.parent;
             while (parent != null) {
-                stmt.ref = parent.subs.typedef_stmt[arg];
-                if (stmt.ref != null) break;
+                var tt = parent.subs.typedef_stmt[arg];
+                if (tt != null && tt.status == Current) stmt.typedefine = tt;
+                if (stmt.typedefine != null) break;
                 parent = parent.parent;
             }
-            if (stmt.ref ==  null) {  //check the submodule
+            if (stmt.typedefine ==  null) {  //check the submodule
                 for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'type_stmt ${stmt.arg} include-module-error');
                     var tt = sub.subs.typedef_stmt[arg];
-                    if (tt != null && tt.status == Current) stmt.ref = tt;
-                    if (stmt.ref != null) break;
+                    if (tt != null && tt.status == Current) stmt.typedefine = tt;
+                    if (stmt.typedefine != null) break;
                 }
             }
-            assertTrue(stmt.ref != null, 'type_stmt ${stmt.arg} local-typedef-reference-error');
+            assertTrue(stmt.typedefine != null, 'type_stmt ${stmt.arg} local-typedef-reference-error');
         } else {
             var prefixName:Array<String> = stmt.arg.split(':');
             for (m in stmt.top.subs.import_stmt.iterator()) {
@@ -87,11 +88,11 @@ class AstTypeVisitor extends AstVisitor {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'type_stmt ${stmt.arg} global-typedef-module-error');
                     var tt = mo.subs.typedef_stmt[arg];
-                    if (tt != null && tt.status == Current) stmt.ref = tt;
-                    if (stmt.ref != null) break;
+                    if (tt != null && tt.status == Current) stmt.typedefine = tt;
+                    if (stmt.typedefine != null) break;
                 }
             }   
-            assertTrue(stmt.ref != null, 'type_stmt ${stmt.arg} global-typedf-reference-error');         
+            assertTrue(stmt.typedefine != null, 'type_stmt ${stmt.arg} global-typedf-reference-error');         
         }
     }
 }

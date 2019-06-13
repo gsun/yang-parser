@@ -3,7 +3,7 @@ using Lambda;
 
 class AstBaseVisitor extends AstVisitor {  
     
-    function base_stmt(stmt:Stmt, context:Dynamic) {
+    function base_stmt(stmt:BaseStmt, context:Dynamic) {
         var local = true;
         var prefix;
         var arg = stmt.arg;     
@@ -25,24 +25,25 @@ class AstBaseVisitor extends AstVisitor {
         if (local) {
             var parent = stmt.parent;
             while (parent != null) {
-                stmt.ref = parent.subs.identity_stmt[arg];
-                if (stmt.ref != null) {
+                var ii = parent.subs.identity_stmt[arg];
+				if (ii != null && ii.status == Current) stmt.identity = ii;
+                if (stmt.identity != null) {
                     break;
                 }
                 parent = parent.parent;
             }
-            if (stmt.ref ==  null) {  //check the submodule
+            if (stmt.identity ==  null) {  //check the submodule
                 for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'base_stmt ${stmt.arg} include-module-error');
                     var ii = sub.subs.identity_stmt[arg];
-                    if (ii != null && ii.status == Current) stmt.ref = ii;
-                    if (stmt.ref != null) {
+                    if (ii != null && ii.status == Current) stmt.identity = ii;
+                    if (stmt.identity != null) {
                         break;
                     }
                 }
             }
-            assertTrue(stmt.ref != null, 'base_stmt ${stmt.arg} local-identity-reference-error');
+            assertTrue(stmt.identity != null, 'base_stmt ${stmt.arg} local-identity-reference-error');
         } else {
             var prefixName:Array<String> = stmt.arg.split(':');
             for (m in stmt.top.subs.import_stmt.iterator()) {
@@ -50,13 +51,13 @@ class AstBaseVisitor extends AstVisitor {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'base_stmt ${stmt.arg} global-identity-module-error');
                     var ii = mo.subs.identity_stmt[arg];
-                    if (ii != null && ii.status == Current) stmt.ref = ii;
-                    if (stmt.ref != null) {
+                    if (ii != null && ii.status == Current) stmt.identity = ii;
+                    if (stmt.identity != null) {
                         break;
                     }
                 }
             }
-            assertTrue(stmt.ref != null, 'base_stmt ${stmt.arg} global-identity-reference-error');      
+            assertTrue(stmt.identity != null, 'base_stmt ${stmt.arg} global-identity-reference-error');      
         }
     }   
 }
