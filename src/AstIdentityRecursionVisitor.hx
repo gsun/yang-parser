@@ -21,10 +21,10 @@ class AstIdentityRecursionVisitor extends AstVisitor {
 
     function base_stmt(stmt:Stmt, context:Dynamic) {
         if (stmt.arg.indexOf(':') == -1) {
-            assertFalse(identity.has(stmt.arg), 'base_stmt ${stmt.arg} identity-recursion-error');
+            assertFalse(identity.has(stmt.arg), 'identity-recursion-error');
         } else {
             var prefixName = stmt.arg.split(':');
-            assertFalse(identity.has(prefixName[1]), 'base_stmt ${stmt.arg} identity-recursion-error');            
+            assertFalse(identity.has(prefixName[1]), 'identity-recursion-error');            
         }
     }   
 }

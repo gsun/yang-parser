@@ -21,10 +21,10 @@ class AstFeatureRecursionVisitor extends AstVisitor {
 
     function if_feature_stmt(stmt:Stmt, context:Dynamic) {
         if (stmt.arg.indexOf(':') == -1) {
-            assertFalse(feature.has(stmt.arg), 'if_feature_stmt ${stmt.arg} feature-recursion-error');
+            assertFalse(feature.has(stmt.arg), 'feature-recursion-error');
         } else {
             var prefixName = stmt.arg.split(':');
-            assertFalse(feature.has(prefixName[1]), 'if_feature_stmt ${stmt.arg} feature-recursion-error');            
+            assertFalse(feature.has(prefixName[1]), 'feature-recursion-error');            
         }
     }   
 }

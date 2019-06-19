@@ -21,19 +21,19 @@ class AstVisitor {
     
     function assertTrue(b:Bool, msg:String) {
         if (b != true){
-            trace('${msg} in ${stmt.type} ${stmt.keyword} ${stmt.arg} location ${stmt.location} path ${stmt.path}');
+            trace('${msg} in ${stmt}');
         }
     }
     
     function assertFalse(b:Bool, msg:String) {
         if (b == true){
-            trace('${msg} in ${stmt.type} ${stmt.keyword} ${stmt.arg} location ${stmt.location} path ${stmt.path}');
+            trace('${msg} in ${stmt}');
         }
     }
     
     function assertEquals<T>(expected:T , actual:T,  msg:String) {
         if (expected != actual){
-            trace('${msg} in ${stmt.type} ${stmt.keyword} ${stmt.arg} location ${stmt.location} path ${stmt.path}');
+            trace('${msg} in ${stmt}');
         }
     }
 }

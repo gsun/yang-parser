@@ -225,4 +225,8 @@ class Stmt {
     static public function validType(t:String) {
         return validTypes.has(t);
     }
+
+	public function toString() {
+	    return 'type ${type} keyword ${keyword} arg ${arg} location ${location} path ${path}';
+	}
 }
