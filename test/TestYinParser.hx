@@ -1,6 +1,6 @@
 import Parser;
 import Context;
-import Stmt;
+import stmt.Stmt;
 import sys.io.File;
 import haxe.io.Path;
 

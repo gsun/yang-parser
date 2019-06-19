@@ -1,5 +1,6 @@
 import AstVisitor;
-import Stmt.StmtStatus;
+import stmt.Stmt;
+import stmt.Stmt.StmtStatus;
 
 class AstStatusVisitor extends AstVisitor {
     function status_stmt(stmt:Stmt, context:Dynamic) {

@@ -1,4 +1,5 @@
 import AstVisitor;
+import stmt.UsesStmt;
 using Lambda;
 
 class AstUsesGroupVisitor extends AstVisitor {  

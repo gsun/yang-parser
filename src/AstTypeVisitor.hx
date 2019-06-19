@@ -1,4 +1,5 @@
 import AstVisitor;
+import stmt.TypeStmt;
 using Lambda;
 
 class AstTypeVisitor extends AstVisitor {  

@@ -1,4 +1,4 @@
-import Stmt;
+import stmt.Stmt;
 
 class Context {
     public var raw:Map<String, StmtRaw>;

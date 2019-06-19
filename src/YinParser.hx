@@ -1,4 +1,4 @@
-import Stmt;
+import stmt.Stmt;
 
 class YinParser {
     public static function parse(e:Xml, ctx:Context) :Stmt {

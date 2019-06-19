@@ -1,4 +1,5 @@
 import AstVisitor;
+import stmt.Stmt;
 using Lambda;
 
 class AstIdentityRecursionVisitor extends AstVisitor {  

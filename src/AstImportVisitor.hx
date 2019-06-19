@@ -1,4 +1,10 @@
 import AstVisitor;
+import stmt.Stmt;
+import stmt.ModuleStmt;
+import stmt.SubmoduleStmt;
+import stmt.ImportStmt;
+import stmt.IncludeStmt;
+import stmt.BelongsToStmt;
 using Lambda;
 
 class AstImportVisitor extends AstVisitor {

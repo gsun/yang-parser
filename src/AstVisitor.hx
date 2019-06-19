@@ -1,4 +1,4 @@
-import Stmt;
+import stmt.Stmt;
 
 class AstVisitor {
     var stmt:Stmt;

@@ -1,6 +1,6 @@
 import sys.io.File;
 import haxe.io.Path;
-import Stmt;
+import stmt.Stmt;
 
 @:jsRequire("./yang")
 extern class YangParser {

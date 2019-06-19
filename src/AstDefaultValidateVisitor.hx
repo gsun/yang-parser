@@ -1,4 +1,6 @@
 import AstVisitor;
+import stmt.Stmt;
+import stmt.TypeStmt;
 using Lambda;
 using StringTools;
 

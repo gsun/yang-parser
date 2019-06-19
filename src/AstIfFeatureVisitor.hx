@@ -1,4 +1,5 @@
 import AstVisitor;
+import stmt.IfFeatureStmt;
 using Lambda;
 
 class AstIfFeatureVisitor extends AstVisitor {  
