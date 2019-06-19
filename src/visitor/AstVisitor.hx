@@ -1,3 +1,5 @@
+package visitor;
+
 import stmt.Stmt;
 
 class AstVisitor {

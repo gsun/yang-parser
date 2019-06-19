@@ -1,4 +1,5 @@
-import AstVisitor;
+package visitor;
+
 import stmt.BaseStmt;
 using Lambda;
 

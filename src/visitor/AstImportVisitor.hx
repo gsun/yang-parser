@@ -1,4 +1,5 @@
-import AstVisitor;
+package visitor;
+
 import stmt.Stmt;
 import stmt.ModuleStmt;
 import stmt.SubmoduleStmt;
