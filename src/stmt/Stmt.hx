@@ -62,7 +62,6 @@ class Stmt {
     public var location:Location;  
 
     public var status:StmtStatus;
-    public var level:Int; //yang file formatter
     public var ctx:Context;
     public var parent:Stmt;
     
@@ -77,9 +76,7 @@ class Stmt {
                                       "organization_stmt","output_stmt","path_stmt","pattern_stmt","position_stmt","prefix_stmt","presence_stmt",
                                       "range_stmt","reference_stmt","refine_stmt","require_instance_stmt","revision_stmt","revision_date_stmt",
                                       "rpc_stmt","status_stmt","submodule_stmt","type_stmt","typedef_stmt","unique_stmt","units_stmt",
-                                      "uses_stmt","value_stmt","when_stmt","yang_version_stmt","yin_element_stmt","add_stmt","current_stmt",
-                                      "delete_stmt","deprecated_stmt","false_stmt","max_stmt","min_stmt","not_supported_stmt","obsolete_stmt",
-                                      "replace_stmt","system_stmt","true_stmt","unbounded_stmt","user_stmt", "unknown_stmt"];
+                                      "uses_stmt","value_stmt","when_stmt","yang_version_stmt","yin_element_stmt","unknown_stmt"];
                                       
     public var top(get, never):Stmt;
     function get_top() {
@@ -141,7 +138,7 @@ class Stmt {
         status = Current;
     }
 
-    static public function buildStmt(raw:StmtRaw, ctx:Context, level:Int=0):Stmt {
+    static public function buildStmt(raw:StmtRaw, ctx:Context):Stmt {
         var stmt = switch raw.type {
             case "anyxml_stmt": new AnyxmlStmt();
             case "argument_stmt": new ArgumentStmt();
@@ -216,9 +213,8 @@ class Stmt {
         stmt.arg = raw.arg;
         stmt.location = raw.location;
         stmt.ctx = ctx;
-        stmt.level = level;
         for (s in raw.subs) {
-            var child = buildStmt(s, ctx, level+1);
+            var child = buildStmt(s, ctx);
             stmt.addSub(child);
         } 
         return stmt;
@@ -228,7 +224,7 @@ class Stmt {
         return validTypes.has(t);
     }
 
-	public function toString() {
-	    return 'type ${type} keyword ${keyword} arg ${arg} location ${location} path ${path}';
-	}
+    public function toString() {
+        return 'type ${type} keyword ${keyword} arg ${arg} location ${location} path ${path}';
+    }
 }

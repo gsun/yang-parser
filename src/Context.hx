@@ -7,7 +7,7 @@ class Context {
     public var yin:Bool;             //yang or yin
     
     public function new() {
-	    raw = new Map();
+        raw = new Map();
         mo = new Map();
         path = new Map();
         yin = false;
