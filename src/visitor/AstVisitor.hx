@@ -19,6 +19,11 @@ class AstVisitor {
         for (s in stmt.subList) {
             visit(s, context);
         }
+
+        var post = Reflect.field(this, 'post_${stmt.type}');
+        if (post != null) {
+            Reflect.callMethod(this, post, [stmt, context]);
+        }
     }
     
     function assertTrue(b:Bool, msg:String) {
