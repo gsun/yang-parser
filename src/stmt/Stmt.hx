@@ -37,7 +37,7 @@ enum StmtStatus {
 abstract NodeListAccess(List<Stmt>) from List<Stmt> to List<Stmt> {
     @:op(a.b)
     public function resolve( type : String ) : NodeListAccess {
-        if (!Stmt.validType(type)) throw('invalid stmt type');
+        if (!Stmt.validType(type)) throw('invalid stmt type ${type}');
         return this.filter(function(e) { return e.type == type;});
     }
     @:arrayAccess
@@ -176,13 +176,13 @@ class Stmt {
         return stmt;
     }
     
-    static public function cloneStmt(stmt:Stmt, ctx:Context):Stmt {
+    static public function cloneStmt(stmt:Stmt):Stmt {
         if (!stmt.isValid()) return null;
         
         var c = stmt.clone();
         
         for (s in stmt.subList) {
-            var child = cloneStmt(s, ctx);
+            var child = cloneStmt(s);
             if (child != null) c.addSub(child);
         } 
         return c;
