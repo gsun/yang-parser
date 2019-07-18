@@ -29,7 +29,7 @@ class AstIfFeatureVisitor extends AstVisitor {
             var parent = stmt.parent;
             while (parent != null) {
                 var ff = parent.subs.feature_stmt[arg];
-                if (ff != null && ff.status == Current) stmt.feature = ff;
+                if (ff != null && ff.isValid()) stmt.feature = ff;
                 if (stmt.feature != null) {
                     break;
                 }
@@ -40,7 +40,7 @@ class AstIfFeatureVisitor extends AstVisitor {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'include-module-error');
                     var ff = sub.subs.feature_stmt[arg];
-                    if (ff != null && ff.status == Current) stmt.feature = ff;
+                    if (ff != null && ff.isValid()) stmt.feature = ff;
                     if (stmt.feature != null) {
                         break;
                     }
@@ -54,7 +54,7 @@ class AstIfFeatureVisitor extends AstVisitor {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'global-feature-module-error');
                     var ff = mo.subs.feature_stmt[arg];
-                    if (ff != null && ff.status == Current) stmt.feature = ff;
+                    if (ff != null && ff.isValid()) stmt.feature = ff;
                     if (stmt.feature != null) {
                         break;
                     }

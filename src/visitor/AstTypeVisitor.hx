@@ -69,7 +69,7 @@ class AstTypeVisitor extends AstVisitor {
             var parent = stmt.parent;
             while (parent != null) {
                 var tt = parent.subs.typedef_stmt[arg];
-                if (tt != null && tt.status == Current) stmt.typedefine = tt;
+                if (tt != null && tt.isValid()) stmt.typedefine = tt;
                 if (stmt.typedefine != null) break;
                 parent = parent.parent;
             }
@@ -78,7 +78,7 @@ class AstTypeVisitor extends AstVisitor {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'type_stmt ${stmt.arg} include-module-error');
                     var tt = sub.subs.typedef_stmt[arg];
-                    if (tt != null && tt.status == Current) stmt.typedefine = tt;
+                    if (tt != null && tt.isValid()) stmt.typedefine = tt;
                     if (stmt.typedefine != null) break;
                 }
             }
@@ -90,7 +90,7 @@ class AstTypeVisitor extends AstVisitor {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'type_stmt ${stmt.arg} global-typedef-module-error');
                     var tt = mo.subs.typedef_stmt[arg];
-                    if (tt != null && tt.status == Current) stmt.typedefine = tt;
+                    if (tt != null && tt.isValid()) stmt.typedefine = tt;
                     if (stmt.typedefine != null) break;
                 }
             }   

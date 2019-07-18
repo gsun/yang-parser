@@ -130,6 +130,10 @@ class Stmt {
         sub.parent = null;
         subList.remove(sub);
     }
+	
+	public function isValid() {
+	    return (status == Current || status == Deprecated)?true:false;
+	}
     
     public function new() {
         ctx = null;

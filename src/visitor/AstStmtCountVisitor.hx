@@ -116,6 +116,14 @@ class AstStmtCountVisitor extends AstVisitor {
         assertTrue(stmt.subs.revision_date_stmt.length <= 1, 'revision_date_stmt count-error');
     }   
     
+    function input_stmt(stmt:Stmt, context:Dynamic) {
+        var num_of_data_def_stmt = stmt.subs.container_stmt.length + stmt.subs.leaf_stmt.length +
+                                   stmt.subs.leaf_list_stmt.length + stmt.subs.list_stmt.length +
+                                   stmt.subs.choice_stmt.length + stmt.subs.anyxml_stmt.length +
+                                   stmt.subs.uses_stmt.length;
+        assertTrue(num_of_data_def_stmt >= 1, 'input_stmt count-error');
+    }   
+    
     function leaf_stmt(stmt:Stmt, context:Dynamic) {
         assertTrue(stmt.subs.when_stmt.length <= 1, 'when_stmt count-error');
         assertTrue(stmt.subs.type_stmt.length == 1, 'type_stmt count-error');
@@ -175,6 +183,14 @@ class AstStmtCountVisitor extends AstVisitor {
         assertTrue(stmt.subs.reference_stmt.length <= 1, 'reference_stmt count-error');
         assertTrue(stmt.subs.description_stmt.length <= 1, 'description_stmt count-error');
     }
+    
+    function output_stmt(stmt:Stmt, context:Dynamic) {
+        var num_of_data_def_stmt = stmt.subs.container_stmt.length + stmt.subs.leaf_stmt.length +
+                                   stmt.subs.leaf_list_stmt.length + stmt.subs.list_stmt.length +
+                                   stmt.subs.choice_stmt.length + stmt.subs.anyxml_stmt.length +
+                                   stmt.subs.uses_stmt.length;
+        assertTrue(num_of_data_def_stmt >= 1, 'output_stmt count-error');
+    }   
         
     function pattern_stmt(stmt:Stmt, context:Dynamic) {
         assertTrue(stmt.subs.error_message_stmt.length <= 1, 'error_message_stmt count-error');

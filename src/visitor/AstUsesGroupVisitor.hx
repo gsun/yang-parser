@@ -29,7 +29,7 @@ class AstUsesGroupVisitor extends AstVisitor {
             var parent = stmt.parent;
             while (parent != null) {
                 var gg = parent.subs.grouping_stmt[arg];
-                if (gg != null && gg.status == Current) stmt.grouping = gg;
+                if (gg != null && gg.isValid()) stmt.grouping = gg;
                 if (stmt.grouping != null) break;
                 parent = parent.parent;
             }
@@ -38,7 +38,7 @@ class AstUsesGroupVisitor extends AstVisitor {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'uses_stmt ${stmt.arg} include-module-error');
                     var gg = sub.subs.grouping_stmt[arg];
-                    if (gg != null && gg.status == Current) stmt.grouping = gg;
+                    if (gg != null && gg.isValid()) stmt.grouping = gg;
                     if (stmt.grouping != null) break;
                 }
             }
@@ -50,7 +50,7 @@ class AstUsesGroupVisitor extends AstVisitor {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'uses_stmt ${stmt.arg} global-group-module-error');
                     var gg = mo.subs.grouping_stmt[arg];
-                    if (gg != null && gg.status == Current) stmt.grouping = gg;
+                    if (gg != null && gg.isValid()) stmt.grouping = gg;
                     if (stmt.grouping != null) break;
                 }
             }   

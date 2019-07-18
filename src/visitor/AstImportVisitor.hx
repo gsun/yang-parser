@@ -15,7 +15,7 @@ class AstImportVisitor extends AstVisitor {
             var m = stmt.getMo(i.arg);
             assertTrue(m != null, 'import_stmt ${i.arg} exist-error');
             assertEquals(m.keyword, "module", 'import_stmt ${i.arg} type-error');
-            if (m != null && m.status == Current) i.module = m;
+            if (m != null && m.isValid()) i.module = m;
         }
         
         for (ii in stmt.subs.include_stmt.iterator()) {
@@ -29,7 +29,7 @@ class AstImportVisitor extends AstVisitor {
             if (module_version != null && sub_version != null) {
                 assertEquals(module_version.arg, sub_version.arg, 'include_stmt ${i.arg} version-error');
             }
-            if (sub != null && sub.status == Current) i.subModule = sub;
+            if (sub != null && sub.isValid()) i.subModule = sub;
         }
     }
     
@@ -39,14 +39,14 @@ class AstImportVisitor extends AstVisitor {
         
         var mo:Stmt = stmt.getMo(belongsto.arg);
         assertTrue(mo != null, 'include_stmt ${stmt.arg} belongs-to-error');
-        if (mo != null && mo.status == Current) belongsto.module = mo;
+        if (mo != null && mo.isValid()) belongsto.module = mo;
         
         for (ii in stmt.subs.import_stmt.iterator()) {
             var i:ImportStmt = cast ii;
             var m = stmt.getMo(i.arg);
             assertTrue(m != null, 'import_stmt ${i.arg} exist-error');
             assertEquals(m.keyword, "module", 'import_stmt ${i.arg} type-error');
-            if (m != null && m.status == Current) i.module = m;
+            if (m != null && m.isValid()) i.module = m;
         }
         
         for (ii in stmt.subs.include_stmt.iterator()) {
@@ -60,7 +60,7 @@ class AstImportVisitor extends AstVisitor {
             if (module_version != null && sub_version != null) {
                 assertEquals(module_version.arg, sub_version.arg, 'include_stmt ${i.arg} version-error');
             }
-            if (sub != null && sub.status == Current) i.subModule = sub;
+            if (sub != null && sub.isValid()) i.subModule = sub;
         }
     }
 }

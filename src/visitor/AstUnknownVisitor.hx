@@ -30,7 +30,7 @@ class AstUnknownVisitor extends AstVisitor {
             var parent = stmt.parent;
             while (parent != null) {
                 var ee = parent.subs.extension_stmt[keyword];
-                if (ee != null && ee.status == Current) stmt.extension = ee;
+                if (ee != null && ee.isValid()) stmt.extension = ee;
                 if (stmt.extension != null) break;
                 parent = parent.parent;
             }
@@ -39,7 +39,7 @@ class AstUnknownVisitor extends AstVisitor {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'type_stmt ${stmt.keyword} include-module-error');
                     var ee = sub.subs.extension_stmt[keyword];
-                    if (ee != null && ee.status == Current) stmt.extension = ee;
+                    if (ee != null && ee.isValid()) stmt.extension = ee;
                     if (stmt.extension != null) break;
                 }
             }
@@ -51,7 +51,7 @@ class AstUnknownVisitor extends AstVisitor {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'type_stmt ${stmt.keyword} global-extension-module-error');
                     var ee = mo.subs.extension_stmt[keyword];
-                    if (ee != null && ee.status == Current) stmt.extension = ee;
+                    if (ee != null && ee.isValid()) stmt.extension = ee;
                     if (stmt.extension != null) break;
                 }
             }   

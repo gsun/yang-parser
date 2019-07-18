@@ -28,7 +28,7 @@ class AstBaseVisitor extends AstVisitor {
             var parent = stmt.parent;
             while (parent != null) {
                 var ii = parent.subs.identity_stmt[arg];
-				if (ii != null && ii.status == Current) stmt.identity = ii;
+				if (ii != null && ii.isValid()) stmt.identity = ii;
                 if (stmt.identity != null) {
                     break;
                 }
@@ -39,7 +39,7 @@ class AstBaseVisitor extends AstVisitor {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'include-module-error');
                     var ii = sub.subs.identity_stmt[arg];
-                    if (ii != null && ii.status == Current) stmt.identity = ii;
+                    if (ii != null && ii.isValid()) stmt.identity = ii;
                     if (stmt.identity != null) {
                         break;
                     }
@@ -53,7 +53,7 @@ class AstBaseVisitor extends AstVisitor {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'global-identity-module-error');
                     var ii = mo.subs.identity_stmt[arg];
-                    if (ii != null && ii.status == Current) stmt.identity = ii;
+                    if (ii != null && ii.isValid()) stmt.identity = ii;
                     if (stmt.identity != null) {
                         break;
                     }
