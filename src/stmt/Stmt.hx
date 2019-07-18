@@ -144,6 +144,10 @@ class Stmt {
         origin = null;
     }
     
+    public function isClonable() {
+        return true;
+    }
+    
     public function clone():Stmt {
         var c = new Stmt();
         c.type = this.type;
@@ -181,7 +185,7 @@ class Stmt {
     
     static public function cloneStmt(stmt:Stmt):Stmt {
         if (!stmt.isValid()) return null;
-        
+        if (!stmt.isClonable()) return null;
         var c = stmt.clone();
         
         for (s in stmt.subList) {
