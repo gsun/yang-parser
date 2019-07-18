@@ -13,6 +13,7 @@ class BelongsToStmt extends Stmt {
         c.arg = this.arg;
         c.location = this.location;
         c.ctx = this.ctx;
+        c.origin = this;
         c.module = this.module;
         return c;
     }

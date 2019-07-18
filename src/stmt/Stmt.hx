@@ -64,6 +64,7 @@ class Stmt {
     public var status:StmtStatus;
     public var ctx:Context;
     public var parent:Stmt;
+    public var origin:Stmt; //cloned from
     
     
     static var validTypes:Array<String> = ["anyxml_stmt","argument_stmt","augment_stmt","base_stmt","belongs_to_stmt",
@@ -140,6 +141,7 @@ class Stmt {
         parent = null;
         subList = new List();
         status = Current;
+        origin = null;
     }
     
     public function clone():Stmt {
@@ -149,6 +151,7 @@ class Stmt {
         c.arg = this.arg;
         c.location = this.location;
         c.ctx = this.ctx;
+        c.origin = this;
         return c;
     }
 

@@ -13,6 +13,7 @@ class UsesStmt extends Stmt {
         c.arg = this.arg;
         c.location = this.location;
         c.ctx = this.ctx;
+        c.origin = this;
         c.grouping = this.grouping;
         return c;
     }

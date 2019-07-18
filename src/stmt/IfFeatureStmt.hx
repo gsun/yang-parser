@@ -13,6 +13,7 @@ class IfFeatureStmt extends Stmt {
         c.arg = this.arg;
         c.location = this.location;
         c.ctx = this.ctx;
+        c.origin = this;
         c.feature = this.feature;
         return c;
     }

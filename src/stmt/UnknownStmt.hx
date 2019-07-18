@@ -13,6 +13,7 @@ class UnknownStmt extends Stmt {
         c.arg = this.arg;
         c.location = this.location;
         c.ctx = this.ctx;
+        c.origin = this;
         c.extension = this.extension;
         return c;
     }
