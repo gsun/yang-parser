@@ -130,10 +130,10 @@ class Stmt {
         sub.parent = null;
         subList.remove(sub);
     }
-	
-	public function isValid() {
-	    return (status == Current || status == Deprecated)?true:false;
-	}
+    
+    public function isValid() {
+        return (status == Current || status == Deprecated)?true:false;
+    }
     
     public function new() {
         ctx = null;
@@ -141,74 +141,26 @@ class Stmt {
         subList = new List();
         status = Current;
     }
+    
+    public function clone():Stmt {
+        var c = new Stmt();
+        c.type = this.type;
+        c.keyword = this.keyword;
+        c.arg = this.arg;
+        c.location = this.location;
+        c.ctx = this.ctx;
+        return c;
+    }
 
     static public function buildStmt(raw:StmtRaw, ctx:Context):Stmt {
         var stmt = switch raw.type {
-            case "anyxml_stmt": new AnyxmlStmt();
-            case "argument_stmt": new ArgumentStmt();
-            case "augment_stmt": new AugmentStmt();
             case "base_stmt": new BaseStmt();
             case "belongs_to_stmt": new BelongsToStmt();
-            case "bit_stmt": new BitStmt();
-            case "case_stmt": new CaseStmt(); 
-            case "choice_stmt": new ChoiceStmt();
-            case "config_stmt": new ConfigStmt();
-            case "contact_stmt": new ContactStmt();
-            case "container_stmt": new ContainerStmt();
-            case "default_stmt": new DefaultStmt();
-            case "description_stmt": new DescriptionStmt();
-            case "enum_stmt": new EnumStmt();
-            case "error_app_tag_stmt": new ErrorAppTagStmt();
-            case "error_message_stmt": new ErrorMessageStmt();
-            case "extension_stmt": new ExtensionStmt();
-            case "deviation_stmt": new DeviationStmt();
-            case "deviate_stmt": new DeviateStmt();
-            case "feature_stmt": new FeatureStmt();
-            case "fraction_digits_stmt": new FractionDigitsStmt();
-            case "grouping_stmt": new GroupingStmt();
-            case "identity_stmt": new IdentityStmt();
             case "if_feature_stmt": new IfFeatureStmt();
             case "import_stmt": new ImportStmt();
             case "include_stmt": new IncludeStmt();
-            case "input_stmt": new InputStmt();
-            case "key_stmt": new KeyStmt();
-            case "leaf_stmt": new LeafStmt();
-            case "leaf_list_stmt": new LeafListStmt();
-            case "length_stmt": new LengthStmt();
-            case "list_stmt": new ListStmt();
-            case "mandatory_stmt": new MandatoryStmt();
-            case "max_elements_stmt": new MaxElementsStmt();
-            case "min_elements_stmt": new MinElementsStmt();
-            case "module_stmt": new ModuleStmt();
-            case "must_stmt": new MustStmt();
-            case "namespace_stmt": new NamespaceStmt();
-            case "notification_stmt": new NotificationStmt();
-            case "ordered_by_stmt": new OrderedByStmt();
-            case "organization_stmt": new OrganizationStmt();
-            case "output_stmt": new OutputStmt();
-            case "path_stmt": new PathStmt();
-            case "pattern_stmt": new PatternStmt();
-            case "position_stmt": new PositionStmt();
-            case "prefix_stmt": new PrefixStmt();
-            case "presence_stmt": new PresenceStmt();
-            case "range_stmt": new RangeStmt();
-            case "reference_stmt": new ReferenceStmt();
-            case "refine_stmt": new RefineStmt();
-            case "require_instance_stmt": new RequireInstanceStmt();
-            case "revision_stmt": new RevisionStmt();
-            case "revision_date_stmt": new RevisionDateStmt();
-            case "rpc_stmt": new RpcStmt();
-            case "status_stmt": new StatusStmt();
-            case "submodule_stmt": new SubmoduleStmt();
             case "type_stmt": new TypeStmt();
-            case "typedef_stmt": new TypedefStmt();
-            case "unique_stmt": new UniqueStmt();
-            case "units_stmt": new UnitsStmt();
             case "uses_stmt": new UsesStmt();
-            case "value_stmt": new ValueStmt();
-            case "when_stmt": new WhenStmt();
-            case "yang_version_stmt": new YangVersionStmt();
-            case "yin_element_stmt": new YinElementStmt();
             case "unknown_stmt": new UnknownStmt();
             default: new Stmt();
         }
@@ -222,6 +174,18 @@ class Stmt {
             stmt.addSub(child);
         } 
         return stmt;
+    }
+    
+    static public function cloneStmt(stmt:Stmt, ctx:Context):Stmt {
+        if (!stmt.isValid()) return null;
+        
+        var c = stmt.clone();
+        
+        for (s in stmt.subList) {
+            var child = cloneStmt(s, ctx);
+            if (child != null) c.addSub(child);
+        } 
+        return c;
     }
     
     static public function validType(t:String) {
