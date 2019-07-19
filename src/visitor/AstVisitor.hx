@@ -4,7 +4,7 @@ import stmt.Stmt;
 
 class AstVisitor {
     var stmt:Stmt;
-    var terminal:Bool;
+    var termFlag:Bool;
 
     public function new() {
         stmt = null;
