@@ -4,8 +4,16 @@ import stmt.Stmt;
 
 class AstVisitor {
     var stmt:Stmt;
+    var terminal:Bool;
 
-    public function new() {}
+    public function new() {
+        stmt = null;
+        termFlag = false;
+    }
+    
+    public function terminate() {
+        termFlag = true;
+    }
     
     public function visit(stmt:Stmt, context:Dynamic=null) {
         if (!stmt.isValid()) return;
@@ -15,9 +23,14 @@ class AstVisitor {
         if (method != null) {
             Reflect.callMethod(this, method, [stmt, context]);
         }
-        
-        for (s in stmt.subList) {
-            visit(s, context);
+        /* all the sub stmts are visited by default, and the visit can be terminated manually.*/
+        /* the terminate() can be called in stmt.type method for specific AstVisitor.*/
+        if (termFlag) {
+            termFlag = false;
+        } else {
+            for (s in stmt.subList) {
+                visit(s, context);
+            }
         }
 
         var post = Reflect.field(this, 'post_${stmt.type}');

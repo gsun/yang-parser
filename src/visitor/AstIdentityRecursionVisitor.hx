@@ -19,6 +19,7 @@ class AstIdentityRecursionVisitor extends AstVisitor {
             visitor.visit(s);
         }
         identity.pop();
+        terminate();
     } 
 
     function base_stmt(stmt:Stmt, context:Dynamic) {

@@ -19,6 +19,7 @@ class AstFeatureRecursionVisitor extends AstVisitor {
             visitor.visit(s);
         }
         feature.pop();
+        terminate();
     } 
 
     function if_feature_stmt(stmt:Stmt, context:Dynamic) {
