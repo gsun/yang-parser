@@ -6,15 +6,4 @@ class IncludeStmt extends Stmt {
         super();
         subModule = null;
     }
-    override public function clone():Stmt {
-        var c = new IncludeStmt();
-        c.type = this.type;
-        c.keyword = this.keyword;
-        c.arg = this.arg;
-        c.location = this.location;
-        c.ctx = this.ctx;
-        c.origin = this;
-        c.subModule = this.subModule;
-        return c;
-    }
 }

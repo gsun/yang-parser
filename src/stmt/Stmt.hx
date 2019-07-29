@@ -154,7 +154,7 @@ class Stmt {
     }
     
     public function isClonable() {
-        return true;
+        return false;
     }
     
     public function clone():Stmt {
