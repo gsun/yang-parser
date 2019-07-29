@@ -19,7 +19,7 @@ class AstGroupingRecursionVisitor extends AstVisitor {
             visitor.visit(s);
         }
         group.pop();
-        terminate();
+        yield();
     } 
 
     function uses_stmt(stmt:Stmt, context:Dynamic) {
