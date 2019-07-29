@@ -33,7 +33,6 @@ class AstVisitor {
             }
         }
         
-
         var post = Reflect.field(this, 'post_${stmt.type}');
         if (post != null) {
             Reflect.callMethod(this, post, [stmt, context]);

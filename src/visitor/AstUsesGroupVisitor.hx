@@ -1,6 +1,7 @@
 package visitor;
 
 import stmt.UsesStmt;
+import stmt.GroupingStmt;
 using Lambda;
 
 class AstUsesGroupVisitor extends AstVisitor {  
@@ -37,8 +38,11 @@ class AstUsesGroupVisitor extends AstVisitor {
                 for (i in stmt.top.subs.include_stmt.iterator()) {
                     var sub = stmt.getMo(i.arg);
                     assertTrue(sub != null, 'uses_stmt ${stmt.arg} include-module-error');
-                    var gg = sub.subs.grouping_stmt[arg];
-                    if (gg != null && gg.isValid()) stmt.grouping = gg;
+                    var gg:GroupingStmt = cast sub.subs.grouping_stmt[arg];
+                    if (gg != null && gg.isValid()) {
+                        stmt.grouping = gg;
+                        gg.uses.add(stmt);
+                    }
                     if (stmt.grouping != null) break;
                 }
             }
@@ -49,8 +53,11 @@ class AstUsesGroupVisitor extends AstVisitor {
                 if (m.subs.prefix_stmt[prefixName[0]] != null) {
                     var mo = stmt.getMo(m.arg);
                     assertTrue(mo != null, 'uses_stmt ${stmt.arg} global-group-module-error');
-                    var gg = mo.subs.grouping_stmt[arg];
-                    if (gg != null && gg.isValid()) stmt.grouping = gg;
+                    var gg:GroupingStmt = cast mo.subs.grouping_stmt[arg];
+                    if (gg != null && gg.isValid()) {
+                        stmt.grouping = gg;
+                        gg.uses.add(stmt);
+                    }
                     if (stmt.grouping != null) break;
                 }
             }   

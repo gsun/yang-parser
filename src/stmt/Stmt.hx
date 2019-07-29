@@ -88,6 +88,15 @@ class Stmt {
         return p;
     }
     
+    public var root(get, never):Stmt;
+    function get_root() {
+        var p = this;
+        while (p.parent != null) {
+            p = p.parent;
+        }
+        return p;
+    }
+
     public var config(get, never):Bool;
     function get_config() {
         var p = this;
@@ -96,7 +105,7 @@ class Stmt {
             if (config_stmt != null) return (config_stmt.arg=='true')?true:false;
             p = p.parent;
         }
-        return false;
+        return true;
     }
 
     public var path(get, never):String;
@@ -163,6 +172,7 @@ class Stmt {
         var stmt = switch raw.type {
             case "base_stmt": new BaseStmt();
             case "belongs_to_stmt": new BelongsToStmt();
+            case "grouping_stmt": new GroupingStmt();
             case "if_feature_stmt": new IfFeatureStmt();
             case "import_stmt": new ImportStmt();
             case "include_stmt": new IncludeStmt();
