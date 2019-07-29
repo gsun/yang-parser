@@ -29,7 +29,7 @@ class AstUsesGroupVisitor extends AstVisitor {
         if (local) {
             var parent = stmt.parent;
             while (parent != null) {
-                var gg = parent.subs.grouping_stmt[arg];
+                var gg:GroupingStmt = cast parent.subs.grouping_stmt[arg];
                 if (gg != null && gg.isValid()) {
                         stmt.grouping = gg;
                         gg.uses.add(stmt);

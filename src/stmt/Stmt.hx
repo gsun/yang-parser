@@ -54,6 +54,22 @@ private abstract NodeAccess(List<Stmt>) from List<Stmt> {
     } 
 }
 
+abstract IdRef(String) from String to String {
+    public var prefix(get, never):String;
+    public var id(get, never):String;
+    
+    function get_prefix() {
+        if (this.indexOf(':') == -1) return null;
+        var ida:Array<String> = this.split(':');
+        return ida[0];
+    }
+    function get_id() {
+        if (this.indexOf(':') == -1) return this;
+        var ida:Array<String> = this.split(':');
+        return ida[1];
+    }
+}
+
 class Stmt {
     public var type:String;
     public var keyword:String;
@@ -155,6 +171,18 @@ class Stmt {
     
     public function isClonable() {
         return false;
+    }
+    
+    public function isLocalIdRef() {
+        var idref:IdRef = arg;
+        return switch top.type {
+            case 'module_stmt': (top.subs.prefix_stmt[idref.prefix] == null)?false:true;
+            case 'submodule_stmt': {
+                var belongs_to = top.sub.belongs_to_stmt;
+                (belongs_to.subs.prefix_stmt[idref.prefix] == null)?false:true;
+            }
+            default: true;
+        }
     }
     
     public function clone():Stmt {
