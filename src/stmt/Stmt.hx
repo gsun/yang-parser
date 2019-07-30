@@ -54,19 +54,30 @@ private abstract NodeAccess(List<Stmt>) from List<Stmt> {
     } 
 }
 
-abstract IdRef(String) from String to String {
+abstract NodeId(String) from String to String {
     public var prefix(get, never):String;
     public var id(get, never):String;
     
     function get_prefix() {
-        if (this.indexOf(':') == -1) return null;
-        var ida:Array<String> = this.split(':');
-        return ida[0];
+        var idx = this.indexOf(':');
+        return (idx == -1)?null:this.substring(0,idx);
     }
     function get_id() {
-        if (this.indexOf(':') == -1) return this;
-        var ida:Array<String> = this.split(':');
-        return ida[1];
+        var idx = this.indexOf(':');
+        return (idx == -1)?this:this.substring(idx+1);
+    }
+}
+
+abstract SchemaNodeId(String) from String to String {
+    public var absolute(get, never):Bool;
+    public var path(get, never):Array<NodeId>;
+    
+    function get_absolute() {
+        return (this.charAt(0)=='/')?true:false;
+    }
+    function get_path() {
+        var relative = absolute?this.substring(1):this;
+        return relative.split('/');
     }
 }
 
@@ -171,18 +182,6 @@ class Stmt {
     
     public function isClonable() {
         return false;
-    }
-    
-    public function isLocalIdRef() {
-        var idref:IdRef = arg;
-        return switch top.type {
-            case 'module_stmt': (top.subs.prefix_stmt[idref.prefix] == null)?false:true;
-            case 'submodule_stmt': {
-                var belongs_to = top.sub.belongs_to_stmt;
-                (belongs_to.subs.prefix_stmt[idref.prefix] == null)?false:true;
-            }
-            default: true;
-        }
     }
     
     public function clone():Stmt {
