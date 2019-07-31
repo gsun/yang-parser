@@ -42,18 +42,21 @@ class AstVisitor {
     function assertTrue(b:Bool, msg:String) {
         if (b != true){
             trace('${msg} in ${stmt}');
+            yield();
         }
     }
     
     function assertFalse(b:Bool, msg:String) {
         if (b == true){
             trace('${msg} in ${stmt}');
+            yield();
         }
     }
     
     function assertEquals<T>(expected:T , actual:T,  msg:String) {
         if (expected != actual){
             trace('${msg} in ${stmt}');
+            yield();
         }
     }
 }
