@@ -28,7 +28,7 @@ class AstVisitor {
         if (yieldFlag) {
             yieldFlag = false;
         } else {
-            for (s in stmt.subList) {
+            for (s in stmt.getSubs()) {
                 visit(s, context);
             }
         }

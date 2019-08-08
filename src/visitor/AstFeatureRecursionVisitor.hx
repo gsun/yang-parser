@@ -13,7 +13,7 @@ class AstFeatureRecursionVisitor extends AstVisitor {
     
     function feature_stmt(stmt:Stmt, context:Dynamic) {
         feature.push(stmt.arg);
-        for (s in stmt.getSubs("if_feature_stmt")) {
+        for (s in stmt.subs.if_feature_stmt.iterator()) {
             var visitor = new AstFeatureRecursionVisitor();
             visitor.feature = feature.list();
             visitor.visit(s);

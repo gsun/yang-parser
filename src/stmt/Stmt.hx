@@ -103,14 +103,12 @@ class Stmt {
     function get_location() {
         return raw.location;
     }
-    
-    public var subList:List<Stmt>;
+
+    public var parent:Stmt;
+    public var children:List<Stmt>;
     public var status:StmtStatus;
     public var ctx:Context;
-    public var parent:Stmt;
-    public var origin:Stmt; //cloned from
-    public var nodeList:List<Stmt>;
-    
+   
     
     static var validTypes:Array<String> = ["anyxml_stmt","argument_stmt","augment_stmt","base_stmt","belongs_to_stmt",
                                       "bit_stmt","case_stmt", "choice_stmt","config_stmt","contact_stmt","container_stmt",
@@ -159,31 +157,23 @@ class Stmt {
     public function getMo(type:String):Null<Stmt> return ctx.mo[type];
     
     public var subs(get, never):NodeListAccess;
-    function get_subs() return subList;
+    function get_subs() return children;
     
     public var sub(get, never):NodeAccess;
-    function get_sub() return subList;
+    function get_sub() return children;
     
-    public function getSubs(type:String) : List<Stmt> {
-        return subList.filter(function(ch) { return ch.type == type;});
-    }
-
-    public function getSub(type:String, ?arg:String) : Null<Stmt> {
-        if (arg != null) {
-            return subList.find(function(ch) { return (ch.type == type && ch.arg == arg); });
-        } else {
-            return subList.find(function(ch) { return (ch.type == type); });
-        }
+    public function getSubs(type:String=null) : List<Stmt> {
+        return (type==null)?children:children.filter(function(ch) { return ch.type == type;});
     }
 
     public function addSub(sub:Stmt) {
         sub.parent = this;
-        subList.add(sub);
+        children.add(sub);
     }
     
     public function removeSub(sub:Stmt) {
         sub.parent = null;
-        subList.remove(sub);
+        children.remove(sub);
     }
     
     public function isValid() {
@@ -194,10 +184,8 @@ class Stmt {
         raw = null;
         ctx = null;
         parent = null;
-        subList = new List();
+        children = new List();
         status = Current;
-        origin = null;
-        nodeList = new List();
     }
     
     static public function buildStmt(raw:StmtRaw, ctx:Context):Stmt {
