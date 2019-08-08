@@ -82,16 +82,34 @@ abstract SchemaNodeId(String) from String to String {
 }
 
 class Stmt {
-    public var type:String;
-    public var keyword:String;
-    public var arg:String;
-    public var subList:List<Stmt>;
-    public var location:Location;  
+    var raw:StmtRaw;
+    
+    public var type(get, never):String;
+    function get_type() {
+        return raw.type;
+    }
+    
+    public var keyword(get, never):String;
+    function get_keyword() {
+        return raw.keyword;
+    }
+    
+    public var arg(get, never):String;
+    function get_arg() {
+        return raw.arg;
+    }
 
+    public var location(get, never):Location;  
+    function get_location() {
+        return raw.location;
+    }
+    
+    public var subList:List<Stmt>;
     public var status:StmtStatus;
     public var ctx:Context;
     public var parent:Stmt;
     public var origin:Stmt; //cloned from
+    public var nodeList:List<Stmt>;
     
     
     static var validTypes:Array<String> = ["anyxml_stmt","argument_stmt","augment_stmt","base_stmt","belongs_to_stmt",
@@ -173,28 +191,15 @@ class Stmt {
     }
     
     public function new() {
+        raw = null;
         ctx = null;
         parent = null;
         subList = new List();
         status = Current;
         origin = null;
+        nodeList = new List();
     }
     
-    public function isClonable() {
-        return false;
-    }
-    
-    public function clone():Stmt {
-        var c = new Stmt();
-        c.type = this.type;
-        c.keyword = this.keyword;
-        c.arg = this.arg;
-        c.location = this.location;
-        c.ctx = this.ctx;
-        c.origin = this;
-        return c;
-    }
-
     static public function buildStmt(raw:StmtRaw, ctx:Context):Stmt {
         var stmt = switch raw.type {
             case "base_stmt": new BaseStmt();
@@ -208,10 +213,7 @@ class Stmt {
             case "unknown_stmt": new UnknownStmt();
             default: new Stmt();
         }
-        stmt.type = raw.type;
-        stmt.keyword = raw.keyword;
-        stmt.arg = raw.arg;
-        stmt.location = raw.location;
+        stmt.raw = raw;
         stmt.ctx = ctx;
         for (s in raw.subs) {
             var child = buildStmt(s, ctx);
@@ -219,19 +221,7 @@ class Stmt {
         } 
         return stmt;
     }
-    
-    static public function cloneStmt(stmt:Stmt):Stmt {
-        if (!stmt.isValid()) return null;
-        if (!stmt.isClonable()) return null;
-        var c = stmt.clone();
         
-        for (s in stmt.subList) {
-            var child = cloneStmt(s);
-            if (child != null) c.addSub(child);
-        } 
-        return c;
-    }
-    
     static public function validType(t:String) {
         return validTypes.has(t);
     }
