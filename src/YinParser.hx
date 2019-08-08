@@ -4,19 +4,25 @@ class YinParser {
     public static function parse(e:Xml, ctx:Context) :Stmt {
         var fast = new haxe.xml.Access(e);
         if (fast.hasNode.module) {
-            var stmt = new Stmt();
-            stmt.keyword = 'module';
-            stmt.type = 'module_stmt';
-            stmt.arg = fast.node.module.att.name;
-            stmt.ctx = ctx;
+            var raw = { 
+                        type:'module_stmt',
+                        keyword:'module',
+                        arg:fast.node.module.att.name,
+                        location:null,
+                        subs:[],
+                      };
+            var stmt = Stmt.buildStmt(raw,ctx);
             parseSubs(fast.node.module.x, stmt);
             return stmt;
         } else if (fast.hasNode.submodule) {
-            var stmt = new Stmt();
-            stmt.keyword = 'submodule';
-            stmt.type = 'submodule_stmt';
-            stmt.arg = fast.node.submodule.att.name;
-            stmt.ctx = ctx;
+            var raw = { 
+                        type:'submodule_stmt',
+                        keyword:'submodule',
+                        arg:fast.node.module.att.name,
+                        location:null,
+                        subs:[],
+                      };
+            var stmt = Stmt.buildStmt(raw,ctx);
             parseSubs(fast.node.submodule.x, stmt);
             return stmt;
         } else {
@@ -26,302 +32,241 @@ class YinParser {
     public static function parseSubs(e:Xml, parent:Stmt) {      
     
         for (ii in e.elements()) {
+            var yield = false;
             trace(ii);
-            var stmt = new Stmt();
-            stmt.parent = parent;
-            stmt.keyword = ii.nodeName;
-            stmt.ctx = parent.ctx;
-            
-            switch (stmt.keyword) {
+            var raw = { 
+                        type:'',
+                        keyword:ii.nodeName,
+                        arg:'',
+                        location:null,
+                        subs:[],
+                      };
+            switch (raw.keyword) {
              case "action":
-                 stmt.type = "action_stmt"; 
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "action_stmt"; 
+                 raw.arg = ii.get("name");
              case "anydata":
-                 stmt.type = "anydata_stmt"; 
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "anydata_stmt"; 
+                 raw.arg = ii.get("name");
              case "anyxml":
-                 stmt.type = "anyxml_stmt"; 
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);             
+                 raw.type = "anyxml_stmt"; 
+                 raw.arg = ii.get("name");
              case "argument":
-                 stmt.type = "argument_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "argument_stmt";
+                 raw.arg = ii.get("name");
              case "augment":
-                 stmt.type = parent.type == "uses_stmt"?"uses_augment_stmt":"augment_stmt";  
-                 stmt.arg = ii.get("target-node");
-                 parent.addSub(stmt);             
+                 raw.type = parent.type == "uses_stmt"?"uses_augment_stmt":"augment_stmt";  
+                 raw.arg = ii.get("target-node");   
              case "base":
-                 stmt.type = "base_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "base_stmt";
+                 raw.arg = ii.get("name");
              case "belongs-to":
-                 stmt.type = "belongs_to_stmt";
-                 stmt.arg = ii.get("module");
-                 parent.addSub(stmt);             
+                 raw.type = "belongs_to_stmt";
+                 raw.arg = ii.get("module");
              case "bit":
-                 stmt.type = "bit_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "bit_stmt";
+                 raw.arg = ii.get("name");
              case "case":
-                 stmt.type = "case_stmt";   
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);             
+                 raw.type = "case_stmt";   
+                 raw.arg = ii.get("name");
              case "choice":
-                 stmt.type = "choice_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "choice_stmt";
+                 raw.arg = ii.get("name");
              case "config":
-                 stmt.type = "config_stmt";    
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);             
+                 raw.type = "config_stmt";    
+                 raw.arg = ii.get("value");
              case "contact":
-                 stmt.type = "contact_stmt";
+                 raw.type = "contact_stmt";
                  var fast = new haxe.xml.Access(ii);  
-                 stmt.arg = fast.node.text.innerData;   
-                 parent.addSub(stmt);
-                 continue;
+                 raw.arg = fast.node.text.innerData;  
+                 yield = true;               
              case "container":
-                 stmt.type = "container_stmt";  
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);             
+                 raw.type = "container_stmt";  
+                 raw.arg = ii.get("name"); 
              case "default":
-                 stmt.type = "default_stmt";
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);
+                 raw.type = "default_stmt";
+                 raw.arg = ii.get("value");
              case "description":
-                 stmt.type = "description_stmt";   
+                 raw.type = "description_stmt";   
                  var fast = new haxe.xml.Access(ii);  
-                 stmt.arg = fast.node.text.innerData;   
-                 parent.addSub(stmt);
-                 continue;               
+                 raw.arg = fast.node.text.innerData;   
+                 yield = true;               
              case "deviate":
-                 stmt.type = "deviate_stmt";  
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);    
+                 raw.type = "deviate_stmt";  
+                 raw.arg = ii.get("value");
              case "deviation":
-                 stmt.type = "deviation_stmt";
-                 stmt.arg = ii.get("target-node");
-                 parent.addSub(stmt);         
+                 raw.type = "deviation_stmt";
+                 raw.arg = ii.get("target-node");
              case "enum":
-                 stmt.type = "enum_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "enum_stmt";
+                 raw.arg = ii.get("name");
              case "error-app-tag":
-                 stmt.type = "error_app_tag_stmt";  
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);             
+                 raw.type = "error_app_tag_stmt";  
+                 raw.arg = ii.get("value");
              case "error-message":
-                 stmt.type = "error_message_stmt";
+                 raw.type = "error_message_stmt";
                  var fast = new haxe.xml.Access(ii);  
-                 stmt.arg = fast.node.value.innerData;  
-                 parent.addSub(stmt);
-                 continue;
+                 raw.arg = fast.node.value.innerData;  
+                 yield = true;
              case "extension":
-                 stmt.type = "extension_stmt";  
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);               
+                 raw.type = "extension_stmt";  
+                 raw.arg = ii.get("name");
              case "feature":
-                 stmt.type = "feature_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "feature_stmt";
+                 raw.arg = ii.get("name");
              case "fraction-digits":
-                 stmt.type = "fraction_digits_stmt";  
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);             
+                 raw.type = "fraction_digits_stmt";  
+                 raw.arg = ii.get("value");
              case "grouping":
-                 stmt.type = "grouping_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "grouping_stmt";
+                 raw.arg = ii.get("name");
              case "identity":
-                 stmt.type = "identity_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "identity_stmt";
+                 raw.arg = ii.get("name");
              case "if-feature":
-                 stmt.type = "if_feature_stmt";  
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);             
+                 raw.type = "if_feature_stmt";  
+                 raw.arg = ii.get("name");
              case "import":
-                 stmt.type = "import_stmt";
-                 stmt.arg = ii.get("module");
-                 parent.addSub(stmt);
+                 raw.type = "import_stmt";
+                 raw.arg = ii.get("module");
              case "include":
-                 stmt.type = "include_stmt";
-                 stmt.arg = ii.get("module");
-                 parent.addSub(stmt);             
+                 raw.type = "include_stmt";
+                 raw.arg = ii.get("module");
              case "input":
-                 stmt.type = "input_stmt";
-                 parent.addSub(stmt);
+                 raw.type = "input_stmt";
              case "key":
-                 stmt.type = "key_stmt"; 
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);             
+                 raw.type = "key_stmt"; 
+                 raw.arg = ii.get("value");
              case "leaf":
-                 stmt.type = "leaf_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "leaf_stmt";
+                 raw.arg = ii.get("name");
              case "leaf-list":
-                 stmt.type = "leaf_list_stmt";   
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);             
+                 raw.type = "leaf_list_stmt";   
+                 raw.arg = ii.get("name");
              case "length":
-                 stmt.type = "length_stmt";
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);
+                 raw.type = "length_stmt";
+                 raw.arg = ii.get("value");
              case "list":
-                 stmt.type = "list_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "list_stmt";
+                 raw.arg = ii.get("name");
              case "mandatory":
-                 stmt.type = "mandatory_stmt";  
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);             
+                 raw.type = "mandatory_stmt";  
+                 raw.arg = ii.get("value");
              case "max-elements":
-                 stmt.type = "max_elements_stmt";
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);
+                 raw.type = "max_elements_stmt";
+                 raw.arg = ii.get("value");
              case "min-elements":
-                 stmt.type = "min_elements_stmt"; 
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);
+                 raw.type = "min_elements_stmt"; 
+                 raw.arg = ii.get("value");
              case "modifier":
-                 stmt.type = "modifier_stmt"; 
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);             
+                 raw.type = "modifier_stmt"; 
+                 raw.arg = ii.get("value");
              case "module":
-                 stmt.type = "module_stmt";
-                 stmt.arg = ii.get("name");
+                 raw.type = "module_stmt";
+                 raw.arg = ii.get("name");
              case "must":
-                 stmt.type = "must_stmt";  
-                 stmt.arg = ii.get("condition");
-                 parent.addSub(stmt);             
+                 raw.type = "must_stmt";  
+                 raw.arg = ii.get("condition");
              case "namespace":
-                 stmt.type = "namespace_stmt";
-                 stmt.arg = ii.get("uri");
-                 parent.addSub(stmt);
+                 raw.type = "namespace_stmt";
+                 raw.arg = ii.get("uri");
              case "notification":
-                 stmt.type = "notification_stmt";  
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);             
+                 raw.type = "notification_stmt";  
+                 raw.arg = ii.get("name");
              case "ordered-by":
-                 stmt.type = "ordered_by_stmt";
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);
+                 raw.type = "ordered_by_stmt";
+                 raw.arg = ii.get("value");
              case "organization":
-                 stmt.type = "organization_stmt";  
+                 raw.type = "organization_stmt";  
                  var fast = new haxe.xml.Access(ii);  
-                 stmt.arg = fast.node.text.innerData;   
-                 parent.addSub(stmt);    
-                 continue;               
+                 raw.arg = fast.node.text.innerData;   
+                 yield = true;               
              case "output":
-                 stmt.type = "output_stmt";
-                 parent.addSub(stmt);
+                 raw.type = "output_stmt";
              case "path":
-                 stmt.type = "path_stmt";  
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);             
+                 raw.type = "path_stmt";  
+                 raw.arg = ii.get("value");
              case "pattern":
-                 stmt.type = "pattern_stmt";
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);
+                 raw.type = "pattern_stmt";
+                 raw.arg = ii.get("value");
              case "position":
-                 stmt.type = "position_stmt";  
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);             
+                 raw.type = "position_stmt";  
+                 raw.arg = ii.get("value");
              case "prefix":
-                 stmt.type = "prefix_stmt";
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);
+                 raw.type = "prefix_stmt";
+                 raw.arg = ii.get("value");
              case "presence":
-                 stmt.type = "presence_stmt";  
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);             
+                 raw.type = "presence_stmt";  
+                 raw.arg = ii.get("value");
              case "range":
-                 stmt.type = "range_stmt";
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);
+                 raw.type = "range_stmt";
+                 raw.arg = ii.get("value");
              case "reference":
-                 stmt.type = "reference_stmt";   
+                 raw.type = "reference_stmt";   
                  var fast = new haxe.xml.Access(ii);  
-                 stmt.arg = fast.node.text.innerData;   
-                 parent.addSub(stmt);    
-                 continue;               
+                 raw.arg = fast.node.text.innerData;   
+                 yield = true;               
              case "refine":
-                 stmt.type = "refine_stmt";
-                 stmt.arg = ii.get("target-node");
-                 parent.addSub(stmt);
+                 raw.type = "refine_stmt";
+                 raw.arg = ii.get("target-node");
              case "require-instance":
-                 stmt.type = "require_instance_stmt"; 
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);             
+                 raw.type = "require_instance_stmt"; 
+                 raw.arg = ii.get("value");
              case "revision":
-                 stmt.type = "revision_stmt";
-                 stmt.arg = ii.get("date");
-                 parent.addSub(stmt);
+                 raw.type = "revision_stmt";
+                 raw.arg = ii.get("date");
              case "revision-date":
-                 stmt.type = "revision_dat_stmt"; 
-                 stmt.arg = ii.get("date");
-                 parent.addSub(stmt);             
+                 raw.type = "revision_dat_stmt"; 
+                 raw.arg = ii.get("date");
              case "rpc":
-                 stmt.type = "rpc_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "rpc_stmt";
+                 raw.arg = ii.get("name");
              case "status":
-                 stmt.type = "status_stmt";  
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);             
+                 raw.type = "status_stmt";  
+                 raw.arg = ii.get("value");
              case "submodule":
-                 stmt.type = "submodule_stmt";
-                 stmt.arg = ii.get("name");
+                 raw.type = "submodule_stmt";
+                 raw.arg = ii.get("name");
              case "type":
-                 stmt.type = "type_stmt";  
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);             
+                 raw.type = "type_stmt";  
+                 raw.arg = ii.get("name");
              case "typedef":
-                 stmt.type = "typedef_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);    
+                 raw.type = "typedef_stmt";
+                 raw.arg = ii.get("name");
              case "unique":
-                 stmt.type = "unique_stmt"; 
-                 stmt.arg = ii.get("tag");
-                 parent.addSub(stmt);             
+                 raw.type = "unique_stmt"; 
+                 raw.arg = ii.get("tag");
              case "units":
-                 stmt.type = "units_stmt";
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);
+                 raw.type = "units_stmt";
+                 raw.arg = ii.get("name");
              case "uses":
-                 stmt.type = "uses_stmt";  
-                 stmt.arg = ii.get("name");
-                 parent.addSub(stmt);             
+                 raw.type = "uses_stmt";  
+                 raw.arg = ii.get("name");
              case "value":
-                 stmt.type = "value_stmt";
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);
+                 raw.type = "value_stmt";
+                 raw.arg = ii.get("value");
              case "when":
-                 stmt.type = "when_stmt";  
-                 stmt.arg = ii.get("condition");
-                 parent.addSub(stmt);             
+                 raw.type = "when_stmt";  
+                 raw.arg = ii.get("condition");
              case "yang-version":
-                 stmt.type = "yang_version_stmt";
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);
+                 raw.type = "yang_version_stmt";
+                 raw.arg = ii.get("value");
              case "yin-element":
-                 stmt.type = "yin_element_stmt";
-                 stmt.arg = ii.get("value");
-                 parent.addSub(stmt);
+                 raw.type = "yin_element_stmt";
+                 raw.arg = ii.get("value");
              default:
-                 stmt.type = "unknown_stmt";
+                 raw.type = "unknown_stmt";
                  for (att in ii.attributes()) {
-                     stmt.arg = ii.get(att);
+                     raw.arg = ii.get(att);
                      break;
                  }
-                 parent.addSub(stmt);
             }
+            var stmt = Stmt.buildStmt(raw, parent.ctx);
+            parent.addSub(stmt);
+            
+            if (yield) continue;
 
             parseSubs(ii, stmt);
-        
         }   
         
     }
