@@ -105,7 +105,7 @@ class Stmt {
     }
 
     public var parent:Stmt;
-    public var children:List<Stmt>;
+    var children:List<Stmt>;
     public var status:StmtStatus;
     public var ctx:Context;
    
@@ -203,6 +203,7 @@ class Stmt {
         }
         stmt.raw = raw;
         stmt.ctx = ctx;
+        ctx.stmt.add(stmt);
         for (s in raw.subs) {
             var child = buildStmt(s, ctx);
             stmt.addSub(child);

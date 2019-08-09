@@ -25,11 +25,10 @@ class Parser {
 
             if (stmtRaw.keyword != "module" && stmtRaw.keyword != "submodule") throw ('$infile does not define module/submodule');
             if (ctx.mo[stmtRaw.arg] !=  null) throw('${stmtRaw.keyword} ${stmtRaw.arg} in $infile conflict with ${ctx.path[stmtRaw.arg]}');
-            ctx.raw[stmtRaw.arg] = stmtRaw;
             ctx.path[stmtRaw.arg] = infile;
 
             var stmt = Stmt.buildStmt(stmtRaw, ctx);
-            ctx.mo[stmtRaw.arg] = stmt;
+            ctx.mo[stmt.arg] = stmt;
         } catch (e:String) {
             trace(e);
         } catch (e:Dynamic) {
