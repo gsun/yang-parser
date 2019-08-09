@@ -130,15 +130,6 @@ class Stmt {
         }
         return p;
     }
-    
-    public var root(get, never):Stmt;
-    function get_root() {
-        var p = this;
-        while (p.parent != null) {
-            p = p.parent;
-        }
-        return p;
-    }
 
     public var config(get, never):Bool;
     function get_config() {
@@ -151,10 +142,10 @@ class Stmt {
         return true;
     }
 
-    public var path(get, never):String;
-    function get_path() return ctx.path[top.arg];
+    public var file(get, never):String;
+    function get_file() return ctx.files[top.arg];
 
-    public function getMo(type:String):Null<Stmt> return ctx.mo[type];
+    public function getMo(type:String):Null<Stmt> return ctx.modules[type];
     
     public var subs(get, never):NodeListAccess;
     function get_subs() return children;
@@ -203,7 +194,7 @@ class Stmt {
         }
         stmt.raw = raw;
         stmt.ctx = ctx;
-        ctx.stmt.add(stmt);
+        ctx.stmts.add(stmt);
         for (s in raw.subs) {
             var child = buildStmt(s, ctx);
             stmt.addSub(child);
@@ -216,6 +207,6 @@ class Stmt {
     }
 
     public function toString() {
-        return 'type ${type} keyword ${keyword} arg ${arg} location ${location} path ${path}';
+        return 'type ${type} keyword ${keyword} arg ${arg} location ${location} file ${file}';
     }
 }

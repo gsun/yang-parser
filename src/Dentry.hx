@@ -6,10 +6,11 @@ class Dentry {
     public var name:String;
     public var node:Stmt;
     
-    public function new() {
+    public function new(name:String=null) {
         parent = null;
         children = new List();
         node = null;
+        this.name = name;
     }
 
     public var root(get, never):Dentry;
