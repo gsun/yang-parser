@@ -63,5 +63,9 @@ class TestParser {
             var visitor = new AstUnknownVisitor();
             visitor.visit(st);
         }
+        for (st in c.modules) {
+            var visitor = new AstMkdirVisitor();
+            visitor.visit(st);
+        }
     }
 }
