@@ -38,4 +38,8 @@ class Context {
     public function pwd() {
         return cwd;
     }
+
+    public function tree() {
+        return root.tree();
+    }
 }

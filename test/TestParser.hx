@@ -67,5 +67,6 @@ class TestParser {
             var visitor = new AstMkdirVisitor();
             visitor.visit(st);
         }
+		c.tree();
     }
 }

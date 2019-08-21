@@ -6,6 +6,7 @@ import stmt.IncludeStmt;
 using Lambda;
 
 class AstMkdirVisitor extends AstVisitor {
+    var expanding:Bool;
 
     public function choice_stmt(stmt:Stmt, context:Dynamic) {
         var de = stmt.ctx.mkDir(stmt.arg, stmt);
@@ -91,34 +92,43 @@ class AstMkdirVisitor extends AstVisitor {
         
     public function uses_stmt(stmt:UsesStmt, context:Dynamic) {
         var visitor = new AstMkdirVisitor();
+        visitor.expanding = true;
         visitor.visit(stmt.grouping);
         yield();
     }   
+    
+    public function grouping_stmt(stmt:UsesStmt, context:Dynamic) {
+        if (!expanding) yield();
+    }  
 
     public function module_stmt(stmt:Stmt, context:Dynamic) {
-        var de = stmt.ctx.mkDir(stmt.arg, stmt);
-        stmt.ctx.cdDir(de);
+        var pwd = stmt.ctx.pwd();
         for (s in stmt.getSubs()) {
             var visitor = new AstMkdirVisitor();
             visitor.visit(s);
         }
-        stmt.ctx.cdDir(de.parent);
+        stmt.ctx.cdDir(pwd);
         yield();
     }   
     
     public function include_stmt(stmt:IncludeStmt, context:Dynamic) {
         var visitor = new AstMkdirVisitor();
+        visitor.expanding = true;
         visitor.visit(stmt.subModule);
         yield();
     }   
     
     public function submodule_stmt(stmt:Stmt, context:Dynamic) {
-        if (stmt.ctx.pwd() == stmt.ctx.root) return;
-
+        if (!expanding) {
+            yield();
+            return;
+        }
+        var pwd = stmt.ctx.pwd();
         for (s in stmt.getSubs()) {
             var visitor = new AstMkdirVisitor();
             visitor.visit(s);
         }
+        stmt.ctx.cdDir(pwd);
         yield();
     }   
 
@@ -132,4 +142,9 @@ class AstMkdirVisitor extends AstVisitor {
         stmt.ctx.cdDir(de.parent);
         yield();
     }   
+    
+    public function augment_stmt(stmt:Stmt, context:Dynamic) {
+        yield();
+    }   
+
 }

@@ -7926,9 +7926,6 @@ function peg$parse(input, options) {
           s0 = peg$parselist_stmt();
           if (s0 === peg$FAILED) {
             s0 = peg$parseanyxml_stmt();
-            if (s0 === peg$FAILED) {
-              s0 = peg$parseunknown_stmt();
-            }
           }
         }
       }
