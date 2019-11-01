@@ -27,20 +27,20 @@ class Dentry {
         return (node != null)?node.type:"";
     }
     
-    public function tree2(depth:String) {
-        Sys.println('${name}  ');
+    public function tree2(depth:String, out:haxe.io.Output) {
+        out.writeString('${name}  \n');
         var idx = 0;
         for (c in children) {
             idx++;
-            Sys.print( '${depth} |--');
+            out.writeString( '${depth} |--');
             (idx==children.length)?(depth += '    '):(depth += ' |  ');
-            c.tree2(depth);
+            c.tree2(depth, out);
             depth = depth.substr(0, depth.length-4);
         }
     }
     
-    public function tree() {
+    public function tree(out:haxe.io.Output) {
         var depth = '';
-        return tree2(depth);
+        return tree2(depth, out);
     }
 }

@@ -39,7 +39,8 @@ class Context {
         return cwd;
     }
 
-    public function tree() {
-        return root.tree();
+    public function tree(?out:haxe.io.Output) {
+	    var out = (out==null)?Sys.stdout():out;
+        return root.tree(out);
     }
 }
