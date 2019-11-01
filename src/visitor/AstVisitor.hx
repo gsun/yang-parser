@@ -15,13 +15,13 @@ class AstVisitor {
         yieldFlag = true;
     }
     
-    public function visit(stmt:Stmt, context:Dynamic=null) {
+    public function visit(stmt:Stmt) {
         if (!stmt.isValid()) return;
         
         this.stmt = stmt;
         var method = Reflect.field(this, stmt.type);
         if (method != null) {
-            Reflect.callMethod(this, method, [stmt, context]);
+            Reflect.callMethod(this, method, [stmt]);
         }
         /* all the sub stmts are visited by default, and the visit can yield manually.*/
         /* the yield() can be called in stmt.type method for specific AstVisitor.*/
@@ -29,7 +29,7 @@ class AstVisitor {
             yieldFlag = false;
         } else {
             for (s in stmt.getSubs()) {
-                visit(s, context);
+                visit(s);
             }
         }
     }

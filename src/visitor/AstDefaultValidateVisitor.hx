@@ -23,7 +23,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
         default_stmt = null;
     }
     
-    function type_stmt(stmt:TypeStmt, context:Dynamic) {
+    function type_stmt(stmt:TypeStmt) {
         var default_stmt = default_stmt!=null?default_stmt:stmt.parent.sub.default_stmt;
         if (default_stmt != null) {
             switch stmt.arg {
@@ -46,7 +46,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
         }
     }
     
-    function mandatory_stmt(stmt:Stmt, context:Dynamic) {
+    function mandatory_stmt(stmt:Stmt) {
         assertTrue(stmt.parent.sub.default_stmt == null, '${stmt.parent.type} ${stmt.parent.arg} mandatory-error');
     }
     

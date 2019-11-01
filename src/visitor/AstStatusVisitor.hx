@@ -4,7 +4,7 @@ import stmt.Stmt;
 import stmt.Stmt.StmtStatus;
 
 class AstStatusVisitor extends AstVisitor {
-    function status_stmt(stmt:Stmt, context:Dynamic) {
+    function status_stmt(stmt:Stmt) {
         var status:StmtStatus = switch stmt.arg {
             case "obsolete": Obsolete;
             case "deprecated": Deprecated;

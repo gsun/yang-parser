@@ -6,7 +6,7 @@ using Lambda;
 
 class AstBaseVisitor extends AstVisitor {  
     
-    function base_stmt(stmt:BaseStmt, context:Dynamic) {
+    function base_stmt(stmt:BaseStmt) {
         var local = true;
         var nid:NodeId = stmt.arg;     
         if (nid.prefix != null) {

@@ -11,7 +11,7 @@ class AstGroupingRecursionVisitor extends AstVisitor {
         group = new List();
     }      
     
-    function grouping_stmt(stmt:Stmt, context:Dynamic) {
+    function grouping_stmt(stmt:Stmt) {
         group.push(stmt.arg);
         for (s in stmt.getSubs()) {
             var visitor = new AstGroupingRecursionVisitor();
@@ -22,7 +22,7 @@ class AstGroupingRecursionVisitor extends AstVisitor {
         yield();
     } 
 
-    function uses_stmt(stmt:Stmt, context:Dynamic) {
+    function uses_stmt(stmt:Stmt) {
         if (stmt.arg.indexOf(':') == -1) {
             assertFalse(group.has(stmt.arg), 'group-recursion-error');
         } else {

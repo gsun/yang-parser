@@ -6,7 +6,7 @@ using Lambda;
 
 class AstIfFeatureVisitor extends AstVisitor {  
     
-    function if_feature_stmt(stmt:IfFeatureStmt, context:Dynamic) {
+    function if_feature_stmt(stmt:IfFeatureStmt) {
         var local = true;
         var nid:NodeId = stmt.arg;     
         if (nid.prefix != null) {

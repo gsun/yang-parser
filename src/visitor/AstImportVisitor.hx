@@ -9,7 +9,7 @@ import stmt.BelongsToStmt;
 using Lambda;
 
 class AstImportVisitor extends AstVisitor {
-    function module_stmt(stmt:ModuleStmt, context:Dynamic) {
+    function module_stmt(stmt:ModuleStmt) {
         for (ii in stmt.subs.import_stmt.iterator()) {
             var i:ImportStmt = cast ii;
             var m = stmt.getMo(i.arg);
@@ -33,7 +33,7 @@ class AstImportVisitor extends AstVisitor {
         }
     }
     
-    function submodule_stmt(stmt:SubmoduleStmt, context:Dynamic) {
+    function submodule_stmt(stmt:SubmoduleStmt) {
         var belongsto:BelongsToStmt = cast stmt.sub.belongs_to_stmt;
         assertTrue(belongsto != null, 'include_stmt ${stmt.arg} belongs-to-error');
         

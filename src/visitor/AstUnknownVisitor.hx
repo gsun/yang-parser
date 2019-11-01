@@ -5,7 +5,7 @@ using Lambda;
 
 class AstUnknownVisitor extends AstVisitor {  
     
-    function unknown_stmt(stmt:UnknownStmt, context:Dynamic) {
+    function unknown_stmt(stmt:UnknownStmt) {
         var local = true;
         var prefix;
         var keyword = stmt.keyword;

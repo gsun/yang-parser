@@ -11,7 +11,7 @@ class AstIdentityRecursionVisitor extends AstVisitor {
         identity = new List();
     }      
     
-    function identity_stmt(stmt:Stmt, context:Dynamic) {
+    function identity_stmt(stmt:Stmt) {
         identity.push(stmt.arg);
         for (s in stmt.subs.base_stmt.iterator()) {
             var visitor = new AstIdentityRecursionVisitor();
@@ -22,7 +22,7 @@ class AstIdentityRecursionVisitor extends AstVisitor {
         yield();
     } 
 
-    function base_stmt(stmt:Stmt, context:Dynamic) {
+    function base_stmt(stmt:Stmt) {
         if (stmt.arg.indexOf(':') == -1) {
             assertFalse(identity.has(stmt.arg), 'identity-recursion-error');
         } else {

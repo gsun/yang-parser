@@ -11,7 +11,7 @@ class AstFeatureRecursionVisitor extends AstVisitor {
         feature = new List();
     }      
     
-    function feature_stmt(stmt:Stmt, context:Dynamic) {
+    function feature_stmt(stmt:Stmt) {
         feature.push(stmt.arg);
         for (s in stmt.subs.if_feature_stmt.iterator()) {
             var visitor = new AstFeatureRecursionVisitor();
@@ -22,7 +22,7 @@ class AstFeatureRecursionVisitor extends AstVisitor {
         yield();
     } 
 
-    function if_feature_stmt(stmt:Stmt, context:Dynamic) {
+    function if_feature_stmt(stmt:Stmt) {
         if (stmt.arg.indexOf(':') == -1) {
             assertFalse(feature.has(stmt.arg), 'feature-recursion-error');
         } else {

@@ -7,7 +7,7 @@ using Lambda;
 
 class AstUsesGroupVisitor extends AstVisitor {  
     
-    function uses_stmt(stmt:UsesStmt, context:Dynamic) {
+    function uses_stmt(stmt:UsesStmt) {
         var local = true;
         var nid:NodeId = stmt.arg;     
         if (nid.prefix != null) {

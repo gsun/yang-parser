@@ -8,7 +8,7 @@ using Lambda;
 class AstMkdirVisitor extends AstVisitor {
     var expanding:Bool;
 
-    public function choice_stmt(stmt:Stmt, context:Dynamic) {
+    public function choice_stmt(stmt:Stmt) {
         var de = stmt.ctx.mkDir(stmt.arg, stmt);
         stmt.ctx.cdDir(de);
         for (s in stmt.getSubs()) {
@@ -19,11 +19,11 @@ class AstMkdirVisitor extends AstVisitor {
         yield();
     }   
     
-    public function case_stmt(stmt:Stmt, context:Dynamic) {
+    public function case_stmt(stmt:Stmt) {
         stmt.ctx.mkDir(stmt.arg, stmt);
     } 
     
-    public function rpc_stmt(stmt:Stmt, context:Dynamic) {
+    public function rpc_stmt(stmt:Stmt) {
         var de = stmt.ctx.mkDir(stmt.arg, stmt);
         stmt.ctx.cdDir(de);
         for (s in stmt.getSubs()) {
@@ -34,7 +34,7 @@ class AstMkdirVisitor extends AstVisitor {
         yield();
     }   
     
-    public function input_stmt(stmt:Stmt, context:Dynamic) {
+    public function input_stmt(stmt:Stmt) {
         var de = stmt.ctx.mkDir("input", stmt);
         stmt.ctx.cdDir(de);
         for (s in stmt.getSubs()) {
@@ -45,7 +45,7 @@ class AstMkdirVisitor extends AstVisitor {
         yield();
     }   
     
-    public function output_stmt(stmt:Stmt, context:Dynamic) {
+    public function output_stmt(stmt:Stmt) {
         var de = stmt.ctx.mkDir("output", stmt);
         stmt.ctx.cdDir(de);
         for (s in stmt.getSubs()) {
@@ -56,7 +56,7 @@ class AstMkdirVisitor extends AstVisitor {
         yield();
     }   
     
-    public function container_stmt(stmt:Stmt, context:Dynamic) {
+    public function container_stmt(stmt:Stmt) {
         var de = stmt.ctx.mkDir(stmt.arg, stmt);
         stmt.ctx.cdDir(de);
         for (s in stmt.getSubs()) {
@@ -67,15 +67,15 @@ class AstMkdirVisitor extends AstVisitor {
         yield();
     }   
     
-    public function leaf_stmt(stmt:Stmt, context:Dynamic) {
+    public function leaf_stmt(stmt:Stmt) {
         stmt.ctx.mkDir(stmt.arg, stmt);
     }   
     
-    public function leaf_list_stmt(stmt:Stmt, context:Dynamic) {
+    public function leaf_list_stmt(stmt:Stmt) {
         stmt.ctx.mkDir(stmt.arg, stmt);
     }   
     
-    public function list_stmt(stmt:Stmt, context:Dynamic) {
+    public function list_stmt(stmt:Stmt) {
         var de = stmt.ctx.mkDir(stmt.arg, stmt);
         stmt.ctx.cdDir(de);
         for (s in stmt.getSubs()) {
@@ -86,22 +86,22 @@ class AstMkdirVisitor extends AstVisitor {
         yield();
     }   
     
-    public function anyxml_stmt(stmt:Stmt, context:Dynamic) {
+    public function anyxml_stmt(stmt:Stmt) {
         stmt.ctx.mkDir(stmt.arg, stmt);
     }   
         
-    public function uses_stmt(stmt:UsesStmt, context:Dynamic) {
+    public function uses_stmt(stmt:UsesStmt) {
         var visitor = new AstMkdirVisitor();
         visitor.expanding = true;
         visitor.visit(stmt.grouping);
         yield();
     }   
     
-    public function grouping_stmt(stmt:UsesStmt, context:Dynamic) {
+    public function grouping_stmt(stmt:UsesStmt) {
         if (!expanding) yield();
     }  
 
-    public function module_stmt(stmt:Stmt, context:Dynamic) {
+    public function module_stmt(stmt:Stmt) {
         var pwd = stmt.ctx.pwd();
         for (s in stmt.getSubs()) {
             var visitor = new AstMkdirVisitor();
@@ -111,14 +111,14 @@ class AstMkdirVisitor extends AstVisitor {
         yield();
     }   
     
-    public function include_stmt(stmt:IncludeStmt, context:Dynamic) {
+    public function include_stmt(stmt:IncludeStmt) {
         var visitor = new AstMkdirVisitor();
         visitor.expanding = true;
         visitor.visit(stmt.subModule);
         yield();
     }   
     
-    public function submodule_stmt(stmt:Stmt, context:Dynamic) {
+    public function submodule_stmt(stmt:Stmt) {
         if (!expanding) {
             yield();
             return;
@@ -132,7 +132,7 @@ class AstMkdirVisitor extends AstVisitor {
         yield();
     }   
 
-    public function notification_stmt(stmt:Stmt, context:Dynamic) {
+    public function notification_stmt(stmt:Stmt) {
         var de = stmt.ctx.mkDir(stmt.arg, stmt);
         stmt.ctx.cdDir(de);
         for (s in stmt.getSubs()) {
@@ -143,7 +143,7 @@ class AstMkdirVisitor extends AstVisitor {
         yield();
     }   
     
-    public function augment_stmt(stmt:Stmt, context:Dynamic) {
+    public function augment_stmt(stmt:Stmt) {
         yield();
     }   
 

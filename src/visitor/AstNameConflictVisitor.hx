@@ -5,43 +5,43 @@ using Lambda;
 
 class AstNameConflictVisitor extends AstVisitor {
         
-    function container_stmt(stmt:Stmt, context:Dynamic) {      
-        check2(stmt, context);
+    function container_stmt(stmt:Stmt) {      
+        check2(stmt);
     }
         
-    function grouping_stmt(stmt:Stmt, context:Dynamic) {
-        check2(stmt, context);
+    function grouping_stmt(stmt:Stmt) {
+        check2(stmt);
     }
     
-    function input_stmt(stmt:Stmt, context:Dynamic) {
-        check2(stmt, context);
+    function input_stmt(stmt:Stmt) {
+        check2(stmt);
     }
            
-    function list_stmt(stmt:Stmt, context:Dynamic) {
-        check2(stmt, context);
+    function list_stmt(stmt:Stmt) {
+        check2(stmt);
     }
     
-    function module_stmt(stmt:Stmt, context:Dynamic) { 
-        check5(stmt, context);
+    function module_stmt(stmt:Stmt) { 
+        check5(stmt);
     }
 
-    function notification_stmt(stmt:Stmt, context:Dynamic) {
-        check2(stmt, context);
+    function notification_stmt(stmt:Stmt) {
+        check2(stmt);
     }
         
-    function output_stmt(stmt:Stmt, context:Dynamic) {
-        check2(stmt, context);
+    function output_stmt(stmt:Stmt) {
+        check2(stmt);
     }   
                 
-    function rpc_stmt(stmt:Stmt, context:Dynamic) {
-        check2(stmt, context);
+    function rpc_stmt(stmt:Stmt) {
+        check2(stmt);
     }   
     
-    function submodule_stmt(stmt:Stmt, context:Dynamic) {
-        check5(stmt, context);
+    function submodule_stmt(stmt:Stmt) {
+        check5(stmt);
     }   
     
-    function check2(stmt:Stmt, context:Dynamic) {
+    inline function check2(stmt:Stmt) {
         var types = ["typedef_stmt", "grouping_stmt"]; 
         for (i in types) {
             nameConflict(stmt, i);
@@ -49,7 +49,7 @@ class AstNameConflictVisitor extends AstVisitor {
         }
     }
     
-    function check5(stmt:Stmt, context:Dynamic) {
+    inline function check5(stmt:Stmt) {
         var types = ["typedef_stmt", "grouping_stmt", "feature_stmt", "identity_stmt", "extension_stmt"]; 
         for (i in types) {
             nameConflict(stmt, i);
