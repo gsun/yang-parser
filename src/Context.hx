@@ -27,6 +27,13 @@ class Context {
         if (cwd != null) {
             cwd.children.add(dir);
             dir.parent = cwd;
+            if (cwd.prefix != null) {
+                //use the same global prefix as parent
+                dir.prefix = cwd.prefix;
+            } else {
+                //set global prefix
+                dir.prefix = st.top.sub.prefix_stmt.arg;
+            }
         }
         return dir;
     }
@@ -40,7 +47,7 @@ class Context {
     }
 
     public function tree(?out:haxe.io.Output) {
-	    var out = (out==null)?Sys.stdout():out;
+        var out = (out==null)?Sys.stdout():out;
         return root.tree(out);
     }
 }
