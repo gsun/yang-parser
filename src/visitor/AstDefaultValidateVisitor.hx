@@ -198,7 +198,7 @@ class AstDefaultValidateVisitor extends AstVisitor {
         }
         var pattern_stmt = stmt.sub.pattern_stmt;
         if (pattern_stmt != null) {
-            var pat = new js.RegExp(pattern_stmt.arg);
+            var pat = new js.lib.RegExp(pattern_stmt.arg);
             assertTrue(pat.test(value), 'value ${value} pattern-error');
         }
     }
