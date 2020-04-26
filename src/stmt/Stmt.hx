@@ -105,7 +105,7 @@ class Stmt {
     }
 
     public var parent:Stmt;
-    var children:List<Stmt>;
+    private var subStmts:List<Stmt>;
     public var status:StmtStatus;
     public var ctx:Context;
    
@@ -148,23 +148,23 @@ class Stmt {
     public function getMo(type:String):Null<Stmt> return ctx.modules[type];
     
     public var subs(get, never):NodeListAccess;
-    function get_subs() return children;
+    function get_subs() return subStmts;
     
     public var sub(get, never):NodeAccess;
-    function get_sub() return children;
+    function get_sub() return subStmts;
     
     public function getSubs(type:String=null) : List<Stmt> {
-        return (type==null)?children:children.filter(function(ch) { return ch.type == type;});
+        return (type==null)?subStmts:subStmts.filter(function(ch) { return ch.type == type;});
     }
 
     public function addSub(sub:Stmt) {
         sub.parent = this;
-        children.add(sub);
+        subStmts.add(sub);
     }
     
     public function removeSub(sub:Stmt) {
         sub.parent = null;
-        children.remove(sub);
+        subStmts.remove(sub);
     }
     
     public function isValid() {
@@ -175,7 +175,7 @@ class Stmt {
         raw = null;
         ctx = null;
         parent = null;
-        children = new List();
+        subStmts = new List();
         status = Current;
     }
     
