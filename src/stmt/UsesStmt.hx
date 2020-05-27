@@ -1,9 +1,10 @@
 package stmt;
 
 class UsesStmt extends Stmt {
-    public var grouping:Stmt;
-    public function new() {
-        super();
-        grouping = null;
-    }
+	public var grouping:Stmt;
+
+	public function new() {
+		super();
+		grouping = null;
+	}
 }

@@ -1,7 +1,7 @@
 package stmt;
 
 class OrganizationStmt extends Stmt {
-    public function new() {
-        super();
-    }
+	public function new() {
+		super();
+	}
 }

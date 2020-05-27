@@ -1,7 +1,7 @@
 package stmt;
 
 class PresenceStmt extends Stmt {
-    public function new() {
-        super();
-    }
+	public function new() {
+		super();
+	}
 }

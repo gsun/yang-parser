@@ -1,7 +1,7 @@
 package stmt;
 
 class PatternStmt extends Stmt {
-    public function new() {
-        super();
-    }
+	public function new() {
+		super();
+	}
 }

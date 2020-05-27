@@ -1,7 +1,7 @@
 package stmt;
 
 class RevisionDateStmt extends Stmt {
-    public function new() {
-        super();
-    }
+	public function new() {
+		super();
+	}
 }
