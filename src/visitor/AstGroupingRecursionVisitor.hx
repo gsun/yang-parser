@@ -24,11 +24,11 @@ class AstGroupingRecursionVisitor extends AstVisitor {
 	}
 
 	function uses_stmt(stmt:Stmt) {
-		if (stmt.arg.indexOf(':') == -1) {
+		var n:NodeId = stmt.arg;
+		if (n.prefix == null) {
 			assertFalse(group.has(stmt.arg), 'group-recursion-error');
 		} else {
-			var prefixName = stmt.arg.split(':');
-			assertFalse(group.has(prefixName[1]), 'group-recursion-error');
+			assertFalse(group.has(n.id), 'group-recursion-error');
 		}
 	}
 }

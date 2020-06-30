@@ -286,7 +286,9 @@ class Stmt {
 			case "when_stmt": new WhenStmt();
 			case "yang_version_stmt": new YangVersionStmt();
 			case "yin_element_stmt": new YinElementStmt();
-			default: new Stmt();
+			default: {
+				trace('unsupport stmt type $raw.type'); new Stmt();
+			}
 		}
 		stmt.raw = raw;
 		stmt.ctx = ctx;

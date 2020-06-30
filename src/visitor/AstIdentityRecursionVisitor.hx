@@ -26,11 +26,11 @@ class AstIdentityRecursionVisitor extends AstVisitor {
 	}
 
 	function base_stmt(stmt:Stmt) {
-		if (stmt.arg.indexOf(':') == -1) {
+	    var n:NodeId = stmt.arg;
+		if (n.prefix == null) {
 			assertFalse(identity.has(stmt.arg), 'identity-recursion-error');
 		} else {
-			var prefixName = stmt.arg.split(':');
-			assertFalse(identity.has(prefixName[1]), 'identity-recursion-error');
+			assertFalse(identity.has(n.id), 'identity-recursion-error');
 		}
 	}
 }

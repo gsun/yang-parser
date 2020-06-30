@@ -26,11 +26,11 @@ class AstFeatureRecursionVisitor extends AstVisitor {
 	}
 
 	function if_feature_stmt(stmt:Stmt) {
-		if (stmt.arg.indexOf(':') == -1) {
+		var n:NodeId = stmt.arg;
+		if (n.prefix == null) {
 			assertFalse(feature.has(stmt.arg), 'feature-recursion-error');
 		} else {
-			var prefixName = stmt.arg.split(':');
-			assertFalse(feature.has(prefixName[1]), 'feature-recursion-error');
+			assertFalse(feature.has(n.id), 'feature-recursion-error');
 		}
 	}
 }
