@@ -200,11 +200,6 @@ class Stmt {
 		sub.parent = this;
 		subStmts.add(sub);
 	}
-
-	public function removeSub(sub:Stmt) {
-		sub.parent = null;
-		subStmts.remove(sub);
-	}
 	
 	public function isValid() {
 		return (status == Current || status == Deprecated) ? true : false;
