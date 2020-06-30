@@ -1,6 +1,10 @@
 package visitor;
 
 import stmt.TypeStmt;
+import stmt.EnumStmt;
+import stmt.BitStmt;
+import stmt.IncludeStmt;
+import stmt.ImportStmt;
 import stmt.Stmt.NodeId;
 
 using Lambda;
@@ -34,7 +38,8 @@ class AstTypeVisitor extends AstVisitor {
 							assertTrue(stmt.subs.enum_stmt.length >= 1, 'type_stmt ${stmt.arg} type-error');
 							var value = 0;
 							var valueArray = [];
-							for (e in stmt.subs.enum_stmt.iterator()) {
+							var subs:List<EnumStmt> = cast stmt.subs.enum_stmt;
+							for (e in subs) {
 								if (e.sub.value_stmt != null)
 									value = Std.parseInt(e.sub.value_stmt.arg);
 								assertTrue(value >= -2147483648 && value <= 2147483647, 'type_stmt ${stmt.arg} value-error');
@@ -48,7 +53,8 @@ class AstTypeVisitor extends AstVisitor {
 							assertTrue(stmt.subs.bit_stmt.length >= 1, 'type_stmt ${stmt.arg} type-error');
 							var position = 0;
 							var positionArray = [];
-							for (e in stmt.subs.bit_stmt.iterator()) {
+							var subs:List<BitStmt> = cast stmt.subs.bit_stmt;
+							for (e in subs) {
 								if (e.sub.position_stmt != null)
 									position = Std.parseInt(e.sub.position_stmt.arg);
 								assertTrue(position >= 0 && position <= 4294967295, 'type_stmt ${stmt.arg} position-error');
@@ -80,7 +86,8 @@ class AstTypeVisitor extends AstVisitor {
 				parent = parent.parent;
 			}
 			if (stmt.typedefine == null) { // check the submodule
-				for (i in stmt.top.subs.include_stmt.iterator()) {
+				var subs:List<IncludeStmt> = cast stmt.top.subs.include_stmt;
+				for (i in subs) {
 					var sub = stmt.getMo(i.arg);
 					assertTrue(sub != null, 'type_stmt ${stmt.arg} include-module-error');
 					var tt = sub.subs.typedef_stmt[nid.id];
@@ -92,7 +99,8 @@ class AstTypeVisitor extends AstVisitor {
 			}
 			assertTrue(stmt.typedefine != null, 'type_stmt ${stmt.arg} local-typedef-reference-error');
 		} else {
-			for (m in stmt.top.subs.import_stmt.iterator()) {
+			var subs:List<ImportStmt> = cast stmt.top.subs.import_stmt;
+			for (m in subs) {
 				if (m.subs.prefix_stmt[nid.prefix] != null) {
 					var mo = stmt.getMo(m.arg);
 					assertTrue(mo != null, 'type_stmt ${stmt.arg} global-typedef-module-error');

@@ -199,7 +199,8 @@ class AstDefaultValidateVisitor extends AstVisitor {
 
 	function validateUnion(stmt:Stmt, default_stmt:Stmt) {
 		var valid = false;
-		for (u in stmt.subs.type_stmt.iterator()) {
+		var subs:List<TypeStmt> = cast stmt.subs.type_stmt;
+		for (u in subs) {
 			var visitor = new AstDefaultValidateVisitor();
 			visitor.isUnionBranch = true;
 			visitor.default_stmt = default_stmt;

@@ -2,6 +2,8 @@ package visitor;
 
 import stmt.IfFeatureStmt;
 import stmt.Stmt.NodeId;
+import stmt.ImportStmt;
+import stmt.IncludeStmt;
 
 using Lambda;
 
@@ -34,7 +36,8 @@ class AstIfFeatureVisitor extends AstVisitor {
 				parent = parent.parent;
 			}
 			if (stmt.feature == null) { // check the submodule
-				for (i in stmt.top.subs.include_stmt.iterator()) {
+			    var subs:List<IncludeStmt> = cast stmt.top.subs.include_stmt;
+				for (i in subs) {
 					var sub = stmt.getMo(i.arg);
 					assertTrue(sub != null, 'include-module-error');
 					var ff = sub.subs.feature_stmt[nid.id];
@@ -48,7 +51,8 @@ class AstIfFeatureVisitor extends AstVisitor {
 			if (stmt.feature == null)
 				stmt.parent.status = Prune;
 		} else {
-			for (m in stmt.top.subs.import_stmt.iterator()) {
+		    var subs:List<ImportStmt> = cast stmt.top.subs.import_stmt;
+			for (m in subs) {
 				if (m.subs.prefix_stmt[nid.prefix] != null) {
 					var mo = stmt.getMo(m.arg);
 					assertTrue(mo != null, 'global-feature-module-error');

@@ -11,8 +11,8 @@ using Lambda;
 
 class AstImportVisitor extends AstVisitor {
 	function module_stmt(stmt:ModuleStmt) {
-		for (ii in stmt.subs.import_stmt.iterator()) {
-			var i:ImportStmt = cast ii;
+		var subs:List<ImportStmt> = cast stmt.subs.import_stmt;
+		for (i in subs) {
 			var m = stmt.getMo(i.arg);
 			assertTrue(m != null, 'import_stmt ${i.arg} exist-error');
 			assertEquals(m.keyword, "module", 'import_stmt ${i.arg} type-error');
@@ -20,8 +20,8 @@ class AstImportVisitor extends AstVisitor {
 				i.module = m;
 		}
 
-		for (ii in stmt.subs.include_stmt.iterator()) {
-			var i:IncludeStmt = cast ii;
+		var subs:List<IncludeStmt> = cast stmt.subs.include_stmt;
+		for (i in subs) {
 			var sub:Stmt = stmt.getMo(i.arg);
 			assertTrue(sub != null, 'include_stmt ${i.arg} exist-error');
 			assertEquals(sub.keyword, "submodule", 'include_stmt ${i.arg} type-error');
@@ -45,17 +45,17 @@ class AstImportVisitor extends AstVisitor {
 		if (mo != null && mo.isValid())
 			belongsto.module = mo;
 
-		for (ii in stmt.subs.import_stmt.iterator()) {
-			var i:ImportStmt = cast ii;
+		var subs:List<ImportStmt> = cast stmt.subs.import_stmt;
+		for (i in subs) {
 			var m = stmt.getMo(i.arg);
 			assertTrue(m != null, 'import_stmt ${i.arg} exist-error');
 			assertEquals(m.keyword, "module", 'import_stmt ${i.arg} type-error');
 			if (m != null && m.isValid())
 				i.module = m;
 		}
-
-		for (ii in stmt.subs.include_stmt.iterator()) {
-			var i:IncludeStmt = cast ii;
+		
+		var subs:List<IncludeStmt> = cast stmt.subs.include_stmt;
+		for (i in subs) {
 			var sub:Stmt = stmt.getMo(i.arg);
 			assertTrue(sub != null, 'include_stmt ${i.arg} exist-error');
 			assertEquals(sub.keyword, "submodule", 'include_stmt ${i.arg} type-error');

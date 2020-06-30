@@ -33,7 +33,7 @@ enum StmtStatus {
 	Obsolete;
 }
 
-@:forward
+@:forward(length)
 abstract NodeListAccess(List<Stmt>) from List<Stmt> to List<Stmt> {
 	@:op(a.b)
 	public function resolve(type:String):NodeListAccess {
@@ -121,7 +121,7 @@ class Stmt {
 
 	public var parent:Stmt;
 
-	private var subStmts:List<Stmt>;
+
 
 	public var status:StmtStatus;
 	public var ctx:Context;
@@ -168,6 +168,7 @@ class Stmt {
 	public function getMo(type:String):Null<Stmt>
 		return ctx.modules[type];
 
+	private var subStmts:List<Stmt>;
 	public var subs(get, never):NodeListAccess;
 
 	function get_subs()
@@ -193,7 +194,7 @@ class Stmt {
 		sub.parent = null;
 		subStmts.remove(sub);
 	}
-
+	
 	public function isValid() {
 		return (status == Current || status == Deprecated) ? true : false;
 	}

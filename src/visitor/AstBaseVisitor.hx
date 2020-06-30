@@ -1,6 +1,8 @@
 package visitor;
 
 import stmt.BaseStmt;
+import stmt.IncludeStmt;
+import stmt.ImportStmt;
 import stmt.Stmt.NodeId;
 
 using Lambda;
@@ -34,7 +36,8 @@ class AstBaseVisitor extends AstVisitor {
 				parent = parent.parent;
 			}
 			if (stmt.identity == null) { // check the submodule
-				for (i in stmt.top.subs.include_stmt.iterator()) {
+				var subs:List<IncludeStmt> = cast stmt.top.subs.include_stmt;
+				for (i in subs) {
 					var sub = stmt.getMo(i.arg);
 					assertTrue(sub != null, 'include-module-error');
 					var ii = sub.subs.identity_stmt[nid.id];
@@ -47,7 +50,8 @@ class AstBaseVisitor extends AstVisitor {
 			}
 			assertTrue(stmt.identity != null, 'local-identity-reference-error');
 		} else {
-			for (m in stmt.top.subs.import_stmt.iterator()) {
+			var subs:List<ImportStmt> = cast stmt.top.subs.import_stmt;
+			for (m in subs) {
 				if (m.subs.prefix_stmt[nid.prefix] != null) {
 					var mo = stmt.getMo(m.arg);
 					assertTrue(mo != null, 'global-identity-module-error');

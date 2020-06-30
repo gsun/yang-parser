@@ -1,6 +1,8 @@
 package visitor;
 
 import stmt.UnknownStmt;
+import stmt.ImportStmt;
+import stmt.IncludeStmt;
 
 using Lambda;
 
@@ -37,7 +39,8 @@ class AstUnknownVisitor extends AstVisitor {
 				parent = parent.parent;
 			}
 			if (stmt.extension == null) { // check the submodule
-				for (i in stmt.top.subs.include_stmt.iterator()) {
+				var subs:List<IncludeStmt> = cast stmt.top.subs.include_stmt;
+				for (i in subs) {
 					var sub = stmt.getMo(i.arg);
 					assertTrue(sub != null, 'type_stmt ${stmt.keyword} include-module-error');
 					var ee = sub.subs.extension_stmt[keyword];
@@ -51,7 +54,8 @@ class AstUnknownVisitor extends AstVisitor {
 				'unknown_stmt ${stmt.keyword} ${stmt.arg} local-extension-reference-error');
 		} else {
 			var prefixName:Array<String> = stmt.keyword.split(':');
-			for (m in stmt.top.subs.import_stmt.iterator()) {
+			var subs:List<ImportStmt> = cast stmt.top.subs.import_stmt;
+			for (m in subs) {
 				if (m.subs.prefix_stmt[prefixName[0]] != null) {
 					var mo = stmt.getMo(m.arg);
 					assertTrue(mo != null, 'type_stmt ${stmt.keyword} global-extension-module-error');

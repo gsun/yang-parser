@@ -2,6 +2,8 @@ package visitor;
 
 import stmt.UsesStmt;
 import stmt.GroupingStmt;
+import stmt.IncludeStmt;
+import stmt.ImportStmt;
 import stmt.Stmt.NodeId;
 
 using Lambda;
@@ -36,7 +38,8 @@ class AstUsesGroupVisitor extends AstVisitor {
 				parent = parent.parent;
 			}
 			if (stmt.grouping == null) { // check the submodule
-				for (i in stmt.top.subs.include_stmt.iterator()) {
+				var subs:List<IncludeStmt> = cast stmt.top.subs.include_stmt;
+				for (i in subs) {
 					var sub = stmt.getMo(i.arg);
 					assertTrue(sub != null, 'uses_stmt ${stmt.arg} include-module-error');
 					var gg:GroupingStmt = cast sub.subs.grouping_stmt[nid.id];
@@ -50,7 +53,8 @@ class AstUsesGroupVisitor extends AstVisitor {
 			}
 			assertTrue(stmt.grouping != null, 'uses_stmt ${stmt.arg} local-group-reference-error');
 		} else {
-			for (m in stmt.top.subs.import_stmt.iterator()) {
+			var subs:List<ImportStmt> = cast stmt.top.subs.import_stmt;
+			for (m in subs) {
 				if (m.subs.prefix_stmt[nid.prefix] != null) {
 					var mo = stmt.getMo(m.arg);
 					assertTrue(mo != null, 'uses_stmt ${stmt.arg} global-group-module-error');

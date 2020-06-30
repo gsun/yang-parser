@@ -1,6 +1,7 @@
 package visitor;
 
 import stmt.Stmt;
+import stmt.IfFeatureStmt;
 
 using Lambda;
 
@@ -14,7 +15,8 @@ class AstFeatureRecursionVisitor extends AstVisitor {
 
 	function feature_stmt(stmt:Stmt) {
 		feature.push(stmt.arg);
-		for (s in stmt.subs.if_feature_stmt.iterator()) {
+		var subs:List<IfFeatureStmt> = cast stmt.subs.if_feature_stmt;
+		for (s in subs) {
 			var visitor = new AstFeatureRecursionVisitor();
 			visitor.feature = feature.list();
 			visitor.visit(s);
