@@ -63,6 +63,10 @@ class TestParser {
 			var visitor = new AstUnknownVisitor();
 			visitor.visit(st);
 		}
+		for (st in c.modules) {
+			var visitor = new AstMountFsVisitor();
+			visitor.visit(st);
+		}
 		trace('number of assert is ${AstVisitor.numOfAssert}');
 	}
 }
