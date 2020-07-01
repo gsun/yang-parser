@@ -281,7 +281,7 @@ class Stmt {
 
 	static public function buildStmt(raw:StmtRaw, ctx:Context):Stmt {
 		var type:StmtType = raw.type;
-		var stmt:Stmt = switch raw.type {
+		var stmt:Stmt = switch type {
 			case STAnyxml: new AnyxmlStmt(); 
 			case STArgument: new ArgumentStmt();
 			case STAugment: new AugmentStmt();
@@ -354,7 +354,6 @@ class Stmt {
 		}
 		stmt.raw = raw;
 		stmt.ctx = ctx;
-		ctx.stmts.add(stmt);
 		for (s in raw.subs) {
 			var child = buildStmt(s, ctx);
 			stmt.addSub(child);
