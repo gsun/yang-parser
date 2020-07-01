@@ -1,5 +1,4 @@
 import sys.io.File;
-import haxe.io.Path;
 import stmt.Stmt;
 
 @:jsRequire("./yang")
@@ -75,10 +74,10 @@ class Parser {
 				}
 			} else {
 				if (ctx.yin == false) {
-					if (Path.extension(path) == "yang")
+					if (haxe.io.Path.extension(path) == "yang")
 						parseYangFile(path);
 				} else {
-					if (Path.extension(path) == "yin")
+					if (haxe.io.Path.extension(path) == "yin")
 						parseYinFile(path);
 				}
 			}

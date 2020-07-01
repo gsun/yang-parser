@@ -37,8 +37,6 @@ enum StmtStatus {
 abstract NodeListAccess(List<Stmt>) from List<Stmt> to List<Stmt> {
 	@:op(a.b)
 	public function resolve(type:String):NodeListAccess {
-		if (!Stmt.validType(type))
-			throw('invalid stmt type ${type}');
 		return this.filter(function(e) {
 			return e.type == type;
 		});
@@ -55,8 +53,6 @@ abstract NodeListAccess(List<Stmt>) from List<Stmt> to List<Stmt> {
 private abstract NodeAccess(List<Stmt>) from List<Stmt> {
 	@:op(a.b)
 	public function resolve(type:String):Null<Stmt> {
-		if (!Stmt.validType(type))
-			throw('invalid stmt type ${type}');
 		return this.find(function(e) {
 			return e.type == type;
 		});
@@ -92,10 +88,80 @@ abstract SchemaNodeId(String) from String to String {
 	}
 }
 
+@:enum
+abstract StmtType(String) from String to String {
+	var STAnyxml = "anyxml_stmt"; 
+	var STArgument = "argument_stmt";
+	var STAugment = "augment_stmt"; 
+	var STBase = "base_stmt"; 
+	var STBelongsTo = "belongs_to_stmt"; 
+	var STBit = "bit_stmt"; 
+	var STCase = "case_stmt"; 
+	var STChoice = "choice_stmt"; 
+	var STConfig = "config_stmt"; 
+	var STContact = "contact_stmt";
+	var STContainer = "container_stmt"; 
+	var STDefault = "default_stmt"; 
+	var STDescription = "description_stmt"; 
+	var STDeviation = "deviation_stmt"; 
+	var STDeviate = "deviate_stmt"; 
+	var STEnum = "enum_stmt"; 
+	var STErrorAppTag = "error_app_tag_stmt"; 
+	var STErrorMessage = "error_message_stmt"; 
+	var STExtension = "extension_stmt"; 
+	var STFeature = "feature_stmt"; 
+	var STFractionDigits = "fraction_digits_stmt"; 
+	var STGrouping = "grouping_stmt"; 
+	var STIdentity = "identity_stmt"; 
+	var STIfFeature = "if_feature_stmt"; 
+	var STImport = "import_stmt"; 
+	var STInclude = "include_stmt"; 
+	var STInput = "input_stmt"; 
+	var STKey = "key_stmt"; 
+	var STLeaf = "leaf_stmt"; 
+	var STLeafList = "leaf_list_stmt"; 
+	var STLength = "length_stmt"; 
+	var STList = "list_stmt"; 
+	var STMandatory = "mandatory_stmt"; 
+	var STMaxElements = "max_elements_stmt"; 
+	var STMinElements = "min_elements_stmt"; 
+	var STModule = "module_stmt"; 
+	var STMust = "must_stmt"; 
+	var STNamespace = "namespace_stmt"; 
+	var STNotification = "notification_stmt"; 
+	var STOrderedBy = "ordered_by_stmt"; 
+	var STOrganization = "organization_stmt"; 
+	var STOutput = "output_stmt"; 
+	var STPath = "path_stmt"; 
+	var STPattern = "pattern_stmt"; 
+	var STPosition = "position_stmt"; 
+	var STPrefix = "prefix_stmt"; 
+	var STPresence = "presence_stmt"; 
+	var STRange = "range_stmt"; 
+	var STReference = "reference_stmt"; 
+	var STRefine = "refine_stmt"; 
+	var STRequireInstance = "require_instance_stmt"; 
+	var STRevision = "revision_stmt"; 
+	var STRevisionDate = "revision_date_stmt"; 
+	var STRpc = "rpc_stmt"; 
+	var STStatus = "status_stmt"; 
+	var STSubmodule = "submodule_stmt"; 
+	var STType = "type_stmt"; 
+	var STTypedef = "typedef_stmt"; 
+	var STUnique = "unique_stmt"; 
+	var STUnits = "units_stmt"; 
+	var STUses = "uses_stmt"; 
+	var STUnknown = "unknown_stmt";
+	var STValue = "value_stmt"; 
+	var STWhen = "when_stmt"; 
+	var STYangVersion = "yang_version_stmt"; 
+	var STYinElement = "yin_element_stmt";
+}
+
 class Stmt {
 	var raw:StmtRaw;
 
-	public var type(get, never):String;
+	public var type(get, never):StmtType;
 
 	function get_type() {
 		return raw.type;
@@ -204,7 +270,7 @@ class Stmt {
 	public function isValid() {
 		return (status == Current || status == Deprecated) ? true : false;
 	}
-
+	
 	public function new() {
 		raw = null;
 		ctx = null;
@@ -214,73 +280,74 @@ class Stmt {
 	}
 
 	static public function buildStmt(raw:StmtRaw, ctx:Context):Stmt {
+		var type:StmtType = raw.type;
 		var stmt:Stmt = switch raw.type {
-			case "anyxml_stmt": new AnyxmlStmt(); 
-			case "argument_stmt": new ArgumentStmt();
-			case "augment_stmt": new AugmentStmt();
-			case "base_stmt": new BaseStmt(); 
-			case "belongs_to_stmt": new BelongsToStmt();
-			case "bit_stmt": new BitStmt();
-			case "case_stmt": new CaseStmt();
-			case "choice_stmt": new ChoiceStmt(); 
-			case "config_stmt": new ConfigStmt();
-			case "contact_stmt": new ContactStmt();
-			case "container_stmt": new ContainerStmt();
-			case "default_stmt": new DefaultStmt();
-			case "description_stmt": new DescriptionStmt();
-			case "deviation_stmt": new DeviationStmt();
-			case "deviate_stmt": new DeviateStmt(); 
-			case "enum_stmt": new EnumStmt();
-			case "error_app_tag_stmt": new ErrorAppTagStmt();
-			case "error_message_stmt": new ErrorMessageStmt();
-			case "extension_stmt": new ExtensionStmt();
-			case "feature_stmt": new FeatureStmt();
-			case "fraction_digits_stmt": new FractionDigitsStmt();
-			case "grouping_stmt": new GroupingStmt(); 
-			case "identity_stmt": new IdentityStmt();
-			case "if_feature_stmt": new IfFeatureStmt();
-			case "import_stmt": new ImportStmt(); 
-			case "include_stmt": new IncludeStmt();
-			case "input_stmt": new InputStmt();
-			case "key_stmt": new KeyStmt();
-			case "leaf_stmt": new LeafStmt();
-			case "leaf_list_stmt": new LeafListStmt();
-			case "length_stmt": new LengthStmt();
-			case "list_stmt": new ListStmt();
-			case "mandatory_stmt": new MandatoryStmt(); 
-			case "max_elements_stmt": new MaxElementsStmt();
-			case "min_elements_stmt": new MinElementsStmt(); 
-			case "module_stmt": new ModuleStmt();
-			case "must_stmt": new MustStmt(); 
-			case "namespace_stmt": new NamespaceStmt();
-			case "notification_stmt": new NotificationStmt();
-			case "ordered_by_stmt": new OrderedByStmt();
-			case "organization_stmt": new OrganizationStmt();
-			case "output_stmt": new OutputStmt(); 
-			case "path_stmt": new PathStmt();
-			case "pattern_stmt": new PatternStmt(); 
-			case "position_stmt": new PositionStmt();
-			case "prefix_stmt": new PrefixStmt();
-			case "presence_stmt": new PresenceStmt();
-			case "range_stmt": new RangeStmt();
-			case "reference_stmt": new ReferenceStmt();
-			case "refine_stmt": new RefineStmt(); 
-			case "require_instance_stmt": new RequireInstanceStmt(); 
-			case "revision_stmt": new RevisionStmt();
-			case "revision_date_stmt": new RevisionDateStmt();
-			case "rpc_stmt": new RpcStmt();
-			case "status_stmt": new StatusStmt();
-			case "submodule_stmt": new SubmoduleStmt();
-			case "type_stmt": new TypeStmt();
-			case "typedef_stmt": new TypedefStmt();
-			case "unique_stmt": new UniqueStmt(); 
-			case "units_stmt": new UnitsStmt();
-			case "uses_stmt": new UsesStmt();
-			case "unknown_stmt": new UnknownStmt();
-			case "value_stmt": new ValueStmt();
-			case "when_stmt": new WhenStmt();
-			case "yang_version_stmt": new YangVersionStmt();
-			case "yin_element_stmt": new YinElementStmt();
+			case STAnyxml: new AnyxmlStmt(); 
+			case STArgument: new ArgumentStmt();
+			case STAugment: new AugmentStmt();
+			case STBase: new BaseStmt(); 
+			case STBelongsTo: new BelongsToStmt();
+			case STBit: new BitStmt();
+			case STCase: new CaseStmt();
+			case STChoice: new ChoiceStmt(); 
+			case STConfig: new ConfigStmt();
+			case STContact: new ContactStmt();
+			case STContainer: new ContainerStmt();
+			case STDefault: new DefaultStmt();
+			case STDescription: new DescriptionStmt();
+			case STDeviation: new DeviationStmt();
+			case STDeviate: new DeviateStmt(); 
+			case STEnum: new EnumStmt();
+			case STErrorAppTag: new ErrorAppTagStmt();
+			case STErrorMessage: new ErrorMessageStmt();
+			case STExtension: new ExtensionStmt();
+			case STFeature: new FeatureStmt();
+			case STFractionDigits: new FractionDigitsStmt();
+			case STGrouping: new GroupingStmt(); 
+			case STIdentity: new IdentityStmt();
+			case STIfFeature: new IfFeatureStmt();
+			case STImport: new ImportStmt(); 
+			case STInclude: new IncludeStmt();
+			case STInput: new InputStmt();
+			case STKey: new KeyStmt();
+			case STLeaf: new LeafStmt();
+			case STLeafList: new LeafListStmt();
+			case STLength: new LengthStmt();
+			case STList: new ListStmt();
+			case STMandatory: new MandatoryStmt(); 
+			case STMaxElements: new MaxElementsStmt();
+			case STMinElements: new MinElementsStmt(); 
+			case STModule: new ModuleStmt();
+			case STMust: new MustStmt(); 
+			case STNamespace: new NamespaceStmt();
+			case STNotification: new NotificationStmt();
+			case STOrderedBy: new OrderedByStmt();
+			case STOrganization: new OrganizationStmt();
+			case STOutput: new OutputStmt(); 
+			case STPath: new PathStmt();
+			case STPattern: new PatternStmt(); 
+			case STPosition: new PositionStmt();
+			case STPrefix: new PrefixStmt();
+			case STPresence: new PresenceStmt();
+			case STRange: new RangeStmt();
+			case STReference: new ReferenceStmt();
+			case STRefine: new RefineStmt(); 
+			case STRequireInstance: new RequireInstanceStmt(); 
+			case STRevision: new RevisionStmt();
+			case STRevisionDate: new RevisionDateStmt();
+			case STRpc: new RpcStmt();
+			case STStatus: new StatusStmt();
+			case STSubmodule: new SubmoduleStmt();
+			case STType: new TypeStmt();
+			case STTypedef: new TypedefStmt();
+			case STUnique: new UniqueStmt(); 
+			case STUnits: new UnitsStmt();
+			case STUses: new UsesStmt();
+			case STUnknown: new UnknownStmt();
+			case STValue: new ValueStmt();
+			case STWhen: new WhenStmt();
+			case STYangVersion: new YangVersionStmt();
+			case STYinElement: new YinElementStmt();
 			default: {
 				trace('unsupport stmt type $raw.type'); new Stmt();
 			}
@@ -293,10 +360,6 @@ class Stmt {
 			stmt.addSub(child);
 		}
 		return stmt;
-	}
-
-	static public function validType(t:String) {
-		return validTypes.has(t);
 	}
 
 	public function toString() {

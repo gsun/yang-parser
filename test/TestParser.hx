@@ -63,5 +63,6 @@ class TestParser {
 			var visitor = new AstUnknownVisitor();
 			visitor.visit(st);
 		}
+		trace('number of assert is ${AstVisitor.numOfAssert}');
 	}
 }

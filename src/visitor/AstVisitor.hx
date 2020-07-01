@@ -5,6 +5,7 @@ import stmt.Stmt;
 class AstVisitor {
 	var stmt:Stmt;
 	var yieldFlag:Bool;
+	static public var numOfAssert:Int = 0;
 
 	public function new() {
 		stmt = null;
@@ -34,8 +35,13 @@ class AstVisitor {
 			}
 		}
 	}
+	
+	static function count() {
+		numOfAssert++;
+	}
 
 	function assertTrue(b:Bool, msg:String) {
+		count();
 		if (b != true) {
 			trace('${msg} in ${stmt}');
 			yield();
@@ -43,6 +49,7 @@ class AstVisitor {
 	}
 
 	function assertFalse(b:Bool, msg:String) {
+		count();
 		if (b == true) {
 			trace('${msg} in ${stmt}');
 			yield();
@@ -50,6 +57,7 @@ class AstVisitor {
 	}
 
 	function assertEquals<T>(expected:T, actual:T, msg:String) {
+		count();
 		if (expected != actual) {
 			trace('${msg} in ${stmt}');
 			yield();
