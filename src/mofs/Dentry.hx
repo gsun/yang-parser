@@ -29,10 +29,19 @@ class Dentry {
 		return (node != null)?node.type:"";
 	}
 	
+	function getFlags(s:Stmt) {
+		return switch (s.type) {
+		case STInput: "\u{2500}w";
+		case STOutput: "ro";
+		case STRpc: "\u{2500}x";
+		case STNotification: "ro";
+		default: s.config?"rw":"ro";
+		}
+    }
+	
 	public function tree2(depth:String, out:haxe.io.Output) {
-		var n:NodeId = name;
-		if (n.prefix !=	 null) out.writeString('${n.prefix}:');
-		out.writeString('${n.id}  \n');
+		var flags = (node!=null)?getFlags(node):"";
+		out.writeString('${flags} ${name}  \n');
 		var idx = 0;
 		for (c in children) {
 			idx++;
