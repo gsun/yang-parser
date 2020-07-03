@@ -29,6 +29,14 @@ class MoFs {
 		return cwd;
 	}
 	
+	public function find(path:String) {
+		var n:SchemaNodeId = path;
+		if (n.absolute) {
+			cwd = root;
+		}
+		return cwd;
+	}
+	
 	public function tree(?out:haxe.io.Output) {
         var out = (out==null)?Sys.stdout():out;
         return root.tree(out);
