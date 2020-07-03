@@ -36,8 +36,13 @@ class Dentry {
 		var idx = 0;
 		for (c in children) {
 			idx++;
-			out.writeString( '${depth} |--');
-			(idx==children.length)?(depth += '    '):(depth += ' |  ');
+			if (idx==children.length) {
+				out.writeString('${depth} \u{2514}\u{2500}');
+				depth += '    ';
+			} else {
+				out.writeString('${depth} \u{251c}\u{2500}');
+				depth += ' \u{2502}  ';
+			}
 			c.tree2(depth, out);
 			depth = depth.substr(0, depth.length-4);
 		}
