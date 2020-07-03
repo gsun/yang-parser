@@ -3,11 +3,17 @@ package visitor;
 import stmt.Stmt;
 import stmt.UsesStmt;
 import stmt.IncludeStmt;
+import stmt.GroupingStmt;
 using Lambda;
 
 class AstMountFsVisitor extends AstVisitor {
 	var expanding:Bool;
 
+	public function new(expanding:Bool=false) {
+		super();
+		this.expanding = expanding;
+	}
+	
 	public function choice_stmt(stmt:Stmt) {
 		var de = stmt.ctx.fs.mkDir(stmt.arg, stmt);
 		stmt.ctx.fs.cdDir(de);
@@ -91,14 +97,23 @@ class AstMountFsVisitor extends AstVisitor {
 	}
 	
 	public function uses_stmt(stmt:UsesStmt) {
-		var visitor = new AstMountFsVisitor();
-		visitor.expanding = true;
+		var visitor = new AstMountFsVisitor(true);
 		visitor.visit(stmt.grouping);
 		yield();
 	}
 	
-	public function grouping_stmt(stmt:UsesStmt) {
-		if (!expanding) yield();
+	public function grouping_stmt(stmt:GroupingStmt) {
+		if (!expanding) {
+			yield();
+			return;
+		}
+		var pwd = stmt.ctx.fs.pwd();
+		for (s in stmt.getSubs()) {
+			var visitor = new AstMountFsVisitor();
+			visitor.visit(s);
+		}
+		stmt.ctx.fs.cdDir(pwd);
+		yield();
 	}  
 
 	public function module_stmt(stmt:Stmt) {
@@ -112,8 +127,7 @@ class AstMountFsVisitor extends AstVisitor {
 	}
 	
 	public function include_stmt(stmt:IncludeStmt) {
-		var visitor = new AstMountFsVisitor();
-		visitor.expanding = true;
+		var visitor = new AstMountFsVisitor(true);
 		visitor.visit(stmt.subModule);
 		yield();
 	}

@@ -37,7 +37,7 @@ class Dentry {
 		for (c in children) {
 			idx++;
 			out.writeString( '${depth} |--');
-			(idx==children.length)?(depth += '	  '):(depth += ' |	');
+			(idx==children.length)?(depth += '    '):(depth += ' |  ');
 			c.tree2(depth, out);
 			depth = depth.substr(0, depth.length-4);
 		}
