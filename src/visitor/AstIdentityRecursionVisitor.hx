@@ -26,7 +26,7 @@ class AstIdentityRecursionVisitor extends AstVisitor {
 	}
 
 	function base_stmt(stmt:Stmt) {
-	    var n:NodeId = stmt.arg;
+		var n:NodeId = stmt.arg;
 		if (n.prefix == null) {
 			assertFalse(identity.has(stmt.arg), 'identity-recursion-error');
 		} else {

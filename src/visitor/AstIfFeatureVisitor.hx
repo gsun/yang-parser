@@ -36,7 +36,7 @@ class AstIfFeatureVisitor extends AstVisitor {
 				parent = parent.parent;
 			}
 			if (stmt.feature == null) { // check the submodule
-			    var subs:List<IncludeStmt> = cast stmt.top.subs.include_stmt;
+				var subs:List<IncludeStmt> = cast stmt.top.subs.include_stmt;
 				for (i in subs) {
 					var sub = stmt.getMo(i.arg);
 					assertTrue(sub != null, 'include-module-error');
@@ -51,7 +51,7 @@ class AstIfFeatureVisitor extends AstVisitor {
 			if (stmt.feature == null)
 				stmt.parent.status = Prune;
 		} else {
-		    var subs:List<ImportStmt> = cast stmt.top.subs.import_stmt;
+			var subs:List<ImportStmt> = cast stmt.top.subs.import_stmt;
 			for (m in subs) {
 				if (m.subs.prefix_stmt[nid.prefix] != null) {
 					var mo = stmt.getMo(m.arg);

@@ -1,4 +1,4 @@
-package mofs;
+package fw;
 
 import stmt.Stmt;
 
@@ -7,8 +7,10 @@ class Dentry {
 	public var children:List<Dentry>;
 	public var name:String;
 	public var node:Stmt;
-	
-	public function new(name:String=null) {
+	public var ownerId:String;
+	public var ownerGroupId:String;
+
+	public function new(name:String = null) {
 		parent = null;
 		children = new List();
 		node = null;
@@ -16,6 +18,7 @@ class Dentry {
 	}
 
 	public var root(get, never):Dentry;
+
 	function get_root() {
 		var p = this;
 		while (p.parent != null) {
@@ -23,29 +26,30 @@ class Dentry {
 		}
 		return p;
 	}
-	
-	public var type(get, never):StmtType;
-	function get_type() {
-		return (node != null)?node.type:"";
+
+	public var keyword(get, never):String;
+
+	function get_keyword() {
+		return (node != null) ? node.keyword : "";
 	}
-	
+
 	function getFlags(s:Stmt) {
-		return switch (s.type) {
-		case STInput: "\u{2500}w";
-		case STOutput: "ro";
-		case STRpc: "\u{2500}x";
-		case STNotification: "ro";
-		default: s.config?"rw":"ro";
+		return switch (s.keyword) {
+			case "input": "\u{2500}w";
+			case "output": "ro";
+			case "rpc": "\u{2500}x";
+			case "notification": "ro";
+			default: s.config ? "rw" : "ro";
 		}
-    }
-	
+	}
+
 	public function tree2(depth:String, out:haxe.io.Output) {
-		var flags = (node!=null)?getFlags(node):"";
+		var flags = (node != null) ? getFlags(node) : "";
 		out.writeString('${flags} ${name}  \n');
 		var idx = 0;
 		for (c in children) {
 			idx++;
-			if (idx==children.length) {
+			if (idx == children.length) {
 				out.writeString('${depth} \u{2514}\u{2500}');
 				depth += '    ';
 			} else {
@@ -53,10 +57,10 @@ class Dentry {
 				depth += ' \u{2502}  ';
 			}
 			c.tree2(depth, out);
-			depth = depth.substr(0, depth.length-4);
+			depth = depth.substr(0, depth.length - 4);
 		}
 	}
-	
+
 	public function tree(out:haxe.io.Output) {
 		var depth = '';
 		return tree2(depth, out);

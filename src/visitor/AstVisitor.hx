@@ -5,6 +5,7 @@ import stmt.Stmt;
 class AstVisitor {
 	var stmt:Stmt;
 	var yieldFlag:Bool;
+
 	static public var numOfAssert:Int = 0;
 
 	public function new() {
@@ -35,7 +36,7 @@ class AstVisitor {
 			}
 		}
 	}
-	
+
 	static function count() {
 		numOfAssert++;
 	}

@@ -53,7 +53,7 @@ class AstImportVisitor extends AstVisitor {
 			if (m != null && m.isValid())
 				i.module = m;
 		}
-		
+
 		var subs:List<IncludeStmt> = cast stmt.subs.include_stmt;
 		for (i in subs) {
 			var sub:Stmt = stmt.getMo(i.arg);

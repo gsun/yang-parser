@@ -68,5 +68,6 @@ class TestParser {
 			visitor.visit(st);
 		}
 		trace('number of assert is ${AstVisitor.numOfAssert}');
+		//c.fs.tree();
 	}
 }
